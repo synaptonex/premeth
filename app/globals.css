@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Emil Kowalski's strong custom curves — the built-in CSS eases lack punch. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Brand colors mirrored for raw CSS use */
+  --meth: #3ee089;
+  --meth-dim: #0aa055;
+  --ink: #0a0a0a;
+  --paper: #f7f3ec;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  background: var(--ink);
+  color: var(--paper);
+  font-feature-settings: "ss01", "cv11";
+  text-rendering: optimizeLegibility;
+}
+
+/* Selection in brand color */
+::selection {
+  background: var(--meth);
+  color: var(--ink);
+}
+
+/* Default focus ring that doesn't look generic */
+:focus-visible {
+  outline: 2px solid var(--meth);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Scrollbar — keep it ambient, not noisy */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+}
+::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+/* The faint grid that sits behind the hero — subtle, never distracting. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* Lab-note paper texture for explanation cards — costs nothing, adds warmth. */
+.bg-paper {
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(at 23% 8%, rgba(0,0,0,0.025) 0px, transparent 50%),
+    radial-gradient(at 91% 87%, rgba(0,0,0,0.03) 0px, transparent 50%);
+  color: var(--ink);
+}
+
+/* Reusable transitions — explicit properties only, never `all`. */
+.tx-color   { transition: color 160ms var(--ease-out), background-color 160ms var(--ease-out), border-color 160ms var(--ease-out); }
+.tx-transform { transition: transform 200ms var(--ease-out); }
+.tx-press    { transition: transform 120ms var(--ease-out); }
+
+button:active.press, .press:active {
+  transform: scale(0.97);
+}
+
+/* Underline link, drawn from left on hover */
+.link-draw {
+  position: relative;
+  display: inline-block;
+}
+.link-draw::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 100%; height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 240ms var(--ease-out);
+}
+.link-draw:hover::after { transform: scaleX(1); }
+
+/* Reduced motion — keep opacity, lose movement (per Emil's guidance). */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Hover effects only on real cursors. */
+@media (hover: hover) and (pointer: fine) {
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* ─── Keyframes used across the app ─────────────────────────────────────────── */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fade-up 280ms var(--ease-out);
+}
+
+.animate-modal-in {
+  animation: modal-in 220ms var(--ease-out);
+}
+
+/* ─── Scratchpad page extras ───────────────────────────────────────────────── */
+
+.bg-lines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 35px,
+    rgba(255, 255, 255, 0.06) 35px 36px
+  );
+}
+
+/* ─── Keyboard shortcut "key cap" style — used in Practice and Scratchpad ───── */
+
+.kbd {
+  display: inline-block;
+  padding: 1px 5px;
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  color: #d4d4d8;
+  background: #18181b;
+  border: 1px solid #3f3f46;
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  line-height: 1.2;
+}
+
+.kbd-sm {
+  display: inline-block;
+  padding: 0 4px;
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  color: #d4d4d8;
+  background: #18181b;
+  border: 1px solid #3f3f46;
+  border-radius: 3px;
+  line-height: 1.4;
+}

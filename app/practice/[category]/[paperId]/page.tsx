@@ -1,0 +1,634 @@
+'use client';
+
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Navbar from '@/components/Navbar';
+import { fetchPaper } from '@/lib/data';
+import { INDEXES } from '@/lib/data/indexes';
+import { getCategory, SUBJECT_COLORS } from '@/lib/categories';
+import type { Paper, PaperMeta } from '@/lib/types';
+import QuestionImage from '@/components/QuestionImage';
+import ReportModal from '@/components/ReportModal';
+import { createClient } from '@/lib/supabase/client';
+import { toast } from 'sonner';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import {
+  ArrowLeft, ArrowRight, Check, Flag, X as XIcon, Lightbulb,
+  CheckCircle2, RotateCcw, Trophy, Target, Clock,
+} from 'lucide-react';
+
+gsap.registerPlugin(useGSAP);
+
+type Status = 'loading' | 'loaded' | 'error' | 'finished';
+
+const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'] as const;
+
+export default function PracticePage() {
+  const params = useParams<{ category: string; paperId: string }>();
+  const router = useRouter();
+  const category = params?.category as string;
+  const paperId = params?.paperId as string;
+
+  const [status, setStatus] = useState<Status>('loading');
+  const [paper, setPaper] = useState<Paper | null>(null);
+  const [qIndex, setQIndex] = useState(0);
+  const [answers, setAnswers] = useState<(number | null)[]>([]);
+  const [submitted, setSubmitted] = useState<boolean[]>([]);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [showExplain, setShowExplain] = useState(false);
+  const [startedAt] = useState(() => Date.now());
+
+  const meta: PaperMeta | undefined = useMemo(() => {
+    return INDEXES[category]?.papers.find((p) => p.id === paperId);
+  }, [category, paperId]);
+  const categoryInfo = useMemo(() => getCategory(category), [category]);
+
+  // Load the paper from Supabase Storage on mount.
+  useEffect(() => {
+    let cancelled = false;
+    setStatus('loading');
+    fetchPaper(category, paperId).then((data) => {
+      if (cancelled) return;
+      if (!data || !data.questions?.length) {
+        setStatus('error');
+        return;
+      }
+      setPaper(data);
+      setAnswers(new Array(data.questions.length).fill(null));
+      setSubmitted(new Array(data.questions.length).fill(false));
+      setStatus('loaded');
+    });
+    return () => { cancelled = true; };
+  }, [category, paperId]);
+
+  const total = paper?.questions.length ?? 0;
+  const q = paper?.questions[qIndex];
+  const isSubmitted = submitted[qIndex];
+  const selected = answers[qIndex];
+  const correctIndex = useMemo(() => {
+    if (!q) return -1;
+    return q.options.findIndex((o) => o.isCorrect);
+  }, [q]);
+  const score = useMemo(() => {
+    if (!paper) return 0;
+    return paper.questions.reduce((s, qq, i) => {
+      const a = answers[i];
+      if (a === null) return s;
+      return qq.options[a]?.isCorrect ? s + 1 : s;
+    }, 0);
+  }, [paper, answers]);
+  const answeredCount = answers.filter((a) => a !== null).length;
+  const progressPct = total > 0 ? (answeredCount / total) * 100 : 0;
+
+  // Pick an answer (does not submit yet)
+  const pickAnswer = useCallback(
+    (idx: number) => {
+      if (submitted[qIndex]) return;
+      setAnswers((prev) => {
+        const next = [...prev];
+        next[qIndex] = idx;
+        return next;
+      });
+    },
+    [qIndex, submitted]
+  );
+
+  // Lock in the answer + reveal explanation
+  const submitAnswer = useCallback(() => {
+    if (answers[qIndex] === null || submitted[qIndex]) return;
+    setSubmitted((prev) => {
+      const next = [...prev];
+      next[qIndex] = true;
+      return next;
+    });
+    setShowExplain(true);
+  }, [answers, qIndex, submitted]);
+
+  const goNext = useCallback(() => {
+    setShowExplain(false);
+    if (qIndex < total - 1) {
+      setQIndex((i) => i + 1);
+    }
+  }, [qIndex, total]);
+
+  const goPrev = useCallback(() => {
+    setShowExplain(false);
+    if (qIndex > 0) setQIndex((i) => i - 1);
+  }, [qIndex]);
+
+  // Finish + save attempt
+  const finish = useCallback(async () => {
+    const duration = Math.floor((Date.now() - startedAt) / 1000);
+    setStatus('finished');
+
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user || !paper) return;
+
+    const correctAnswers = paper.questions.map((qq) =>
+      qq.options.findIndex((o) => o.isCorrect)
+    );
+
+    const { error } = await supabase.from('attempts').insert({
+      user_id: user.id,
+      category,
+      paper_id: paperId,
+      score,
+      total,
+      correct_answers: correctAnswers,
+      user_answers: answers.map((a) => (a === null ? -1 : a)),
+      duration_seconds: duration,
+    });
+
+    if (error) {
+      toast.error('Could not save your attempt', { description: error.message });
+    } else {
+      toast.success('Attempt saved to your dashboard');
+    }
+  }, [answers, category, paper, paperId, score, startedAt, total]);
+
+  // Keyboard shortcuts: A/B/C/D to pick, Enter to submit, ← → to navigate, R for report
+  useEffect(() => {
+    if (status !== 'loaded') return;
+    const onKey = (e: KeyboardEvent) => {
+      if (reportOpen) return;
+      const tag = (e.target as HTMLElement | null)?.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea') return;
+
+      const key = e.key.toUpperCase();
+      const letterIdx = LETTERS.indexOf(key as typeof LETTERS[number]);
+      if (letterIdx !== -1 && q && letterIdx < q.options.length) {
+        e.preventDefault();
+        pickAnswer(letterIdx);
+        return;
+      }
+      if (e.key === 'Enter') { e.preventDefault(); if (!isSubmitted) submitAnswer(); else if (qIndex < total - 1) goNext(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); goNext(); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); goPrev(); }
+      if (key === 'F')            { e.preventDefault(); setReportOpen(true); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [status, reportOpen, q, isSubmitted, pickAnswer, submitAnswer, goNext, goPrev, qIndex, total]);
+
+  // Smooth scroll to top on question change
+  const questionCardRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    questionCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [qIndex]);
+
+  // GSAP: animate question card swap. Keep this restrained — Emil rule:
+  // questions are seen many times per session, so the animation must be fast
+  // (under 200ms) and never block input.
+  useGSAP(
+    () => {
+      gsap.fromTo(
+        '.question-card',
+        { autoAlpha: 0, y: 8 },
+        { autoAlpha: 1, y: 0, duration: 0.18, ease: 'power2.out' }
+      );
+    },
+    { dependencies: [qIndex], scope: questionCardRef }
+  );
+
+  // ─── Render ───────────────────────────────────────────────────────────────
+
+  if (status === 'loading') {
+    return (
+      <>
+        <Navbar />
+        <main className="mx-auto max-w-3xl px-5 py-20 text-center">
+          <div className="inline-flex items-center gap-3 text-ink-400">
+            <div className="h-2 w-2 rounded-full bg-meth animate-pulse-dot" />
+            <span>Loading paper…</span>
+          </div>
+        </main>
+      </>
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <>
+        <Navbar />
+        <main className="mx-auto max-w-2xl px-5 py-20 text-center">
+          <h1 className="font-display text-3xl text-paper mb-3">Paper not available</h1>
+          <p className="text-ink-400 mb-6">
+            This paper hasn't been uploaded to storage yet, or the data is malformed.
+            Try another paper or report this to the maintainers.
+          </p>
+          <Link
+            href={`/papers/${category}`}
+            className="press inline-flex items-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-2.5 font-medium hover:bg-meth-300 tx-color"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back to papers
+          </Link>
+        </main>
+      </>
+    );
+  }
+
+  if (status === 'finished' && paper) {
+    const correctCount = score;
+    const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+    const duration = Math.floor((Date.now() - startedAt) / 1000);
+    return (
+      <>
+        <Navbar />
+        <main className="mx-auto max-w-2xl px-5 py-16">
+          <div className="text-center mb-10">
+            <div className="inline-grid place-items-center h-16 w-16 rounded-full bg-meth/15 border border-meth/30 mb-4">
+              <Trophy className="h-7 w-7 text-meth" />
+            </div>
+            <h1 className="font-display text-4xl md:text-5xl text-paper tracking-tight">
+              Paper complete.
+            </h1>
+            <p className="text-ink-400 mt-2">{meta?.name}</p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 mb-8">
+            <Stat icon={<Target className="h-4 w-4" />} label="Score" value={`${correctCount} / ${total}`} />
+            <Stat icon={<CheckCircle2 className="h-4 w-4" />} label="Accuracy" value={`${pct}%`} />
+            <Stat icon={<Clock className="h-4 w-4" />} label="Time" value={fmt(duration)} />
+          </div>
+
+          <div className="space-y-2 max-h-96 overflow-auto rounded-md border border-ink-800 p-2 mb-8">
+            {paper.questions.map((qq, i) => {
+              const a = answers[i];
+              const correct = a !== null && qq.options[a]?.isCorrect;
+              return (
+                <div key={i} className="flex items-center gap-2 px-2 py-1.5 text-sm">
+                  <span className="text-ink-500 w-8">Q{i + 1}</span>
+                  {a === null ? (
+                    <span className="text-ink-500 text-xs">Skipped</span>
+                  ) : correct ? (
+                    <span className="text-meth flex items-center gap-1">
+                      <Check className="h-3.5 w-3.5" /> Correct
+                    </span>
+                  ) : (
+                    <span className="text-crimson flex items-center gap-1">
+                      <XIcon className="h-3.5 w-3.5" /> Incorrect
+                    </span>
+                  )}
+                  <span className="text-ink-400 truncate">{qq.text.slice(0, 80)}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <button
+              onClick={() => {
+                setQIndex(0);
+                setAnswers(new Array(total).fill(null));
+                setSubmitted(new Array(total).fill(false));
+                setStatus('loaded');
+                setShowExplain(false);
+              }}
+              className="press inline-flex items-center gap-2 rounded-md border border-ink-700 px-4 py-2 text-paper hover:border-meth/50 tx-color"
+            >
+              <RotateCcw className="h-4 w-4" /> Retry this paper
+            </button>
+            <Link
+              href={`/papers/${category}`}
+              className="press inline-flex items-center gap-2 rounded-md bg-meth text-ink-950 px-4 py-2 font-medium hover:bg-meth-300 tx-color"
+            >
+              Pick another paper
+            </Link>
+          </div>
+        </main>
+      </>
+    );
+  }
+
+  if (!paper || !q) return null;
+
+  return (
+    <>
+      <Navbar />
+
+      {/* Top bar with progress + paper meta */}
+      <div className="sticky top-14 z-20 border-b border-ink-800 bg-ink-950/90 backdrop-blur-md">
+        <div className="mx-auto max-w-5xl px-5 py-2.5">
+          <div className="flex items-center justify-between gap-3 mb-2">
+            <Link
+              href={`/papers/${category}`}
+              className="inline-flex items-center gap-1.5 text-xs text-ink-400 hover:text-meth tx-color"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              {meta?.name ?? 'Papers'}
+            </Link>
+            <div className="flex items-center gap-3 text-xs text-ink-500">
+              <span>
+                Q <span className="text-paper font-medium">{qIndex + 1}</span> / {total}
+              </span>
+              <span className="text-ink-700">·</span>
+              <span>
+                Score: <span className="text-meth font-medium">{score}</span>
+              </span>
+              <button
+                onClick={finish}
+                className="press text-xs px-2.5 py-1 rounded border border-ink-700 hover:border-crimson hover:text-crimson tx-color"
+              >
+                Finish
+              </button>
+            </div>
+          </div>
+          <div className="h-1 rounded-full bg-ink-900 overflow-hidden">
+            <div
+              className="h-full bg-meth"
+              style={{
+                width: `${progressPct}%`,
+                transition: 'width 320ms var(--ease-out)',
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <main className="mx-auto max-w-5xl px-5 py-8 grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-8">
+        <div ref={questionCardRef} className="min-w-0">
+          <div className="question-card">
+            {/* Subject + topic + report */}
+            <div className="flex items-center justify-between gap-2 mb-4 flex-wrap">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span
+                  className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded border ${
+                    SUBJECT_COLORS[q.subject] ??
+                    'bg-ink-800 text-ink-300 border-ink-700'
+                  }`}
+                >
+                  {q.subject}
+                </span>
+                {q.topic && (
+                  <span className="text-xs text-ink-500">{q.topic}</span>
+                )}
+                {q.year && (
+                  <span className="text-xs text-ink-500">· {q.year}</span>
+                )}
+              </div>
+              <button
+                onClick={() => setReportOpen(true)}
+                className="press inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md border border-ink-800 text-ink-400 hover:text-crimson hover:border-crimson/40 tx-color"
+                title="Report this question (F)"
+              >
+                <Flag className="h-3.5 w-3.5" />
+                Report
+              </button>
+            </div>
+
+            {/* Question text */}
+            <h2 className="font-display text-2xl md:text-3xl text-paper leading-snug">
+              {q.text}
+            </h2>
+
+            {/* Diagram */}
+            {q.image && (
+              <div className="mt-5">
+                <QuestionImage src={q.image} alt="Question diagram" />
+              </div>
+            )}
+
+            {/* Hints */}
+            {q.hints?.length > 0 && (
+              <details className="mt-4 group">
+                <summary className="cursor-pointer text-xs text-meth inline-flex items-center gap-1.5">
+                  <Lightbulb className="h-3.5 w-3.5" />
+                  Show hint{q.hints.length > 1 ? 's' : ''}
+                </summary>
+                <ul className="mt-2 space-y-1 text-sm text-ink-300 pl-5 list-disc">
+                  {q.hints.map((h, i) => <li key={i}>{h}</li>)}
+                </ul>
+              </details>
+            )}
+
+            {/* Options */}
+            <div className="mt-6 space-y-2">
+              {q.options.map((opt, i) => {
+                const isSelected = selected === i;
+                const isCorrect = opt.isCorrect;
+                const showResult = isSubmitted;
+
+                let stateCls =
+                  'border-ink-800 bg-ink-900/40 hover:border-ink-700 hover:bg-ink-900/60';
+                let badgeCls = 'border-ink-700 text-ink-300';
+                if (showResult) {
+                  if (isCorrect) {
+                    stateCls = 'border-meth/40 bg-meth/10 text-paper';
+                    badgeCls = 'border-meth/40 bg-meth/15 text-meth';
+                  } else if (isSelected) {
+                    stateCls = 'border-crimson/40 bg-crimson/10 text-paper';
+                    badgeCls = 'border-crimson/40 bg-crimson/15 text-crimson';
+                  }
+                } else if (isSelected) {
+                  stateCls = 'border-meth/40 bg-meth/5 text-paper';
+                  badgeCls = 'border-meth/50 bg-meth/15 text-meth';
+                }
+
+                return (
+                  <button
+                    key={i}
+                    onClick={() => pickAnswer(i)}
+                    disabled={isSubmitted}
+                    className={`press w-full text-left rounded-lg border p-4 tx-color flex items-start gap-3 ${stateCls} disabled:cursor-default`}
+                    style={{
+                      transition: 'background-color 160ms var(--ease-out), border-color 160ms var(--ease-out), transform 120ms var(--ease-out)',
+                    }}
+                  >
+                    <span
+                      className={`h-7 w-7 shrink-0 inline-grid place-items-center rounded-md border text-xs font-medium tx-color ${badgeCls}`}
+                    >
+                      {showResult && isCorrect ? (
+                        <Check className="h-3.5 w-3.5" />
+                      ) : showResult && isSelected && !isCorrect ? (
+                        <XIcon className="h-3.5 w-3.5" />
+                      ) : (
+                        opt.letter || LETTERS[i]
+                      )}
+                    </span>
+                    <span className="text-base leading-relaxed">{opt.text}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Submit / Next buttons */}
+            <div className="mt-6 flex items-center justify-between gap-3">
+              <button
+                onClick={goPrev}
+                disabled={qIndex === 0}
+                className="press inline-flex items-center gap-1.5 text-sm px-3 py-2 rounded-md border border-ink-800 text-ink-300 hover:text-paper hover:border-ink-700 disabled:opacity-40 disabled:cursor-not-allowed tx-color"
+              >
+                <ArrowLeft className="h-4 w-4" /> Previous
+              </button>
+
+              {!isSubmitted ? (
+                <button
+                  onClick={submitAnswer}
+                  disabled={selected === null}
+                  className="press inline-flex items-center gap-2 text-sm px-5 py-2 rounded-md bg-meth text-ink-950 font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-meth-300 tx-color"
+                >
+                  Check answer
+                  <span className="text-[10px] px-1 py-0.5 rounded bg-ink-950/30 hidden sm:inline">↵</span>
+                </button>
+              ) : qIndex < total - 1 ? (
+                <button
+                  onClick={goNext}
+                  className="press inline-flex items-center gap-1.5 text-sm px-5 py-2 rounded-md bg-meth text-ink-950 font-medium hover:bg-meth-300 tx-color"
+                >
+                  Next question
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              ) : (
+                <button
+                  onClick={finish}
+                  className="press inline-flex items-center gap-2 text-sm px-5 py-2 rounded-md bg-meth text-ink-950 font-medium hover:bg-meth-300 tx-color"
+                >
+                  <Trophy className="h-4 w-4" />
+                  Finish paper
+                </button>
+              )}
+            </div>
+
+            {/* Explanation card */}
+            {isSubmitted && showExplain && (
+              <div
+                className="mt-6 bg-paper rounded-xl p-6 shadow-crisp animate-fade-up"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-xs uppercase tracking-widest text-ink-500">
+                    Explanation
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    {selected !== null && q.options[selected]?.isCorrect ? (
+                      <span className="text-meth-700 inline-flex items-center gap-1">
+                        <Check className="h-4 w-4" /> Correct
+                      </span>
+                    ) : (
+                      <span className="text-crimson inline-flex items-center gap-1">
+                        <XIcon className="h-4 w-4" />
+                        Incorrect — correct answer was{' '}
+                        {q.options[correctIndex]?.letter ?? LETTERS[correctIndex]}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="font-display text-ink-900 text-lg leading-relaxed">
+                  {q.explanation || 'No explanation provided for this question.'}
+                </div>
+                {q.explanationImage && (
+                  <div className="mt-4">
+                    <QuestionImage
+                      src={q.explanationImage}
+                      alt="Explanation diagram"
+                      className="border-ink-300"
+                    />
+                  </div>
+                )}
+                {/* Per-option breakdown if any options have explanations */}
+                {q.options.some((o) => o.explanation) && (
+                  <div className="mt-5 pt-5 border-t border-ink-200">
+                    <div className="text-xs uppercase tracking-widest text-ink-500 mb-3">
+                      Why each option
+                    </div>
+                    <div className="space-y-2">
+                      {q.options.map((o, i) =>
+                        o.explanation ? (
+                          <div key={i} className="text-sm text-ink-800 flex gap-3">
+                            <span
+                              className={`shrink-0 inline-grid place-items-center h-5 w-5 rounded text-[11px] font-medium ${
+                                o.isCorrect
+                                  ? 'bg-meth-700 text-paper'
+                                  : 'bg-ink-200 text-ink-700'
+                              }`}
+                            >
+                              {o.letter || LETTERS[i]}
+                            </span>
+                            <span>{o.explanation}</span>
+                          </div>
+                        ) : null
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Sidebar question grid */}
+        <aside className="lg:sticky lg:top-32 lg:self-start space-y-3">
+          <div className="text-xs uppercase tracking-widest text-ink-500">
+            Questions
+          </div>
+          <div className="grid grid-cols-8 lg:grid-cols-5 gap-1.5">
+            {paper.questions.map((_, i) => {
+              const a = answers[i];
+              const sub = submitted[i];
+              const correct = a !== null && paper.questions[i].options[a]?.isCorrect;
+              const cls = sub
+                ? correct
+                  ? 'bg-meth/15 text-meth border-meth/40'
+                  : 'bg-crimson/15 text-crimson border-crimson/40'
+                : a !== null
+                ? 'bg-meth/5 text-paper border-meth/30'
+                : 'bg-ink-900/40 text-ink-400 border-ink-800 hover:border-ink-700';
+              return (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setShowExplain(submitted[i]);
+                    setQIndex(i);
+                  }}
+                  className={`press text-[11px] font-medium h-8 rounded border tx-color ${
+                    i === qIndex ? 'ring-1 ring-meth ring-offset-1 ring-offset-ink-950' : ''
+                  } ${cls}`}
+                >
+                  {i + 1}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="hidden lg:block mt-5 text-xs text-ink-500 space-y-1.5 leading-relaxed">
+            <div className="text-ink-400 font-medium mb-2">Keyboard</div>
+            <div><kbd className="kbd">A</kbd>–<kbd className="kbd">D</kbd> pick answer</div>
+            <div><kbd className="kbd">↵</kbd> submit / next</div>
+            <div><kbd className="kbd">→</kbd> <kbd className="kbd">←</kbd> nav</div>
+            <div><kbd className="kbd">F</kbd> flag question</div>
+          </div>
+        </aside>
+      </main>
+
+      {q && (
+        <ReportModal
+          open={reportOpen}
+          onClose={() => setReportOpen(false)}
+          category={category}
+          paperId={paperId}
+          questionIndex={qIndex}
+          questionText={q.text}
+        />
+      )}
+    </>
+  );
+}
+
+function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-4">
+      <div className="text-ink-400 inline-flex items-center gap-1.5 text-xs uppercase tracking-wider">
+        {icon} {label}
+      </div>
+      <div className="font-display text-2xl text-paper mt-1">{value}</div>
+    </div>
+  );
+}
+
+function fmt(s: number) {
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  return `${m}m ${r}s`;
+}
