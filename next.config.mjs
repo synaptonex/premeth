@@ -7,9 +7,19 @@ const nextConfig = {
       { protocol: 'https', hostname: '*.supabase.in' },
     ],
   },
-  // The paper JSON data lives in Supabase Storage, so the Next bundle stays slim.
   experimental: {
     optimizePackageImports: ['lucide-react'],
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        url: false,
+      };
+    }
+    return config;
   },
 };
 
