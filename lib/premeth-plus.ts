@@ -1,22 +1,22 @@
+'use client';
+
 // lib/premeth-plus.ts
 // ─────────────────────────────────────────────────────────────────────────────
-// Single source of truth for "is this user a Premeth+ subscriber, right now?"
-//
-// Every gated page calls usePremethPlus() (client) or getPremethPlus() (server).
-// If they want to gate a feature, they ALSO check is_premeth_plus from the DB
-// for security — client checks can lie, RLS / server checks cannot.
+// Premeth+ subscription helpers, pricing constants, payment account details,
+// and redemption-code utilities. Single source of truth for the paid tier.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { createClient as createBrowserClient } from '@/lib/supabase/client';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 
+// ─── Status type ──────────────────────────────────────────────────────────────
+
 export interface PremethPlusStatus {
   isActive: boolean;
   expiresAt: Date | null;
   daysRemaining: number | null;
   flaggedForReview: boolean;
-  // Set while the check is in progress so UI can show a skeleton.
   loading: boolean;
 }
 
@@ -96,9 +96,8 @@ export const PREMETH_PLUS_DURATION_MONTHS = 6;
 export const PREMETH_PLUS_FOUNDERS_PRICE_PKR = 999;
 export const PREMETH_PLUS_FOUNDERS_LIMIT = 100;
 
-// JazzCash / EasyPaisa account details. These show up on /pricing after
-// the buyer picks a payment method, so they know where to send money.
-// To change later, edit this block and redeploy.
+// ─── JazzCash / EasyPaisa account details ─────────────────────────────────────
+// These are shown to users on the /pricing page after they click "Pay".
 export const PAYMENT_ACCOUNTS = {
   jazzcash: {
     accountName: 'Shahbaz Waseem Gul',
