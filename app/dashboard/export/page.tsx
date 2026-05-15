@@ -314,7 +314,7 @@ function PrintContent({
                   {item.topic} · {item.paper_name}
                 </div>
                 <div className="font-semibold mb-3 leading-snug">
-                  Q{i + 1}. {item.question.question}
+                  Q{i + 1}. {item.question.text}
                 </div>
                 <ol className="space-y-1 mb-3">
                   {item.question.options.map((opt, oi) => {
