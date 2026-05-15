@@ -29,9 +29,8 @@ type VaultRow = {
   id: string;
   category: string;
   paper_id: string;
-  q_index: number;
-  user_answer_index: number;
-  added_at: string;
+  question_index: number;
+  created_at: string;
 };
 
 type ResolvedItem = {
@@ -39,8 +38,7 @@ type ResolvedItem = {
   topic: string;
   paper_name: string;
   question: Question;
-  user_answer_index: number;
-  added_at: string;
+  created_at: string;
 };
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'] as const;
@@ -71,9 +69,9 @@ export default function ExportPage() {
       const [{ data: vault }, { data: prof }] = await Promise.all([
         supabase
           .from('mistake_vault')
-          .select('id, category, paper_id, q_index, user_answer_index, added_at')
+          .select('id, category, paper_id, question_index, created_at')
           .eq('user_id', user.id)
-          .order('added_at', { ascending: false })
+          .order('created_at', { ascending: false })
           .limit(500), // cap to keep the PDF reasonable
         supabase.from('profiles').select('username').eq('id', user.id).single(),
       ]);
@@ -97,15 +95,14 @@ export default function ExportPage() {
         if (!paper) continue;
         const meta = INDEXES[category]?.papers.find((p) => p.id === paperId);
         for (const row of rows) {
-          const q = paper.questions[row.q_index];
+          const q = paper.questions[row.question_index];
           if (!q) continue;
           resolved.push({
             subject: meta?.subject ?? 'Other',
             topic: meta?.topics?.[0] ?? 'General',
             paper_name: meta?.name ?? paperId,
             question: q,
-            user_answer_index: row.user_answer_index,
-            added_at: row.added_at,
+            created_at: row.created_at,
           });
         }
       }
@@ -114,7 +111,7 @@ export default function ExportPage() {
       resolved.sort((a, b) => {
         if (a.subject !== b.subject) return a.subject.localeCompare(b.subject);
         if (a.topic !== b.topic) return a.topic.localeCompare(b.topic);
-        return a.added_at.localeCompare(b.added_at);
+        return a.created_at.localeCompare(b.created_at);
       });
 
       setItems(resolved);
@@ -314,26 +311,22 @@ function PrintContent({
                   {item.topic} · {item.paper_name}
                 </div>
                 <div className="font-semibold mb-3 leading-snug">
-                  Q{i + 1}. {item.question.question}
+                  Q{i + 1}. {item.question.text}
                 </div>
                 <ol className="space-y-1 mb-3">
                   {item.question.options.map((opt, oi) => {
                     const isCorrect = oi === correctIdx;
-                    const isUserChoice = oi === item.user_answer_index;
                     return (
                       <li
                         key={oi}
                         className={`text-sm pl-2 ${
                           isCorrect
                             ? 'font-semibold text-green-800'
-                            : isUserChoice
-                            ? 'line-through text-red-700'
                             : 'text-gray-800'
                         }`}
                       >
                         ({LETTERS[oi]}) {opt.text}
                         {isCorrect && ' ✓'}
-                        {isUserChoice && !isCorrect && ' ✗ (you chose this)'}
                       </li>
                     );
                   })}
