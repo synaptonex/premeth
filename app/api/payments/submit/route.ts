@@ -2,11 +2,16 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Student submits proof of JazzCash/EasyPaisa payment.
 // We don't trust anything — we just queue it for admin review.
+//
+// Pricing is enforced server-side: we call premeth_plus_current_price() RPC
+// (defined in migration 0003) which returns 999 if founders' slots are still
+// open, else 1499. The client cannot pick a cheaper price by tampering with
+// the request — the API rejects anything that doesn't match the current
+// server-decided price.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { PREMETH_PLUS_PRICE_PKR, PREMETH_PLUS_FOUNDERS_PRICE_PKR } from '@/lib/premeth-plus';
 
 export async function POST(req: Request) {
   const supabase = createClient();
@@ -35,12 +40,26 @@ export async function POST(req: Request) {
   if (typeof transaction_id !== 'string' || transaction_id.length < 4) {
     return NextResponse.json({ error: 'Invalid transaction ID' }, { status: 400 });
   }
-  const amount = Number(amount_pkr);
-  // Accept either the regular price or the founders' price.
-  const validAmounts = [PREMETH_PLUS_PRICE_PKR, PREMETH_PLUS_FOUNDERS_PRICE_PKR];
-  if (!validAmounts.includes(amount)) {
+
+  // ─── Server-side price enforcement ────────────────────────────────────────
+  // Call the SECURITY DEFINER RPC. This returns the only valid amount right
+  // now: 999 while founders' slots remain, 1499 once they're sold out.
+  const { data: currentPrice, error: priceErr } = await supabase
+    .rpc('premeth_plus_current_price');
+
+  if (priceErr || typeof currentPrice !== 'number') {
     return NextResponse.json(
-      { error: `Amount must be ${PREMETH_PLUS_PRICE_PKR} PKR (or ${PREMETH_PLUS_FOUNDERS_PRICE_PKR} PKR for founders)` },
+      { error: 'Could not verify current price — please refresh and try again.' },
+      { status: 500 }
+    );
+  }
+
+  const amount = Number(amount_pkr);
+  if (amount !== currentPrice) {
+    return NextResponse.json(
+      {
+        error: `The current price is Rs ${currentPrice.toLocaleString()}. Please refresh the pricing page — the founders' deal may have just sold out.`,
+      },
       { status: 400 }
     );
   }
