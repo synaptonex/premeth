@@ -21,7 +21,7 @@ import Navbar from '@/components/Navbar';
 import { createClient } from '@/lib/supabase/client';
 import { fetchPaper } from '@/lib/data';
 import { INDEXES } from '@/lib/data/indexes';
-import { usePremethPlus } from '@/lib/premeth-plus';
+import { usePremethPlus } from '@/lib/premeth-plus.client';
 import type { Question } from '@/lib/types';
 import { Printer, Loader2, Lock, ArrowRight, ArrowLeft } from 'lucide-react';
 
@@ -29,8 +29,9 @@ type VaultRow = {
   id: string;
   category: string;
   paper_id: string;
-  question_index: number;
-  created_at: string;
+  q_index: number;
+  user_answer_index: number;
+  added_at: string;
 };
 
 type ResolvedItem = {
@@ -38,7 +39,8 @@ type ResolvedItem = {
   topic: string;
   paper_name: string;
   question: Question;
-  created_at: string;
+  user_answer_index: number;
+  added_at: string;
 };
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'] as const;
@@ -69,9 +71,9 @@ export default function ExportPage() {
       const [{ data: vault }, { data: prof }] = await Promise.all([
         supabase
           .from('mistake_vault')
-          .select('id, category, paper_id, question_index, created_at')
+          .select('id, category, paper_id, q_index, user_answer_index, added_at')
           .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
+          .order('added_at', { ascending: false })
           .limit(500), // cap to keep the PDF reasonable
         supabase.from('profiles').select('username').eq('id', user.id).single(),
       ]);
@@ -95,14 +97,15 @@ export default function ExportPage() {
         if (!paper) continue;
         const meta = INDEXES[category]?.papers.find((p) => p.id === paperId);
         for (const row of rows) {
-          const q = paper.questions[row.question_index];
+          const q = paper.questions[row.q_index];
           if (!q) continue;
           resolved.push({
             subject: meta?.subject ?? 'Other',
             topic: meta?.topics?.[0] ?? 'General',
             paper_name: meta?.name ?? paperId,
             question: q,
-            created_at: row.created_at,
+            user_answer_index: row.user_answer_index,
+            added_at: row.added_at,
           });
         }
       }
@@ -111,7 +114,7 @@ export default function ExportPage() {
       resolved.sort((a, b) => {
         if (a.subject !== b.subject) return a.subject.localeCompare(b.subject);
         if (a.topic !== b.topic) return a.topic.localeCompare(b.topic);
-        return a.created_at.localeCompare(b.created_at);
+        return a.added_at.localeCompare(b.added_at);
       });
 
       setItems(resolved);
@@ -311,22 +314,26 @@ function PrintContent({
                   {item.topic} · {item.paper_name}
                 </div>
                 <div className="font-semibold mb-3 leading-snug">
-                  Q{i + 1}. {item.question.text}
+                  Q{i + 1}. {item.question.question}
                 </div>
                 <ol className="space-y-1 mb-3">
                   {item.question.options.map((opt, oi) => {
                     const isCorrect = oi === correctIdx;
+                    const isUserChoice = oi === item.user_answer_index;
                     return (
                       <li
                         key={oi}
                         className={`text-sm pl-2 ${
                           isCorrect
                             ? 'font-semibold text-green-800'
+                            : isUserChoice
+                            ? 'line-through text-red-700'
                             : 'text-gray-800'
                         }`}
                       >
                         ({LETTERS[oi]}) {opt.text}
                         {isCorrect && ' ✓'}
+                        {isUserChoice && !isCorrect && ' ✗ (you chose this)'}
                       </li>
                     );
                   })}

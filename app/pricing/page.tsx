@@ -22,8 +22,8 @@ import {
   PREMETH_PLUS_FOUNDERS_LIMIT,
   PREMETH_PLUS_DURATION_MONTHS,
   PAYMENT_ACCOUNTS,
-  usePremethPlus,
 } from '@/lib/premeth-plus';
+import { usePremethPlus } from '@/lib/premeth-plus.client';
 import { toast } from 'sonner';
 import {
   Check, X, Sparkles, Wallet, Smartphone, Copy, ArrowRight, ShieldCheck, Clock,
@@ -53,43 +53,7 @@ export default function PricingPage() {
 
   const [step, setStep] = useState<'choose' | 'pay' | 'submit' | 'done'>('choose');
   const [method, setMethod] = useState<'jazzcash' | 'easypaisa'>('jazzcash');
-
-  // ─── Live founders counter ──────────────────────────────────────────────
-  // Source of truth is two Supabase RPC functions (defined in migration 0003):
-  //   - founders_claimed_count()      → int, number of APPROVED Rs 999 payments
-  //   - premeth_plus_current_price()  → int, 999 if < 100 claimed, else 1499
-  // We refetch every 30 seconds so a user sitting on the page sees the counter
-  // tick up and (if applicable) the price flip to 1499 in real time.
-  const [foundersCount, setFoundersCount] = useState<number | null>(null);
-  const [currentPrice, setCurrentPrice] = useState<number>(PREMETH_PLUS_FOUNDERS_PRICE_PKR);
-  const [pricingLoaded, setPricingLoaded] = useState(false);
-
-  useEffect(() => {
-    const supabase = createClient();
-    let cancelled = false;
-
-    async function refresh() {
-      const [{ data: count }, { data: price }] = await Promise.all([
-        supabase.rpc('founders_claimed_count'),
-        supabase.rpc('premeth_plus_current_price'),
-      ]);
-      if (cancelled) return;
-      if (typeof count === 'number') setFoundersCount(count);
-      if (typeof price === 'number') setCurrentPrice(price);
-      setPricingLoaded(true);
-    }
-
-    refresh();
-    const id = setInterval(refresh, 30_000); // every 30 seconds
-    return () => {
-      cancelled = true;
-      clearInterval(id);
-    };
-  }, []);
-
-  const isFoundersDeal = currentPrice === PREMETH_PLUS_FOUNDERS_PRICE_PKR;
-  const slotsRemaining =
-    foundersCount === null ? null : Math.max(0, PREMETH_PLUS_FOUNDERS_LIMIT - foundersCount);
+  const [amount, setAmount] = useState(PREMETH_PLUS_PRICE_PKR);
 
   const [senderPhone, setSenderPhone] = useState('');
   const [txid, setTxid] = useState('');
@@ -111,7 +75,7 @@ export default function PricingPage() {
         method,
         sender_phone: senderPhone,
         transaction_id: txid,
-        amount_pkr: currentPrice,
+        amount_pkr: amount,
         notes,
       }),
     });
@@ -186,24 +150,8 @@ export default function PricingPage() {
                 </div>
                 <div className="p-4 text-center bg-meth/5 border-l border-meth/20">
                   <div className="text-xs uppercase tracking-wider text-meth">Premeth+</div>
-                  {isFoundersDeal ? (
-                    <>
-                      <div className="font-display text-paper">
-                        <span className="text-ink-500 line-through mr-1.5 text-sm">
-                          Rs {PREMETH_PLUS_PRICE_PKR.toLocaleString()}
-                        </span>
-                        Rs {currentPrice.toLocaleString()}
-                      </div>
-                      <div className="text-[10px] text-meth mt-0.5">
-                        Founders' price · / {PREMETH_PLUS_DURATION_MONTHS} months
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="font-display text-paper">Rs {currentPrice.toLocaleString()}</div>
-                      <div className="text-[10px] text-ink-500 mt-0.5">/ {PREMETH_PLUS_DURATION_MONTHS} months</div>
-                    </>
-                  )}
+                  <div className="font-display text-paper">Rs {PREMETH_PLUS_PRICE_PKR.toLocaleString()}</div>
+                  <div className="text-[10px] text-ink-500 mt-0.5">/ {PREMETH_PLUS_DURATION_MONTHS} months</div>
                 </div>
               </div>
               {FEATURES.map((f) => (
@@ -230,54 +178,18 @@ export default function PricingPage() {
               ))}
             </div>
 
-            {/* ─── Live founders' counter ──────────────────────────────── */}
-            {pricingLoaded && isFoundersDeal && foundersCount !== null && (
-              <div className="rounded-xl border border-meth/30 bg-meth/5 p-5 mb-10">
-                <div className="flex items-start gap-3 mb-3">
-                  <Sparkles className="h-5 w-5 text-meth shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <strong className="text-paper">Founders' pricing — live.</strong>{' '}
-                    <span className="text-ink-300">
-                      First {PREMETH_PLUS_FOUNDERS_LIMIT} buyers pay Rs{' '}
-                      {PREMETH_PLUS_FOUNDERS_PRICE_PKR.toLocaleString()} for {PREMETH_PLUS_DURATION_MONTHS} months.
-                      Once {PREMETH_PLUS_FOUNDERS_LIMIT} have paid, the price goes up to Rs{' '}
-                      {PREMETH_PLUS_PRICE_PKR.toLocaleString()} for everyone else.
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between text-xs text-ink-300 mb-1.5">
-                  <span>
-                    <strong className="text-meth font-display text-base">{foundersCount}</strong>
-                    {' '}/ {PREMETH_PLUS_FOUNDERS_LIMIT} claimed
-                  </span>
-                  <span>
-                    <strong className="text-paper">{slotsRemaining}</strong> slot{slotsRemaining === 1 ? '' : 's'} left
-                  </span>
-                </div>
-                <div className="h-2 rounded-full bg-ink-900 overflow-hidden border border-ink-800">
-                  <div
-                    className="h-full bg-meth transition-all duration-500 ease-out"
-                    style={{
-                      width: `${Math.min(100, (foundersCount / PREMETH_PLUS_FOUNDERS_LIMIT) * 100)}%`,
-                    }}
-                  />
-                </div>
+            <div className="rounded-xl border border-meth/30 bg-meth/5 p-4 mb-10 text-sm flex items-start gap-3">
+              <Sparkles className="h-5 w-5 text-meth shrink-0 mt-0.5" />
+              <div>
+                <strong className="text-paper">Founders' pricing.</strong>{' '}
+                <span className="text-ink-300">
+                  First {PREMETH_PLUS_FOUNDERS_LIMIT} buyers pay Rs{' '}
+                  {PREMETH_PLUS_FOUNDERS_PRICE_PKR} instead of Rs {PREMETH_PLUS_PRICE_PKR}.
+                  Pick that amount below if you qualify — we'll confirm when we
+                  verify your transaction.
+                </span>
               </div>
-            )}
-
-            {pricingLoaded && !isFoundersDeal && (
-              <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-4 mb-10 text-sm flex items-start gap-3">
-                <Clock className="h-5 w-5 text-ink-400 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-paper">Founders' pricing sold out.</strong>{' '}
-                  <span className="text-ink-300">
-                    The first {PREMETH_PLUS_FOUNDERS_LIMIT} buyers got Premeth+ at the
-                    founders' price. Standard pricing applies from here: Rs{' '}
-                    {PREMETH_PLUS_PRICE_PKR.toLocaleString()} for {PREMETH_PLUS_DURATION_MONTHS} months.
-                  </span>
-                </div>
-              </div>
-            )}
+            </div>
 
             {/* ─── Step: choose & pay ──────────────────────────────────── */}
             {step === 'choose' && (
@@ -316,58 +228,36 @@ export default function PricingPage() {
                   </button>
                 </div>
 
-                {/* ─── Live price card — no longer user-selectable ───────── */}
-                {/* The price shown here is read from premeth_plus_current_price()  */}
-                {/* on the server every 30s. Users can't pick a cheaper option —    */}
-                {/* if the founders' deal is live they get it automatically, if not */}
-                {/* they pay the standard price. The API enforces the same rule.   */}
-                <div
-                  className={`rounded-lg border p-5 mb-6 ${
-                    isFoundersDeal
-                      ? 'border-meth/40 bg-meth/5'
-                      : 'border-ink-800 bg-ink-950/40'
-                  }`}
-                >
-                  <div className="flex items-baseline justify-between gap-3 flex-wrap">
-                    <div>
-                      <div className="text-xs uppercase tracking-wider text-ink-500 mb-1">
-                        You'll pay
-                      </div>
-                      <div className="font-display text-3xl text-paper flex items-baseline gap-2">
-                        {isFoundersDeal && (
-                          <span className="text-ink-500 line-through text-lg font-sans font-normal">
-                            Rs {PREMETH_PLUS_PRICE_PKR.toLocaleString()}
-                          </span>
-                        )}
-                        <span>Rs {currentPrice.toLocaleString()}</span>
-                      </div>
-                      <div className="text-xs text-ink-400 mt-1">
-                        {PREMETH_PLUS_DURATION_MONTHS} months of Premeth+
-                      </div>
-                    </div>
-                    {isFoundersDeal && slotsRemaining !== null && (
-                      <div className="text-right">
-                        <div className="text-xs uppercase tracking-wider text-meth">
-                          Founders' price
-                        </div>
-                        <div className="text-sm text-ink-300 mt-1">
-                          {slotsRemaining} slot{slotsRemaining === 1 ? '' : 's'} left
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                <div className="grid sm:grid-cols-2 gap-3 mb-6">
+                  <button
+                    onClick={() => setAmount(PREMETH_PLUS_PRICE_PKR)}
+                    className={`press rounded-lg border p-4 text-left tx-color ${
+                      amount === PREMETH_PLUS_PRICE_PKR
+                        ? 'border-meth bg-meth/5'
+                        : 'border-ink-800 hover:border-ink-700'
+                    }`}
+                  >
+                    <div className="text-xs uppercase tracking-wider text-ink-500">Standard</div>
+                    <div className="font-display text-2xl text-paper">Rs {PREMETH_PLUS_PRICE_PKR.toLocaleString()}</div>
+                  </button>
+                  <button
+                    onClick={() => setAmount(PREMETH_PLUS_FOUNDERS_PRICE_PKR)}
+                    className={`press rounded-lg border p-4 text-left tx-color ${
+                      amount === PREMETH_PLUS_FOUNDERS_PRICE_PKR
+                        ? 'border-meth bg-meth/5'
+                        : 'border-ink-800 hover:border-ink-700'
+                    }`}
+                  >
+                    <div className="text-xs uppercase tracking-wider text-meth">Founders (first {PREMETH_PLUS_FOUNDERS_LIMIT})</div>
+                    <div className="font-display text-2xl text-paper">Rs {PREMETH_PLUS_FOUNDERS_PRICE_PKR.toLocaleString()}</div>
+                  </button>
                 </div>
 
                 <button
                   onClick={() => setStep('pay')}
-                  disabled={!pricingLoaded}
-                  className="press w-full inline-flex items-center justify-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-3 font-medium hover:bg-meth-300 tx-color disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="press w-full inline-flex items-center justify-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-3 font-medium hover:bg-meth-300 tx-color"
                 >
-                  {pricingLoaded ? (
-                    <>Show me the account number <ArrowRight className="h-4 w-4" /></>
-                  ) : (
-                    'Loading…'
-                  )}
+                  Show me the account number <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
             )}
@@ -375,7 +265,7 @@ export default function PricingPage() {
             {step === 'pay' && (
               <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-6 md:p-8">
                 <h2 className="font-display text-2xl text-paper mb-1">
-                  Step 2 — send Rs {currentPrice.toLocaleString()} to this number.
+                  Step 2 — send Rs {amount.toLocaleString()} to this number.
                 </h2>
                 <p className="text-sm text-ink-400 mb-6">
                   Open your {method === 'jazzcash' ? 'JazzCash' : 'EasyPaisa'} app, send

@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import { LogOut, User as UserIcon, Menu, X, Sparkles } from 'lucide-react';
-import { usePremethPlus } from '@/lib/premeth-plus';
+import { usePremethPlus } from '@/lib/premeth-plus.client';
 
 export default function Navbar() {
   const pathname = usePathname();

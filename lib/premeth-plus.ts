@@ -1,110 +1,43 @@
-'use client';
-
 // lib/premeth-plus.ts
 // ─────────────────────────────────────────────────────────────────────────────
-// Premeth+ subscription helpers, pricing constants, payment account details,
-// and redemption-code utilities. Single source of truth for the paid tier.
+// Shared constants and pure helpers for Premeth+. Safe to import from both
+// server and client code — contains NO React, NO Supabase client imports,
+// NO server-only APIs.
+//
+// If you need the actual subscription state, import from:
+//   • lib/premeth-plus.server.ts   (server-side check, takes a SupabaseClient)
+//   • lib/premeth-plus.client.tsx  (React hook, client components only)
+//
+// This split is critical: mixing client/server code in one module causes
+// Next.js to bundle React hooks into server routes, which breaks at runtime
+// with errors like "(0 , u.qU) is not a function".
 // ─────────────────────────────────────────────────────────────────────────────
-
-import { createClient as createBrowserClient } from '@/lib/supabase/client';
-import type { SupabaseClient } from '@supabase/supabase-js';
-import { useEffect, useState } from 'react';
-
-// ─── Status type ──────────────────────────────────────────────────────────────
-// `isActive` and `isPlus` are aliases — they always hold the same value.
-// We keep both because different consumer files were written using different
-// names. Future code should prefer `isPlus`; `isActive` is retained for
-// backwards compatibility.
 
 export interface PremethPlusStatus {
   isActive: boolean;
-  isPlus: boolean;
   expiresAt: Date | null;
   daysRemaining: number | null;
   flaggedForReview: boolean;
   loading: boolean;
 }
 
-const INACTIVE: PremethPlusStatus = {
+export const INACTIVE: PremethPlusStatus = {
   isActive: false,
-  isPlus: false,
   expiresAt: null,
   daysRemaining: null,
   flaggedForReview: false,
   loading: false,
 };
 
-// ─── Server-side check ────────────────────────────────────────────────────────
-// Use this in Server Components / API routes / Server Actions. Pass in a
-// client built with createClient() from lib/supabase/server.ts.
-
-export async function getPremethPlus(
-  supabase: SupabaseClient,
-  userId: string
-): Promise<PremethPlusStatus> {
-  const { data, error } = await supabase
-    .from('subscriptions')
-    .select('status, current_period_end, flagged_for_review')
-    .eq('user_id', userId)
-    .maybeSingle();
-
-  if (error || !data) return INACTIVE;
-
-  const end = new Date(data.current_period_end);
-  const now = new Date();
-  const isActive = data.status === 'active' && end > now;
-  const ms = end.getTime() - now.getTime();
-  const days = Math.max(0, Math.ceil(ms / (1000 * 60 * 60 * 24)));
-
-  return {
-    isActive,
-    isPlus: isActive,
-    expiresAt: end,
-    daysRemaining: isActive ? days : null,
-    flaggedForReview: !!data.flagged_for_review,
-    loading: false,
-  };
-}
-
-// ─── Client-side hook ─────────────────────────────────────────────────────────
-// Drop this into any client component that needs to know subscription state.
-
-export function usePremethPlus(): PremethPlusStatus {
-  const [status, setStatus] = useState<PremethPlusStatus>({
-    ...INACTIVE,
-    loading: true,
-  });
-
-  useEffect(() => {
-    const supabase = createBrowserClient();
-    let cancelled = false;
-
-    (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        if (!cancelled) setStatus({ ...INACTIVE, loading: false });
-        return;
-      }
-      const result = await getPremethPlus(supabase, user.id);
-      if (!cancelled) setStatus(result);
-    })();
-
-    return () => { cancelled = true; };
-  }, []);
-
-  return status;
-}
-
-// ─── Pricing constants ────────────────────────────────────────────────────────
-// Single source of truth. Update here and the whole app reflects it.
-
+// ─── Pricing & duration constants ─────────────────────────────────────────────
 export const PREMETH_PLUS_PRICE_PKR = 1499;
 export const PREMETH_PLUS_DURATION_MONTHS = 6;
 export const PREMETH_PLUS_FOUNDERS_PRICE_PKR = 999;
 export const PREMETH_PLUS_FOUNDERS_LIMIT = 100;
 
-// ─── JazzCash / EasyPaisa account details ─────────────────────────────────────
-// These are shown to users on the /pricing page after they click "Pay".
+// JazzCash / EasyPaisa account details. These show up on /pricing after
+// the buyer picks a payment method, so they know where to send money.
+// To change later, edit this block and redeploy.
 export const PAYMENT_ACCOUNTS = {
   jazzcash: {
     accountName: 'Shahbaz Waseem Gul',
@@ -125,21 +58,17 @@ export const PAYMENT_ACCOUNTS = {
 const CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 
 export function generateRedemptionCode(): string {
-  const block = (len: number) => {
-    let out = '';
-    for (let i = 0; i < len; i++) {
-      out += CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)];
-    }
-    return out;
-  };
-  return `PRMTH-${block(4)}-${block(4)}`;
+  const segment = (n: number) =>
+    Array.from({ length: n }, () =>
+      CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)]
+    ).join('');
+  return `PRMTH-${segment(4)}-${segment(4)}`;
 }
 
-// Normalize whatever the student types (lowercase, weird spacing, missing
-// dashes) into the canonical format for DB lookup.
 export function normalizeRedemptionCode(raw: string): string {
-  const cleaned = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  // Re-insert dashes: PRMTH (5) + 4 + 4 = 13 chars total.
-  if (cleaned.length !== 13 || !cleaned.startsWith('PRMTH')) return cleaned;
-  return `${cleaned.slice(0, 5)}-${cleaned.slice(5, 9)}-${cleaned.slice(9, 13)}`;
+  const cleaned = raw.replace(/[\s\-_]/g, '').toUpperCase();
+  if (cleaned.startsWith('PRMTH') && cleaned.length === 13) {
+    return `PRMTH-${cleaned.slice(5, 9)}-${cleaned.slice(9, 13)}`;
+  }
+  return cleaned;
 }

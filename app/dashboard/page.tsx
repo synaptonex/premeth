@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/client';
 import { INDEXES } from '@/lib/data/indexes';
 import { getCategory, SUBJECT_COLORS } from '@/lib/categories';
-import { usePremethPlus } from '@/lib/premeth-plus';
+import { usePremethPlus } from '@/lib/premeth-plus.client';
 import { computeStreak } from '@/lib/streaks';
 import type { Attempt } from '@/lib/types';
 import {

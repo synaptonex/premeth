@@ -25,7 +25,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/client';
-import { usePremethPlus } from '@/lib/premeth-plus';
+import { usePremethPlus } from '@/lib/premeth-plus.client';
 import { fetchPaper } from '@/lib/data';
 import type { Question } from '@/lib/types';
 import { toast } from 'sonner';

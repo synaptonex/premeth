@@ -22,7 +22,7 @@ import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { createClient } from '@/lib/supabase/client';
-import { usePremethPlus } from '@/lib/premeth-plus';
+import { usePremethPlus } from '@/lib/premeth-plus.client';
 import { INDEXES } from '@/lib/data/indexes';
 import { fetchPaper } from '@/lib/data';
 import type { Question } from '@/lib/types';
