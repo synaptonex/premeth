@@ -11,9 +11,14 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 
 // ─── Status type ──────────────────────────────────────────────────────────────
+// `isActive` and `isPlus` are aliases — they always hold the same value.
+// We keep both because different consumer files were written using different
+// names. Future code should prefer `isPlus`; `isActive` is retained for
+// backwards compatibility.
 
 export interface PremethPlusStatus {
   isActive: boolean;
+  isPlus: boolean;
   expiresAt: Date | null;
   daysRemaining: number | null;
   flaggedForReview: boolean;
@@ -22,6 +27,7 @@ export interface PremethPlusStatus {
 
 const INACTIVE: PremethPlusStatus = {
   isActive: false,
+  isPlus: false,
   expiresAt: null,
   daysRemaining: null,
   flaggedForReview: false,
@@ -52,6 +58,7 @@ export async function getPremethPlus(
 
   return {
     isActive,
+    isPlus: isActive,
     expiresAt: end,
     daysRemaining: isActive ? days : null,
     flaggedForReview: !!data.flagged_for_review,
