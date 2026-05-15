@@ -32,6 +32,7 @@ export async function getPremethPlus(
 
   return {
     isActive,
+    isPlus: isActive,
     expiresAt: end,
     daysRemaining: isActive ? days : null,
     flaggedForReview: !!data.flagged_for_review,

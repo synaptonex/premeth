@@ -51,6 +51,7 @@ export function usePremethPlus(): PremethPlusStatus {
 
       setStatus({
         isActive,
+        isPlus: isActive,
         expiresAt: end,
         daysRemaining: isActive ? days : null,
         flaggedForReview: !!data.flagged_for_review,

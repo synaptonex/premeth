@@ -15,6 +15,8 @@
 
 export interface PremethPlusStatus {
   isActive: boolean;
+  // Alias for isActive — both names work. Pages variously use either.
+  isPlus: boolean;
   expiresAt: Date | null;
   daysRemaining: number | null;
   flaggedForReview: boolean;
@@ -23,6 +25,7 @@ export interface PremethPlusStatus {
 
 export const INACTIVE: PremethPlusStatus = {
   isActive: false,
+  isPlus: false,
   expiresAt: null,
   daysRemaining: null,
   flaggedForReview: false,
