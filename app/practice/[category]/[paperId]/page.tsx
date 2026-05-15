@@ -144,9 +144,65 @@ export default function PracticePage() {
 
     if (error) {
       toast.error('Could not save your attempt', { description: error.message });
-    } else {
-      toast.success('Attempt saved to your dashboard');
+      return;
     }
+
+    toast.success('Attempt saved to your dashboard');
+
+    // ─── Premeth+ : auto-add wrong answers to the Mistake Vault ─────────────
+    // Check if this user has an active subscription. If they do, every
+    // question they got wrong gets upserted into the vault so it shows up in
+    // their spaced-repetition queue. Free users skip this entirely.
+    const { data: sub } = await supabase
+      .from('subscriptions')
+      .select('current_period_end, status')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .gt('current_period_end', new Date().toISOString())
+      .maybeSingle();
+
+    if (!sub) return; // free user — nothing more to do
+
+    const vaultRows = paper.questions
+      .map((qq, i) => ({ qq, i }))
+      .filter(({ qq, i }) => {
+        const a = answers[i];
+        if (a === null) return false;
+        return !qq.options[a]?.isCorrect;
+      })
+      .map(({ qq, i }) => ({
+        user_id: user.id,
+        category,
+        paper_id: paperId,
+        question_index: i,
+        question_text: qq.text.slice(0, 500),
+        subject: (qq as { subject?: string }).subject ?? null,
+        topic: (qq as { topic?: string }).topic ?? null,
+        stage: 1,
+        due_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        times_wrong: 1,
+        last_seen_at: new Date().toISOString(),
+      }));
+
+    if (vaultRows.length === 0) return;
+
+    // Upsert in chunks to stay under Supabase payload limits. On conflict,
+    // ignoreDuplicates keeps the existing spaced-repetition stage intact
+    // (we don't want a re-attempt to wipe out review progress).
+    const CHUNK = 50;
+    for (let i = 0; i < vaultRows.length; i += CHUNK) {
+      await supabase.from('mistake_vault').upsert(
+        vaultRows.slice(i, i + CHUNK),
+        {
+          onConflict: 'user_id,category,paper_id,question_index',
+          ignoreDuplicates: true,
+        }
+      );
+    }
+
+    toast.success(
+      `${vaultRows.length} mistake${vaultRows.length > 1 ? 's' : ''} added to your vault`
+    );
   }, [answers, category, paper, paperId, score, startedAt, total]);
 
   // Keyboard shortcuts: A/B/C/D to pick, Enter to submit, ← → to navigate, R for report
