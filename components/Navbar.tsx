@@ -5,12 +5,14 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
-import { LogOut, User as UserIcon, Menu, X } from 'lucide-react';
+import { LogOut, User as UserIcon, Menu, X, Sparkles } from 'lucide-react';
+import { usePremethPlus } from '@/lib/premeth-plus';
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const { isPlus } = usePremethPlus();
 
   const [user, setUser] = useState<User | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
@@ -32,6 +34,10 @@ export default function Navbar() {
 
   async function signOut() {
     await supabase.auth.signOut();
+    // Clear the session token so SessionHeartbeat doesn't bounce us
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('premeth_session_token');
+    }
     router.push('/');
     router.refresh();
   }
@@ -51,16 +57,36 @@ export default function Navbar() {
           <span className="font-display font-semibold text-paper tracking-tight">
             Premeth
           </span>
+          {isPlus && (
+            <span className="ml-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider bg-meth/15 text-meth border border-meth/30 font-mono">
+              <Sparkles className="h-2.5 w-2.5" /> +
+            </span>
+          )}
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-7">
+        <nav className="hidden md:flex items-center gap-6">
           <Link href="/exams"     className={linkCls('/exams')}>Exams</Link>
+          {/* Premeth+ feature nav, only when subscribed */}
+          {user && isPlus && (
+            <>
+              <Link href="/drill" className={linkCls('/drill')}>Drill</Link>
+              <Link href="/vault" className={linkCls('/vault')}>Vault</Link>
+              <Link href="/mock"  className={linkCls('/mock')}>Mock</Link>
+            </>
+          )}
           <Link href="/draw"      className={linkCls('/draw')}>Scratchpad</Link>
           <Link href="/about"     className={linkCls('/about')}>About</Link>
           {user ? (
             <Link href="/dashboard" className={linkCls('/dashboard')}>Dashboard</Link>
           ) : null}
+          {!isPlus && (
+            <Link href="/pricing" className={linkCls('/pricing')}>
+              <span className="inline-flex items-center gap-1">
+                <Sparkles className="h-3 w-3" /> Premeth+
+              </span>
+            </Link>
+          )}
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
@@ -118,16 +144,40 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden border-t border-ink-800 bg-ink-950 px-5 py-4 space-y-3">
           <Link href="/exams"     onClick={() => setMenuOpen(false)} className="block py-1 text-paper">Exams</Link>
+          {user && isPlus && (
+            <>
+              <Link href="/drill" onClick={() => setMenuOpen(false)} className="block py-1 text-paper">
+                <Sparkles className="inline h-3 w-3 mr-1 text-meth" /> Daily Drill
+              </Link>
+              <Link href="/vault" onClick={() => setMenuOpen(false)} className="block py-1 text-paper">
+                <Sparkles className="inline h-3 w-3 mr-1 text-meth" /> Mistake Vault
+              </Link>
+              <Link href="/mock" onClick={() => setMenuOpen(false)} className="block py-1 text-paper">
+                <Sparkles className="inline h-3 w-3 mr-1 text-meth" /> Mock Exam
+              </Link>
+              <Link href="/goal" onClick={() => setMenuOpen(false)} className="block py-1 text-paper">
+                <Sparkles className="inline h-3 w-3 mr-1 text-meth" /> Goal Tracker
+              </Link>
+            </>
+          )}
           <Link href="/draw"      onClick={() => setMenuOpen(false)} className="block py-1 text-paper">Scratchpad</Link>
           <Link href="/about"     onClick={() => setMenuOpen(false)} className="block py-1 text-paper">About</Link>
           {user ? (
             <>
               <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="block py-1 text-paper">Dashboard</Link>
               <Link href="/profile"   onClick={() => setMenuOpen(false)} className="block py-1 text-paper">Profile</Link>
+              {!isPlus && (
+                <Link href="/pricing" onClick={() => setMenuOpen(false)} className="block py-1 text-meth">
+                  Upgrade to Premeth+
+                </Link>
+              )}
               <button onClick={signOut} className="block py-1 text-crimson">Sign out</button>
             </>
           ) : (
             <>
+              <Link href="/pricing" onClick={() => setMenuOpen(false)} className="block py-1 text-meth">
+                Premeth+
+              </Link>
               <Link href="/login"  onClick={() => setMenuOpen(false)} className="block py-1 text-paper">Sign in</Link>
               <Link href="/signup" onClick={() => setMenuOpen(false)} className="block py-1 text-meth">Create account</Link>
             </>

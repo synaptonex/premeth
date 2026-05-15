@@ -4,6 +4,7 @@ import Hero from '@/components/Hero';
 import Features from '@/components/Features';
 import Marquee from '@/components/Marquee';
 import FAQ from '@/components/FAQ';
+import PremethPlusSection from '@/components/PremethPlusSection';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
@@ -15,6 +16,10 @@ export default function HomePage() {
         <Hero />
         <Marquee />
         <Features />
+
+        {/* Premeth+ upsell — placed after Features so the visitor has seen
+            the free offering first, primed to learn what the paid tier adds. */}
+        <PremethPlusSection />
 
         {/* CTA strip */}
         <section className="relative mx-auto max-w-6xl px-5 py-24">

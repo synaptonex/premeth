@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Fraunces } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'sonner';
+import SessionHeartbeat from '@/components/SessionHeartbeat';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -50,6 +51,9 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
       <body className="bg-ink-950 text-paper antialiased font-sans">
         {children}
+        {/* SessionHeartbeat enforces single-session-per-account for paid users
+            and logs login fingerprints. It's a no-op for signed-out users. */}
+        <SessionHeartbeat />
         <Toaster
           position="bottom-right"
           theme="dark"

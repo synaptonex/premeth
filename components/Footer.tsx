@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Sparkles } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -33,6 +34,12 @@ export default function Footer() {
             <li><Link href="/exams"  className="hover:text-meth tx-color">All Papers</Link></li>
             <li><Link href="/draw"   className="hover:text-meth tx-color">Scratchpad</Link></li>
             <li><Link href="/about"  className="hover:text-meth tx-color">About</Link></li>
+            <li>
+              <Link href="/pricing" className="hover:text-meth tx-color inline-flex items-center gap-1">
+                <Sparkles className="h-3 w-3" /> Premeth+
+              </Link>
+            </li>
+            <li><Link href="/redeem" className="hover:text-meth tx-color">Redeem code</Link></li>
             <li><Link href="/signup" className="hover:text-meth tx-color">Create account</Link></li>
           </ul>
         </div>

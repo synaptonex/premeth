@@ -1,253 +1,180 @@
-# Premeth v2
+# Premeth+ Install Guide
 
-A free, no-signup-required MDCAT prep platform — rebuilt on Next.js + Supabase.
-
-This is the **frontend application** that consumes the open-source [premeth-data](https://github.com/eldrickbnt/premeth-data) MCQ dataset (2,500+ past papers, 400,000+ questions). It's a complete rebuild of premeth.com that adds three things students explicitly asked for:
-
-1. **Diagrams render inline** — questions with figures now show them next to the question instead of leaving them invisible.
-2. **Reportable questions** — students can flag wrong answers, typos, and missing diagrams in two clicks. Reports go to a Supabase table for maintainers to review.
-3. **Accounts (optional)** — sign up to save attempts, track weak topics, and get a dashboard. Practice still works fully without an account.
-
-Plus a built-in HTML-canvas **scratchpad** for free-body diagrams, organic structures, and working-out, right next to the paper.
+Everything in this folder either drops into the existing `premeth-app` repo as-is, or replaces an existing file. **No package.json changes required** — the build uses libraries you already have (`@supabase/ssr`, `@supabase/supabase-js`, `gsap`, `framer-motion`, `lucide-react`, `sonner`, `tailwindcss`).
 
 ---
 
-## Stack
+## What's in this drop
 
-- **Next.js 14** (App Router) + TypeScript
-- **Tailwind CSS** with a custom design system (lab-green on ink, paper-cream explanation cards, Fraunces display + Inter body)
-- **Supabase** for auth, Postgres, and Storage (avatars + paper JSON)
-- **GSAP** + `@gsap/react` for entrance and scroll-triggered animations
-- **Sonner** for toast notifications
-- Hosted on **Vercel** (free tier) — the heavy paper data lives in Supabase Storage so the deploy stays tiny
+```
+out/
+├── supabase/migrations/0002_premeth_plus.sql   ← run this on Supabase
+├── lib/
+│   ├── premeth-plus.ts                          ← NEW: subscription helpers
+│   └── streaks.ts                               ← NEW: streak computation
+├── components/
+│   ├── SessionHeartbeat.tsx                     ← NEW: anti-share session enforcement
+│   ├── PremethPlusSection.tsx                   ← NEW: homepage upsell
+│   ├── Navbar.tsx                               ← REPLACES existing
+│   └── Footer.tsx                               ← REPLACES existing
+├── app/
+│   ├── layout.tsx                               ← REPLACES existing (adds heartbeat)
+│   ├── page.tsx                                 ← REPLACES existing (adds upsell)
+│   ├── dashboard/
+│   │   ├── page.tsx                             ← REPLACES existing (adds + features row)
+│   │   └── export/page.tsx                      ← NEW: PDF export
+│   ├── pricing/page.tsx                         ← NEW: payment flow
+│   ├── redeem/page.tsx                          ← NEW: code entry
+│   ├── drill/page.tsx                           ← NEW: Adaptive Daily Drill
+│   ├── vault/page.tsx                           ← NEW: Mistake Vault
+│   ├── mock/page.tsx                            ← NEW: Timed Mock Exam
+│   ├── goal/page.tsx                            ← NEW: Goal Tracker
+│   ├── admin/payments/page.tsx                  ← NEW: admin dashboard
+│   └── api/
+│       ├── payments/submit/route.ts             ← NEW
+│       ├── admin/approve/route.ts               ← NEW
+│       ├── admin/reject/route.ts                ← NEW
+│       ├── redeem/route.ts                      ← NEW
+│       └── session/heartbeat/route.ts           ← NEW
+└── PATCH_practice_page.ts                       ← MANUAL EDIT to existing practice page
+```
 
 ---
 
-## Quick start (local development)
+## Step 1 — Run the database migration
 
-### 1. Clone and install
+In your Supabase project, open the SQL editor and paste in the contents of `supabase/migrations/0002_premeth_plus.sql`. Run it. This creates:
+
+- `payment_requests` — JazzCash/EasyPaisa submissions awaiting verification
+- `redemption_codes` — codes bound to specific buyers
+- `subscriptions` — active Premeth+ subscriptions
+- `session_fingerprints` — IP + user-agent hashes for sharing detection
+- `mistake_vault` — wrong-answer spaced repetition queue
+- `mock_exam_attempts` — full mock simulation results
+- `study_goals` — exam date + daily target
+- `streaks` — cached streak counts
+- Plus the `payment-receipts` storage bucket and `public.is_premeth_plus()` helper function.
+
+## Step 2 — Make yourself an admin
+
+After the migration, you need to flag your own account as admin so you can approve payments. Find your user ID in the Supabase auth dashboard (Authentication → Users), then run:
+
+```sql
+update public.profiles set is_admin = true where id = 'YOUR-AUTH-UID-HERE';
+```
+
+Now visit `/admin/payments` while signed in to that account — you'll see the admin dashboard.
+
+## Step 3 — Add your payment account details
+
+Open `lib/premeth-plus.ts` and replace the placeholder phone numbers in `PAYMENT_ACCOUNTS`:
+
+```ts
+export const PAYMENT_ACCOUNTS = {
+  jazzcash: {
+    title: 'JazzCash',
+    account_number: '03XX-XXXXXXX',  // ← your JazzCash number
+    account_name: 'Your Name Here',
+  },
+  easypaisa: {
+    title: 'EasyPaisa',
+    account_number: '03XX-XXXXXXX',  // ← your EasyPaisa number
+    account_name: 'Your Name Here',
+  },
+};
+```
+
+These are shown to the buyer on `/pricing` after they pick a method.
+
+## Step 4 — Drop in the files
+
+Copy every file under `out/` into the same path under your repo root. Things that overwrite existing files (`Navbar.tsx`, `Footer.tsx`, `layout.tsx`, `app/page.tsx`, `app/dashboard/page.tsx`) — back them up first if you want, then replace.
+
+## Step 5 — Apply the practice page patch
+
+Open `app/practice/[category]/[paperId]/page.tsx`. Find the `const finish = useCallback(...)` block (around line 122). Replace that callback with the version in `PATCH_practice_page.ts`. The change adds wrong-answer-to-vault upserts for paid users without changing existing behavior for free users.
+
+## Step 6 — Deploy
 
 ```bash
-git clone <this-repo>
-cd premeth-app
-npm install
+npm run build
+# then deploy via Vercel as usual
 ```
 
-### 2. Create a Supabase project
-
-1. Go to <https://app.supabase.com> and create a new project (free tier is fine).
-2. From the project dashboard, grab the **Project URL** and **anon key** (Project Settings → API).
-
-### 3. Run the database migration
-
-In Supabase Studio → **SQL Editor** → New Query, paste the contents of [`supabase/migrations/0001_initial.sql`](./supabase/migrations/0001_initial.sql) and hit **Run**.
-
-This creates:
-- `profiles` table (one row per user, with username + avatar_url)
-- `attempts` table (saved practice sessions)
-- `question_reports` table (flagged MCQs)
-- An auto-trigger that creates a profile row when a user signs up
-- Two public Storage buckets: `avatars` and `premeth-data`
-- Row-level security policies for everything
-
-### 4. Configure environment variables
-
-```bash
-cp .env.local.example .env.local
-```
-
-Then fill in `.env.local`:
-
-```
-NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-SUPABASE_SERVICE_ROLE_KEY=eyJ...
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-```
-
-The **service role key** is only used by the one-time data upload script. Never expose it to the client or commit it.
-
-### 5. Upload the MCQ data to Supabase Storage
-
-Clone the data repo somewhere on your machine:
-
-```bash
-git clone https://github.com/eldrickbnt/premeth-data ../premeth-data
-```
-
-Then push every paper JSON to the `premeth-data` Storage bucket:
-
-```bash
-npm run upload-data -- ../premeth-data
-```
-
-This uploads ~2,600 JSON files (~540 MB total). It's resumable — re-running skips files already there. On a normal connection it takes 5–10 minutes.
-
-If you ever update the dataset, also re-bundle the catalog indexes:
-
-```bash
-npm run build-indexes -- ../premeth-data
-```
-
-This writes `lib/data/indexes.ts` (~1 MB) which ships with the app for instant catalog browsing.
-
-### 6. Configure Supabase Auth email templates (optional but recommended)
-
-In Supabase Studio → **Authentication → Email Templates**, edit the "Reset password" template's link to point to:
-
-```
-{{ .SiteURL }}/reset-password
-```
-
-And the "Confirm signup" link to:
-
-```
-{{ .SiteURL }}/auth/callback
-```
-
-Then in **Authentication → URL Configuration**, set **Site URL** to `http://localhost:3000` for dev (and your production URL on Vercel later). Add `http://localhost:3000/**` and `https://your-domain.com/**` to the **Redirect URLs** allow-list.
-
-### 7. Run the dev server
-
-```bash
-npm run dev
-```
-
-Open <http://localhost:3000>.
+No new environment variables required.
 
 ---
 
-## Deploying to Vercel
+## How the flow works end-to-end
 
-1. Push this repo to GitHub.
-2. Go to <https://vercel.com> → **New Project** → import the repo.
-3. Add the same four env vars from `.env.local` in **Project Settings → Environment Variables**. Set `NEXT_PUBLIC_SITE_URL` to your Vercel URL (e.g. `https://premeth.vercel.app`) or your custom domain.
-4. Deploy.
-5. Back in Supabase Studio → **Authentication → URL Configuration**, replace the dev URL with your production URL.
+### For the buyer
 
-Total cost: $0/month on Vercel free tier + Supabase free tier (good for ~50k MAU and 1 GB storage — the data is ~540 MB).
+1. Buyer visits `/pricing`, picks JazzCash or EasyPaisa
+2. They see the destination phone number and amount (Rs 999 founders / Rs 1,499 regular)
+3. They send the payment from their own JazzCash/EasyPaisa app
+4. They come back to `/pricing` and paste their **transaction ID** + sender phone
+5. They get a "Pending approval — usually within 12 hours" confirmation
+6. You (admin) review at `/admin/payments`, verify the TID in your JazzCash/EasyPaisa transaction history, click **Approve**
+7. The system generates a unique code (e.g. `PRMTH-7K9R-M2X4`) **bound to that buyer's account**
+8. You message the buyer the code (or it can be displayed to them in-app — they refresh `/pricing` and see it)
+9. Buyer goes to `/redeem`, pastes the code, clicks Redeem
+10. Their `subscriptions` row is created/extended — they're in
 
----
+### For the system (anti-sharing)
 
-## Project structure
+- **Code-level**: Codes carry the buyer's `auth.uid()` in `issued_to`. Anyone else trying to redeem gets rejected. Sharing the code in a WhatsApp group does nothing.
+- **Session-level**: `SessionHeartbeat` polls every 60s. If the user logs in from a second device, the second login generates a new session token; the first device sees a token mismatch on its next heartbeat and is kicked to `/login?kicked=1`.
+- **Fingerprint-level**: Every heartbeat logs (IP_hash, UA_hash). If a user accumulates more than 5 distinct fingerprints in 7 days, `flagged_for_review = true` is set. You can see flagged users in the admin dashboard. No automatic ban — just a flag for you to investigate.
+- **Personalization moat**: The actual deepest anti-share defense is that *the features are useless when shared*. Two people sharing one account would get a Mistake Vault polluted with each other's wrong answers, a Daily Drill that targets a weighted average of their weak topics (helping neither), and a streak that breaks every time the other person doesn't hit the daily target.
 
-```
-app/
-  ├── page.tsx                       # Landing page
-  ├── layout.tsx                     # Root layout, fonts, toaster
-  ├── globals.css                    # Tailwind + custom animations + brand colors
-  ├── exams/page.tsx                 # Browse all 31 categories
-  ├── papers/[category]/page.tsx     # Paper list per category
-  ├── practice/[category]/[paperId]/page.tsx   # The quiz — diagrams, reports, keyboard nav
-  ├── draw/page.tsx                  # HTML-canvas scratchpad
-  ├── profile/page.tsx               # Avatar, username, password
-  ├── dashboard/page.tsx             # Attempt history + weak-topic analysis
-  ├── about/page.tsx                 # About page
-  ├── login/, signup/, forgot-password/, reset-password/   # Auth pages
-  └── auth/callback/route.ts         # Email-link auth handler
+### For you (admin)
 
-components/
-  ├── Navbar.tsx, Footer.tsx, AuthShell.tsx
-  ├── Hero.tsx, Features.tsx, Marquee.tsx, FAQ.tsx
-  ├── QuestionImage.tsx              # Inline diagram with fallback
-  └── ReportModal.tsx                # Question reporting flow
-
-lib/
-  ├── supabase/{client,server,middleware}.ts
-  ├── types.ts                       # Question / Paper / Attempt / Report
-  ├── categories.ts                  # 31 categories with names + descriptions
-  ├── data.ts                        # fetchIndex / fetchPaper helpers
-  └── data/indexes.ts                # Auto-generated bundled catalog (~960 KB)
-
-scripts/
-  ├── build-indexes.mjs              # Bundle index.json files into the app
-  └── upload-data.mjs                # Push paper JSON to Supabase Storage
-
-supabase/migrations/
-  └── 0001_initial.sql               # DB schema + RLS + buckets
-
-middleware.ts                        # Refreshes Supabase auth session on every request
-```
+- Visit `/admin/payments` to see pending payments
+- Click "Approve" on each verified one — a modal shows the generated code, you copy and message it
+- Click "Reject" on suspicious ones — buyer gets nothing, you note the reason
+- Scroll down to "Flagged accounts" to see anyone who's tripping the sharing fingerprint detector
+- The flag-review job runs once per heartbeat; no extra cron needed
 
 ---
 
-## Design system
+## What you can change later if you want
 
-The brand identity intentionally extends the original premeth.com voice ("Ensuring premed students stay premeth", Heisenberg-lab humor) rather than flattening it into another generic ed-tech grotesque.
-
-| Layer       | Choice                                                              |
-| ----------- | ------------------------------------------------------------------- |
-| Background  | `#0a0a0a` ink with subtle 56px grid + green ambient orbs            |
-| Accent      | `#3ee089` "meth" green — used sparingly, never as a wash            |
-| Text        | `#f7f3ec` paper-cream (warm white) over ink                         |
-| Explanation | Reverses to paper-cream background with ink text — like a lab note  |
-| Display     | **Fraunces** (variable serif) — literary, slightly playful           |
-| Body        | **Inter** — clean, neutral, lets the display do the work             |
-
-### Motion principles (Emil Kowalski's framework)
-
-All UI animations follow these rules:
-
-- **No `transition: all`** — every transition specifies exact properties (color, transform, border-color, background-color).
-- **No `ease-in` on UI** — it makes interfaces feel sluggish. We use `ease-out` for entries and the custom strong curves stored as CSS variables: `--ease-out: cubic-bezier(0.23, 1, 0.32, 1)`.
-- **High-frequency = no animation.** The question-card swap on the practice page (which can fire 100+ times per session) animates in 180ms with an 8px translate — fast enough to feel like instant feedback, not a transition.
-- **One-time = can breathe.** The hero entrance and scroll-revealed sections use 400–800ms staggered timelines because users see them once per session.
-- **Press feedback** is `transform: scale(0.97)` on `:active` for all buttons that opt into the `.press` class.
-- **Hover lift** is gated behind `@media (hover: hover) and (pointer: fine)` so touch devices don't get false-positive transforms on tap.
-
-### Design review pass (Emil-style)
-
-A before/after audit of the most-touched surfaces:
-
-| Before                                                                  | After                                                                              | Why                                                                                       |
-| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Generic `transition-all duration-300`                                   | `transition: color 160ms var(--ease-out), background-color 160ms var(--ease-out)`  | `all` is wasteful and hurts perf; named properties tell the GPU exactly what to composite |
-| Modal entrance with `scale(0)`                                          | `scale(0.96) translateY(8px)` with opacity                                         | Nothing in real life appears from literal nothing — start near, not at zero               |
-| Question-card swap with 400ms ease-in-out                               | 180ms `power2.out` + 8px translate                                                 | Question swap fires often; users feel sluggishness over 200ms                             |
-| Generic `ease-out` (CSS default)                                        | `cubic-bezier(0.23, 1, 0.32, 1)` (strong)                                          | CSS defaults lack punch; the strong curve makes animations feel intentional               |
-| Hover `scale(1.05)` ungated                                             | Wrapped in `@media (hover: hover) and (pointer: fine)`                             | Touch devices fire hover on tap, causing false positives                                  |
-| Answer-button entrance animation                                        | None — only state transitions                                                       | Options are visible immediately; movement adds latency to a decision-heavy moment         |
-| Toast with fixed 4s timer                                               | Sonner's swipe-to-dismiss + auto-pause when tab hidden                             | Handles edge cases the user never notices                                                 |
-| Same enter/exit speed for explanation card                              | Enter `fade-up 280ms`, no exit animation (it's destroyed on question change)       | Exits should be faster than enters; here, the unmount is effectively instant              |
+- **Pricing**: Edit `PREMETH_PLUS_PRICE_PKR` etc. in `lib/premeth-plus.ts`
+- **Duration**: `PREMETH_PLUS_DURATION_MONTHS` (currently 6)
+- **Founders limit**: `PREMETH_PLUS_FOUNDERS_LIMIT` (currently 100)
+- **Mock exam quotas**: `SUBJECT_QUOTAS` in `app/mock/page.tsx` (currently set to official PMDC 200-MCQ format)
+- **Streak target**: defaults to user's `daily_question_target` or 20 if unset
+- **SR intervals**: `STAGE_INTERVALS_DAYS` in `app/vault/page.tsx` (currently 1/3/7/14/30, mastered at stage 6)
+- **Fingerprint threshold**: `MAX_DISTINCT_FINGERPRINTS_PER_WEEK = 5` in the heartbeat route
 
 ---
 
-## How the data layer works
+## Things not implemented (intentionally)
 
-Two-tier strategy to keep the Vercel deploy slim:
-
-**Tier 1 (bundled with app):** The 31 `index.json` files (~960 KB combined) live in `lib/data/indexes.ts` as a TypeScript module. The catalog (browse categories, browse papers, filter by subject) renders instantly with zero network requests.
-
-**Tier 2 (Supabase Storage):** The individual paper JSON files (~540 MB total) live in a public `premeth-data` Storage bucket. When a student opens a paper, the app fetches just that one JSON file (typically 50–500 KB), cached by Vercel's edge for an hour and by the browser for far longer (`Cache-Control: max-age=31536000` since the content is immutable).
-
-This means:
-- Vercel deploy is ~5 MB.
-- Adding 1,000 more papers doesn't increase deploy size.
-- Page load is instant for the catalog, ~200 ms for a paper start.
+- **No Stripe / no automated payments**. Manual approval is the right move for the Pakistani market — most students don't have credit cards, and JazzCash/EasyPaisa is universal. The labor cost of approving 10-50 payments a day is minimal at this scale.
+- **No refunds API**. If you need to refund someone, do it manually via JazzCash and run `update subscriptions set status='cancelled' where user_id='...'`.
+- **No referral program**. Easy to add later — the `redemption_codes` table can be extended with a `referrer_id` column.
+- **No email notifications**. Buyers see status on `/pricing`. If you want automated email when payment is approved, wire Supabase auth's email service to the approval route.
+- **No PDF library**. The export feature uses browser print-to-PDF for cleaner output and no bundle bloat.
 
 ---
 
-## Adding new MCQs
+## Testing locally
 
-The data lives in a separate repo so anyone can PR a fix without touching the frontend. Workflow:
-
-1. Fork [premeth-data](https://github.com/eldrickbnt/premeth-data).
-2. Add or fix a JSON file. The schema is documented in that repo's README.
-3. Send a PR.
-4. When merged, the maintainer re-runs `npm run build-indexes` and `npm run upload-data` to push the changes to Supabase.
-
----
-
-## Admin: reviewing question reports
-
-Reports are stored in the `question_reports` table. To review them, log into Supabase Studio → **Table Editor → question_reports** and filter by `status = 'open'`. Update the `status` column to `reviewed`, `fixed`, or `dismissed` as you triage them.
-
-(A built-in admin dashboard at `/admin/reports` would be a natural next addition.)
+1. Create two test accounts (e.g. `test1@example.com`, `test2@example.com`)
+2. Mark `test1` as admin
+3. Sign in as `test2`, go to `/pricing`, submit a fake payment with a TID like `TEST123`
+4. Switch to `test1`, go to `/admin/payments`, approve the request
+5. Copy the generated code
+6. Sign back in as `test2`, go to `/redeem`, paste the code
+7. Verify `test2` can now access `/drill`, `/vault`, `/mock`, `/goal`, `/dashboard/export`
+8. Try copying the same code into `test1` — it should fail with "This code is bound to another account"
+9. Sign in as `test2` from a second browser — the first session should be kicked within 60 seconds
 
 ---
 
-## License
+## Files marked NEW vs REPLACES
 
-The app code is MIT. The MCQ dataset has its own license — see the data repo.
+If something is marked **NEW**, just drop it in. If it's marked **REPLACES existing**, you're overwriting the file that was already there. The replacements are drop-in compatible with everything else in the codebase — no other files need to change.
 
-Built on the original premeth.com by the open-source community.
+The only manual edit required is `PATCH_practice_page.ts`, which patches a single callback inside the practice page (the rest of that file is fine).

@@ -8,9 +8,12 @@ import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/client';
 import { INDEXES } from '@/lib/data/indexes';
 import { getCategory, SUBJECT_COLORS } from '@/lib/categories';
+import { usePremethPlus } from '@/lib/premeth-plus';
+import { computeStreak } from '@/lib/streaks';
 import type { Attempt } from '@/lib/types';
 import {
   Target, Clock, TrendingUp, BookOpen, Calendar, ArrowRight, Sparkles,
+  Flame, Zap, AlertOctagon, Timer, FileDown, Lock,
 } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -21,10 +24,14 @@ export default function DashboardPage() {
   const router = useRouter();
   const supabase = createClient();
   const root = useRef<HTMLDivElement>(null);
+  const { isPlus } = usePremethPlus();
 
   const [loading, setLoading] = useState(true);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [username, setUsername] = useState<string | null>(null);
+  const [vaultCounts, setVaultCounts] = useState({ due: 0, total: 0 });
+  const [streak, setStreak] = useState({ current: 0, longest: 0, target: 20, activeToday: false });
+  const [mockCount, setMockCount] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -34,7 +41,10 @@ export default function DashboardPage() {
         return;
       }
 
-      const [{ data: attemptRows }, { data: prof }] = await Promise.all([
+      const [
+        { data: attemptRows },
+        { data: prof },
+      ] = await Promise.all([
         supabase
           .from('attempts')
           .select('*')
@@ -46,13 +56,49 @@ export default function DashboardPage() {
 
       setAttempts(attemptRows ?? []);
       setUsername(prof?.username ?? null);
+
+      // Premeth+ side-loads: only if subscribed
+      if (isPlus) {
+        const now = new Date().toISOString();
+        const [
+          { count: dueCount },
+          { count: vaultTotal },
+          { count: mocks },
+          streakRes,
+        ] = await Promise.all([
+          supabase
+            .from('mistake_vault')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .lte('due_at', now)
+            .lt('stage', 6),
+          supabase
+            .from('mistake_vault')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', user.id),
+          supabase
+            .from('mock_exam_attempts')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('exam_type', 'mdcat_simulation'),
+          computeStreak(supabase, user.id),
+        ]);
+
+        setVaultCounts({ due: dueCount ?? 0, total: vaultTotal ?? 0 });
+        setMockCount(mocks ?? 0);
+        setStreak({
+          current: streakRes.current_streak,
+          longest: streakRes.longest_streak,
+          target: streakRes.target,
+          activeToday: streakRes.active_today,
+        });
+      }
+
       setLoading(false);
     })();
-  }, [router, supabase]);
+  }, [router, supabase, isPlus]);
 
-  // Roll up topic-level accuracy across all attempts
   const topicStats = useMemo(() => {
-    // Build a map of paperId -> meta for quick lookup
     const paperMeta = new Map<string, { subject: string; topics: string[] }>();
     for (const idx of Object.values(INDEXES)) {
       for (const p of idx.papers ?? []) {
@@ -66,9 +112,6 @@ export default function DashboardPage() {
     for (const a of attempts) {
       const meta = paperMeta.get(a.paper_id);
       if (!meta) continue;
-      // We don't have per-question topic data on the client, so we attribute
-      // the whole attempt's score evenly to all topics listed on the paper.
-      // It's a rough heuristic but good enough for "what should I revise."
       const perTopicTotal = a.total / Math.max(meta.topics.length, 1);
       const perTopicCorrect = a.score / Math.max(meta.topics.length, 1);
       for (const t of meta.topics) {
@@ -125,21 +168,118 @@ export default function DashboardPage() {
     <>
       <Navbar />
       <main ref={root} className="mx-auto max-w-5xl px-5 py-12">
-        <div className="mb-10">
-          <span className="text-xs uppercase tracking-widest text-meth">Dashboard</span>
-          <h1 className="font-display text-4xl md:text-5xl text-paper tracking-tight mt-2">
-            {username ? `Welcome back, ${username}.` : 'Welcome back.'}
-          </h1>
-          {attempts.length === 0 ? (
-            <p className="text-ink-400 mt-2">
-              No attempts yet. Practice your first paper to start building stats.
-            </p>
+        <div className="mb-10 flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <span className="text-xs uppercase tracking-widest text-meth">Dashboard</span>
+            <h1 className="font-display text-4xl md:text-5xl text-paper tracking-tight mt-2">
+              {username ? `Welcome back, ${username}.` : 'Welcome back.'}
+            </h1>
+            {attempts.length === 0 ? (
+              <p className="text-ink-400 mt-2">
+                No attempts yet. Practice your first paper to start building stats.
+              </p>
+            ) : (
+              <p className="text-ink-400 mt-2">
+                {stats.totalAttempts} papers attempted · {stats.totalQuestions.toLocaleString()} questions answered.
+              </p>
+            )}
+          </div>
+          {isPlus ? (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs uppercase tracking-wider bg-meth/15 text-meth border border-meth/30">
+              <Sparkles className="h-3 w-3" /> Premeth+
+            </span>
           ) : (
-            <p className="text-ink-400 mt-2">
-              {stats.totalAttempts} papers attempted · {stats.totalQuestions.toLocaleString()} questions answered.
-            </p>
+            <Link
+              href="/pricing"
+              className="press text-xs px-3 py-1.5 rounded-md border border-meth/40 text-meth hover:bg-meth/10 tx-color"
+            >
+              Upgrade to Premeth+
+            </Link>
           )}
         </div>
+
+        {/* Premeth+ feature row — only shown for subscribers */}
+        {isPlus && attempts.length > 0 && (
+          <section className="dash-section mb-10 grid grid-cols-2 md:grid-cols-4 gap-3">
+            <Link
+              href="/drill"
+              className="rounded-xl border border-ink-800 bg-ink-900/40 hover:border-meth/40 tx-color p-4 group"
+            >
+              <div className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-meth mb-1">
+                <Zap className="h-3.5 w-3.5" /> Daily Drill
+              </div>
+              <div className="font-display text-2xl text-paper">30 MCQs</div>
+              <div className="text-xs text-ink-500 mt-1">targeted at weak topics</div>
+            </Link>
+
+            <Link
+              href="/vault"
+              className="rounded-xl border border-ink-800 bg-ink-900/40 hover:border-meth/40 tx-color p-4 group"
+            >
+              <div className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-meth mb-1">
+                <AlertOctagon className="h-3.5 w-3.5" /> Mistake Vault
+              </div>
+              <div className="font-display text-2xl text-paper">
+                {vaultCounts.due}
+                <span className="text-ink-500 text-base"> / {vaultCounts.total}</span>
+              </div>
+              <div className="text-xs text-ink-500 mt-1">due for review</div>
+            </Link>
+
+            <Link
+              href="/mock"
+              className="rounded-xl border border-ink-800 bg-ink-900/40 hover:border-meth/40 tx-color p-4 group"
+            >
+              <div className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-meth mb-1">
+                <Timer className="h-3.5 w-3.5" /> Mock Exam
+              </div>
+              <div className="font-display text-2xl text-paper">{mockCount}</div>
+              <div className="text-xs text-ink-500 mt-1">taken so far</div>
+            </Link>
+
+            <Link
+              href="/goal"
+              className="rounded-xl border border-ink-800 bg-ink-900/40 hover:border-meth/40 tx-color p-4 group"
+            >
+              <div className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-meth mb-1">
+                <Flame className="h-3.5 w-3.5" /> Streak
+              </div>
+              <div className="font-display text-2xl text-paper flex items-baseline gap-1">
+                {streak.current}
+                <span className="text-ink-500 text-base">d</span>
+                {streak.activeToday && <span className="text-meth text-xs">🔥</span>}
+              </div>
+              <div className="text-xs text-ink-500 mt-1">
+                best: {streak.longest}d
+              </div>
+            </Link>
+          </section>
+        )}
+
+        {/* Upgrade CTA for free users with attempts */}
+        {!isPlus && attempts.length >= 3 && (
+          <section className="dash-section mb-10 rounded-xl border border-meth/30 bg-meth/5 p-5">
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+              <div className="flex-1 min-w-0">
+                <div className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-meth mb-1">
+                  <Sparkles className="h-3.5 w-3.5" /> Premeth+
+                </div>
+                <h3 className="font-display text-xl text-paper">
+                  You've answered {stats.totalQuestions.toLocaleString()} questions. Time to lock in.
+                </h3>
+                <p className="text-sm text-ink-300 mt-1">
+                  Get Adaptive Daily Drill, Mistake Vault, Timed Mock Exams, and more.
+                </p>
+              </div>
+              <Link
+                href="/pricing"
+                className="press inline-flex items-center gap-2 rounded-md bg-meth text-ink-950 px-4 py-2 font-medium hover:bg-meth-300 tx-color"
+              >
+                See pricing <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </section>
+        )}
 
         {attempts.length === 0 ? (
           <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-10 text-center">
@@ -184,9 +324,19 @@ export default function DashboardPage() {
             {/* Weak topics */}
             {topicStats.length > 0 && (
               <section className="dash-section mb-10">
-                <h2 className="font-display text-2xl text-paper tracking-tight mb-1">
-                  Topics to revise.
-                </h2>
+                <div className="flex items-center justify-between mb-1">
+                  <h2 className="font-display text-2xl text-paper tracking-tight">
+                    Topics to revise.
+                  </h2>
+                  {isPlus && (
+                    <Link
+                      href="/dashboard/export"
+                      className="text-xs text-meth hover:underline inline-flex items-center gap-1"
+                    >
+                      <FileDown className="h-3.5 w-3.5" /> Export PDF
+                    </Link>
+                  )}
+                </div>
                 <p className="text-sm text-ink-400 mb-5">
                   Sorted by accuracy — your lowest first. Numbers are rough estimates
                   based on whole-paper scores.
