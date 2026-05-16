@@ -4,7 +4,7 @@
 //
 //   1. Look up the code.
 //   2. Verify it exists, isn't already redeemed, and was issued to THIS user.
-//      (This is the layer-1 anti-sharing check — the code is forever bound to
+//      (This is the layer-1 anti-sharing check - the code is forever bound to
 //      the buyer's account. Someone with the code but a different user_id
 //      gets rejected here, even if they're logged in.)
 //   3. Mark it redeemed.
@@ -14,7 +14,7 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { normalizeRedemptionCode } from '@/lib/premeth-plus';
+import { normalizeRedemptionCode } from '@/lib/enid-plus';
 
 export async function POST(req: Request) {
   const supabase = createClient();
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
 
   // ─── THE anti-sharing check ───────────────────────────────────────────────
   // The code was issued to a specific user_id. Even if someone else gets
-  // their hands on it, they can't redeem it — they'd have to log in as the
+  // their hands on it, they can't redeem it - they'd have to log in as the
   // buyer first, which means having the buyer's password, which means…
   // we're back to the account-sharing problem, not the code-sharing problem.
   if (codeRow.issued_to !== user.id) {

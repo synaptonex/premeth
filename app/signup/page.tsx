@@ -18,7 +18,7 @@ export default function SignupPage() {
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Live password strength checks — visible so users know what's expected.
+  // Live password strength checks - visible so users know what's expected.
   const checks = {
     length: password.length >= 8,
     letter: /[a-zA-Z]/.test(password),
@@ -68,7 +68,7 @@ export default function SignupPage() {
       footer={
         <>
           Already have one?{' '}
-          <Link href="/login" className="text-meth hover:underline">
+          <Link href="/login" className="text-accent hover:underline">
             Sign in
           </Link>
         </>
@@ -76,7 +76,7 @@ export default function SignupPage() {
     >
       <form onSubmit={onSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs uppercase tracking-wider text-ink-400 mb-1.5">
+          <label className="block text-xs uppercase tracking-wider text-coal-600 mb-1.5">
             Username
           </label>
           <input
@@ -86,15 +86,15 @@ export default function SignupPage() {
             placeholder="rana_med"
             autoComplete="username"
             required
-            className="w-full px-3 py-2.5 rounded-md bg-ink-900 border border-ink-800 text-paper placeholder:text-ink-600 focus:border-meth focus:outline-none tx-color"
+            className="w-full px-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
           />
-          <p className="text-xs text-ink-500 mt-1.5">
+          <p className="text-xs text-coal-500 mt-1.5">
             3–24 characters. Letters, numbers, underscores. You can change this later.
           </p>
         </div>
 
         <div>
-          <label className="block text-xs uppercase tracking-wider text-ink-400 mb-1.5">
+          <label className="block text-xs uppercase tracking-wider text-coal-600 mb-1.5">
             Email
           </label>
           <input
@@ -104,12 +104,12 @@ export default function SignupPage() {
             placeholder="you@example.com"
             autoComplete="email"
             required
-            className="w-full px-3 py-2.5 rounded-md bg-ink-900 border border-ink-800 text-paper placeholder:text-ink-600 focus:border-meth focus:outline-none tx-color"
+            className="w-full px-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
           />
         </div>
 
         <div>
-          <label className="block text-xs uppercase tracking-wider text-ink-400 mb-1.5">
+          <label className="block text-xs uppercase tracking-wider text-coal-600 mb-1.5">
             Password
           </label>
           <div className="relative">
@@ -120,12 +120,12 @@ export default function SignupPage() {
               placeholder="••••••••"
               autoComplete="new-password"
               required
-              className="w-full pl-3 pr-10 py-2.5 rounded-md bg-ink-900 border border-ink-800 text-paper placeholder:text-ink-600 focus:border-meth focus:outline-none tx-color"
+              className="w-full pl-3 pr-10 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
             />
             <button
               type="button"
               onClick={() => setShowPw((v) => !v)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-ink-500 hover:text-paper tx-color"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-coal-500 hover:text-coal-900 tx-color"
               aria-label={showPw ? 'Hide password' : 'Show password'}
             >
               {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -141,12 +141,12 @@ export default function SignupPage() {
         <button
           type="submit"
           disabled={loading}
-          className="press w-full py-2.5 rounded-md bg-meth text-ink-950 font-medium hover:bg-meth-300 disabled:opacity-50 tx-color"
+          className="press w-full py-2.5 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 disabled:opacity-50 tx-color"
         >
           {loading ? 'Creating account…' : 'Create account'}
         </button>
 
-        <p className="text-xs text-ink-500 leading-relaxed">
+        <p className="text-xs text-coal-500 leading-relaxed">
           By signing up you agree that we'll send you an email confirmation. We
           don't email you again unless you ask us to reset your password.
         </p>
@@ -159,7 +159,7 @@ function PwCheck({ ok, label }: { ok: boolean; label: string }) {
   return (
     <li
       className={`flex items-center gap-1.5 ${
-        ok ? 'text-meth' : 'text-ink-500'
+        ok ? 'text-accent' : 'text-coal-500'
       }`}
       style={{ transition: 'color 160ms var(--ease-out)' }}
     >

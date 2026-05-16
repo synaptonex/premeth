@@ -2,17 +2,17 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Called by every page load while logged in.
 //
-//   Layer 2 — Single concurrent session:
+//   Layer 2 - Single concurrent session:
 //     We store the latest session_token on the subscription row. If a heartbeat
 //     arrives with a token that doesn't match the latest, we tell the client
 //     "you've been signed out from another device" and the client signs out.
 //
-//   Layer 3 — Fingerprint tripwire:
+//   Layer 3 - Fingerprint tripwire:
 //     We log distinct (ip + user-agent) fingerprints. If >5 unique fingerprints
 //     in 7 days, we flag the account for admin review. Flagging doesn't block
-//     access — it just shows up in your admin dashboard.
+//     access - it just shows up in your admin dashboard.
 //
-// Only applies to Premeth+ users. Free users are not tracked.
+// Only applies to Enid+ users. Free users are not tracked.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { NextResponse } from 'next/server';
@@ -50,19 +50,19 @@ export async function POST(req: Request) {
     .eq('user_id', user.id)
     .maybeSingle();
 
-  // No sub means free user — nothing to enforce, just return active.
-  if (!sub) return NextResponse.json({ active: true, premethPlus: false });
+  // No sub means free user - nothing to enforce, just return active.
+  if (!sub) return NextResponse.json({ active: true, enidPlus: false });
 
   const isActive =
     sub.status === 'active' && new Date(sub.current_period_end) > new Date();
 
   if (!isActive) {
-    return NextResponse.json({ active: true, premethPlus: false, expired: true });
+    return NextResponse.json({ active: true, enidPlus: false, expired: true });
   }
 
   // ─── Layer 2: Concurrent session enforcement ──────────────────────────────
   if (!clientToken) {
-    // Client doesn't have a token yet — claim one for them. Old session (if any)
+    // Client doesn't have a token yet - claim one for them. Old session (if any)
     // is now invalidated.
     const newToken = crypto.randomBytes(24).toString('hex');
     await supabase
@@ -73,14 +73,14 @@ export async function POST(req: Request) {
       })
       .eq('user_id', user.id);
     await logFingerprint(supabase, user.id, fp, ip, ua);
-    return NextResponse.json({ active: true, premethPlus: true, token: newToken });
+    return NextResponse.json({ active: true, enidPlus: true, token: newToken });
   }
 
   if (sub.current_session_token && sub.current_session_token !== clientToken) {
     // Someone else logged in. This session is dead.
     return NextResponse.json({
       active: false,
-      premethPlus: true,
+      enidPlus: true,
       kicked: true,
       reason: 'signed_in_elsewhere',
     });
@@ -88,7 +88,7 @@ export async function POST(req: Request) {
 
   // Token matches. Refresh activity timestamp.
   await logFingerprint(supabase, user.id, fp, ip, ua);
-  return NextResponse.json({ active: true, premethPlus: true, token: clientToken });
+  return NextResponse.json({ active: true, enidPlus: true, token: clientToken });
 }
 
 async function logFingerprint(

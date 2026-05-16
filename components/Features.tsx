@@ -75,7 +75,7 @@ export default function Features() {
       <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-28">
         <div className="grid grid-cols-12 gap-6 mb-16">
           <div className="hidden md:block col-span-1 marginalia pt-1">
-            02 / Free
+            03 / Free
           </div>
           <div className="col-span-12 md:col-span-11">
             <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-coal-900 max-w-2xl">

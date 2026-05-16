@@ -2,12 +2,12 @@
 
 // app/vault/page.tsx
 // ─────────────────────────────────────────────────────────────────────────────
-// Mistake Vault (Premeth+).
+// Mistake Vault (Enid+).
 //
 // Lists questions you've previously gotten wrong, grouped into:
-//   • Due now — items where due_at <= now()
-//   • Coming up — due in future
-//   • Mastered — stage >= 5 (means you've gotten it right at all intervals)
+//   • Due now - items where due_at <= now()
+//   • Coming up - due in future
+//   • Mastered - stage >= 5 (means you've gotten it right at all intervals)
 //
 // Clicking a "due now" item drops you into a mini review of just that question.
 // Stage advancement: correct = next stage, wrong = back to stage 1.
@@ -22,17 +22,19 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/client';
-import { usePremethPlus } from '@/lib/premeth-plus.client';
+import { useEnidPlus } from '@/lib/enid-plus.client';
 import { fetchPaper } from '@/lib/data';
 import type { Question } from '@/lib/types';
 import { toast } from 'sonner';
 import {
-  ArrowLeft, ArrowRight, Check, X as XIcon, Lightbulb, Lock,
-  BookOpen, Calendar, CheckCircle2, Brain,
+  ArrowLeft, ArrowRight, Check, X as XIcon, Lightbulb,
+  BookOpen, Calendar, CheckCircle2, Brain, Flag,
 } from 'lucide-react';
+import ReportModal from '@/components/ReportModal';
 
 const STAGE_DAYS: Record<number, number> = {
   1: 1, 2: 3, 3: 7, 4: 14, 5: 30,
@@ -55,7 +57,8 @@ interface VaultRow {
 
 export default function VaultPage() {
   const supabase = createClient();
-  const sub = usePremethPlus();
+  const sub = useEnidPlus();
+  const router = useRouter();
   const [rows, setRows] = useState<VaultRow[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -63,6 +66,7 @@ export default function VaultPage() {
   const [reviewing, setReviewing] = useState<{ row: VaultRow; question: Question } | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   async function refresh() {
     const { data: { user } } = await supabase.auth.getUser();
@@ -78,10 +82,12 @@ export default function VaultPage() {
 
   useEffect(() => {
     if (sub.loading) return;
-    if (!sub.isActive) { setLoading(false); return; }
+    // The Vault list loads for everyone — a free user seeing their mistakes
+    // pile up is the whole hook. The spaced-repetition review itself stays
+    // Enid+, gated at the point of starting a review.
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sub.loading, sub.isActive]);
+  }, [sub.loading]);
 
   const { due, upcoming, mastered } = useMemo(() => {
     const now = Date.now();
@@ -101,6 +107,12 @@ export default function VaultPage() {
   }, [rows]);
 
   async function openReview(row: VaultRow) {
+    // Free users can see the Vault fill up, but starting a spaced-repetition
+    // review is Enid+. Send them to pricing rather than into the review.
+    if (!sub.isActive) {
+      router.push('/pricing');
+      return;
+    }
     const paper = await fetchPaper(row.category, row.paper_id);
     if (!paper || !paper.questions[row.question_index]) {
       toast.error('Could not load this question. Try the next one.');
@@ -153,29 +165,6 @@ export default function VaultPage() {
     );
   }
 
-  if (!sub.isActive) {
-    return (
-      <>
-        <Navbar />
-        <main className="mx-auto max-w-lg px-5 py-20 text-center">
-          <Lock className="h-10 w-10 text-accent mx-auto mb-3" />
-          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Premeth+ only</h1>
-          <p className="text-coal-600 mb-6">
-            The Mistake Vault is part of Premeth+. We auto-collect every question
-            you get wrong, then show it back to you on a spaced-repetition
-            schedule (1, 3, 7, 14, 30 days) until you've mastered it.
-          </p>
-          <Link
-            href="/pricing"
-            className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
-          >
-            See Premeth+ <ArrowRight className="h-4 w-4" />
-          </Link>
-        </main>
-      </>
-    );
-  }
-
   // ─── Review modal ─────────────────────────────────────────────────────
   if (reviewing) {
     const q = reviewing.question;
@@ -199,9 +188,19 @@ export default function VaultPage() {
               <span className="text-xs uppercase tracking-widest text-accent">
                 Stage {reviewing.row.stage} review
               </span>
-              <span className="text-xs text-coal-500">
-                Seen wrong {reviewing.row.times_wrong} time{reviewing.row.times_wrong === 1 ? '' : 's'}
-              </span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-coal-500">
+                  Seen wrong {reviewing.row.times_wrong} time{reviewing.row.times_wrong === 1 ? '' : 's'}
+                </span>
+                <button
+                  onClick={() => setReportOpen(true)}
+                  className="press inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md border border-coal-rule text-coal-600 hover:text-crimson hover:border-crimson/40 tx-color"
+                  title="Report this question"
+                >
+                  <Flag className="h-3.5 w-3.5" />
+                  Report
+                </button>
+              </div>
             </div>
 
             <p className="text-coal-900 leading-relaxed mb-5">{q.text}</p>
@@ -218,7 +217,7 @@ export default function VaultPage() {
                       reveal && isCorrect
                         ? 'border-accent bg-coal-50'
                         : reveal && isPicked && !isCorrect
-                        ? 'border-crimson bg-accent/5'
+                        ? 'border-crimson bg-crimson/5'
                         : isPicked
                         ? 'border-accent bg-coal-50'
                         : 'border-coal-rule hover:border-coal-300'
@@ -238,7 +237,7 @@ export default function VaultPage() {
                 <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-accent mb-2">
                   <Lightbulb className="h-3.5 w-3.5" /> Explanation
                 </div>
-                <p className="text-sm text-coal-700 leading-relaxed">
+                <p className="text-sm text-coal-900 leading-relaxed">
                   {q.explanation || q.options[correctIndex]?.explanation}
                 </p>
               </div>
@@ -262,6 +261,15 @@ export default function VaultPage() {
             )}
           </div>
         </main>
+
+        <ReportModal
+          open={reportOpen}
+          onClose={() => setReportOpen(false)}
+          category={reviewing.row.category}
+          paperId={reviewing.row.paper_id}
+          questionIndex={reviewing.row.question_index}
+          questionText={reviewing.question.text}
+        />
       </>
     );
   }
@@ -272,7 +280,7 @@ export default function VaultPage() {
       <Navbar />
       <main className="mx-auto max-w-3xl px-5 py-12">
         <div className="mb-8">
-          <span className="text-xs uppercase tracking-widest text-accent">Premeth+</span>
+          <span className="text-xs uppercase tracking-widest text-accent">Enid+</span>
           <h1 className="text-4xl font-light tracking-tighter text-coal-900 mt-2">
             Mistake Vault.
           </h1>
@@ -288,12 +296,33 @@ export default function VaultPage() {
           <Stat icon={<CheckCircle2 className="h-4 w-4" />} label="Mastered" value={mastered.length} />
         </div>
 
+        {!sub.isActive && rows.length > 0 && (
+          <div className="mb-8 rounded-xl border border-accent/30 bg-accent/10 p-5">
+            <p className="text-coal-900 font-medium">
+              Reviewing on a schedule is an Enid+ feature.
+            </p>
+            <p className="text-sm text-coal-600 mt-1">
+              Your mistakes are being collected here for free. Enid+ brings
+              each one back at the right time, on a 1, 3, 7, 14, 30 day curve,
+              until you have it down.
+            </p>
+            <Link
+              href="/pricing"
+              className="press inline-flex items-center gap-2 mt-4 bg-accent text-coal px-4 py-2 text-sm font-medium hover:opacity-90 tx-color"
+            >
+              Unlock spaced review <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        )}
+
         {rows.length === 0 ? (
           <div className="border border-coal-rule bg-coal-50 p-10 text-center">
             <Brain className="h-8 w-8 text-accent mx-auto mb-3" />
             <p className="text-coal-700 max-w-md mx-auto">
-              No mistakes yet. Practice a paper or run the Daily Drill.
-              Anything you get wrong lands here.
+              Nothing here yet, which is fine. Practice a paper or run a
+              drill. The questions you get wrong land here, and getting them
+              wrong now is how you stop getting them wrong on the day that
+              counts.
             </p>
           </div>
         ) : (
