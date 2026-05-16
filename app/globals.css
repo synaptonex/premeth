@@ -6,11 +6,11 @@
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 
-  --bone: #F7F7F4;
-  --bone-fg: #1A1A18;
-  --bone-mute: #5C5C56;
-  --bone-rule: #E0E0D8;
-  --accent: #CC2936;
+  --coal: #14130F;
+  --coal-fg: #F0EBDD;
+  --coal-mute: #928C7F;
+  --coal-rule: #322F2A;
+  --accent: #E0A341;
 }
 
 * {
@@ -19,32 +19,31 @@
 }
 
 html, body {
-  background: var(--bone);
-  color: var(--bone-fg);
+  background: var(--coal);
+  color: var(--coal-fg);
   font-feature-settings: "ss01", "ss02", "cv11";
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: var(--bone-fg);
-  color: var(--bone);
+  background: var(--accent);
+  color: var(--coal);
 }
 
 :focus-visible {
-  outline: 1.5px solid var(--bone-fg);
+  outline: 1.5px solid var(--accent);
   outline-offset: 2px;
 }
 
 ::-webkit-scrollbar { width: 12px; height: 12px; }
-::-webkit-scrollbar-track { background: var(--bone); }
+::-webkit-scrollbar-track { background: var(--coal); }
 ::-webkit-scrollbar-thumb {
-  background: var(--bone-rule);
-  border: 3px solid var(--bone);
+  background: var(--coal-rule);
+  border: 3px solid var(--coal);
   border-radius: 999px;
 }
-::-webkit-scrollbar-thumb:hover { background: #B8B8AE; }
+::-webkit-scrollbar-thumb:hover { background: #4A463F; }
 
-/* Reusable transitions, explicit properties only, never `all` */
 .tx-color {
   transition:
     color 160ms var(--ease-out),
@@ -57,7 +56,6 @@ button:active.press, .press:active {
   transform: scale(0.98);
 }
 
-/* Underline link drawn from left on hover */
 .link-draw {
   position: relative;
   display: inline-block;
@@ -76,18 +74,17 @@ button:active.press, .press:active {
 }
 .link-draw:hover::after { transform: scaleX(1); }
 
-/* Marginalia: the section index that runs down the left side of major pages.
-   Set as a small caps numeric label, this is the one signature move that
-   distinguishes Premeth from the every-card-has-a-border SaaS default. */
+/* The section index running down the left margin of major pages.
+   A small tabular-numeral label. This is the one move that keeps the
+   layout from looking like a stack of generic cards. */
 .marginalia {
   font-variant-numeric: tabular-nums;
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--bone-mute);
+  color: var(--coal-mute);
 }
 
-/* Reduced motion: keep opacity, lose movement */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -107,39 +104,34 @@ button:active.press, .press:active {
 }
 .animate-modal-in { animation: modal-in 200ms var(--ease-out); }
 
-/* Paid feature pages and the practice screen keep the original dark theme.
-   Those pages set bg-ink-950 explicitly on their root and we let those
-   styles flow through unchanged. */
-
 .bg-grid {
   background-image:
-    linear-gradient(to right, rgba(0,0,0,0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
   background-size: 56px 56px;
 }
 
 .bg-paper {
-  background-color: var(--bone);
-  color: var(--bone-fg);
+  background-color: var(--coal-50);
+  color: var(--coal-fg);
 }
 
 .bg-lines {
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0 35px,
-    rgba(0, 0, 0, 0.06) 35px 36px
+    rgba(255, 255, 255, 0.05) 35px 36px
   );
 }
 
-/* Keyboard shortcut keycap style, used in Practice and Scratchpad */
 .kbd {
   display: inline-block;
   padding: 1px 5px;
   font-family: ui-monospace, monospace;
   font-size: 10px;
-  color: #d4d4d8;
-  background: #18181b;
-  border: 1px solid #3f3f46;
+  color: #B5AFA1;
+  background: #1E1C17;
+  border: 1px solid #322F2A;
   border-bottom-width: 2px;
   border-radius: 3px;
   line-height: 1.2;
@@ -149,9 +141,9 @@ button:active.press, .press:active {
   padding: 0 4px;
   font-family: ui-monospace, monospace;
   font-size: 10px;
-  color: #d4d4d8;
-  background: #18181b;
-  border: 1px solid #3f3f46;
+  color: #B5AFA1;
+  background: #1E1C17;
+  border: 1px solid #322F2A;
   border-radius: 3px;
   line-height: 1.4;
 }

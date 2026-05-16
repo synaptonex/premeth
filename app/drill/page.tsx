@@ -287,7 +287,7 @@ export default function DrillPage() {
     return (
       <>
         <Navbar />
-        <main className="mx-auto max-w-2xl px-5 py-20 text-center text-bone-600">
+        <main className="mx-auto max-w-2xl px-5 py-20 text-center text-coal-600">
           <Sparkles className="h-8 w-8 text-accent mx-auto mb-3 animate-pulse" />
           Building today's drill from your weak topics…
         </main>
@@ -301,14 +301,14 @@ export default function DrillPage() {
         <Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
           <Lock className="h-10 w-10 text-accent mx-auto mb-3" />
-          <h1 className="text-3xl font-light tracking-tighter text-bone-900 mb-2">Premeth+ only</h1>
-          <p className="text-bone-600 mb-6">
+          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Premeth+ only</h1>
+          <p className="text-coal-600 mb-6">
             The Adaptive Daily Drill is part of Premeth+. It picks 30 fresh MCQs
             every day from your weakest chapters.
           </p>
           <Link
             href="/pricing"
-            className="press inline-flex items-center gap-2 bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color"
+            className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
           >
             See Premeth+ <ArrowRight className="h-4 w-4" />
           </Link>
@@ -322,14 +322,14 @@ export default function DrillPage() {
       <>
         <Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
-          <h1 className="text-3xl font-light tracking-tighter text-bone-900 mb-2">Drill couldn't be built</h1>
-          <p className="text-bone-600 mb-6">
+          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Drill couldn't be built</h1>
+          <p className="text-coal-600 mb-6">
             We couldn't find enough questions matching your weak topics. Practice
             a few more papers and try again tomorrow.
           </p>
           <Link
             href="/exams"
-            className="press inline-flex items-center gap-2 bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color"
+            className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
           >
             Browse papers
           </Link>
@@ -345,28 +345,28 @@ export default function DrillPage() {
         <Navbar />
         <main className="mx-auto max-w-xl px-5 py-16">
           <div className="text-center mb-8">
-            <div className="inline-grid place-items-center h-16 w-16 rounded-full bg-bone-100 border border-bone-rule mb-4">
+            <div className="inline-grid place-items-center h-16 w-16 rounded-full bg-coal-100 border border-coal-rule mb-4">
               <Trophy className="h-7 w-7 text-accent" />
             </div>
-            <h1 className="text-4xl font-light tracking-tighter text-bone-900">Drill complete.</h1>
-            <p className="text-bone-600 mt-2">
+            <h1 className="text-4xl font-light tracking-tighter text-coal-900">Drill complete.</h1>
+            <p className="text-coal-600 mt-2">
               {score} / {questions.length} · {pct}%
             </p>
           </div>
-          <p className="text-center text-sm text-bone-600 mb-6">
+          <p className="text-center text-sm text-coal-600 mb-6">
             Every wrong answer was added to your Mistake Vault for spaced
             repetition. We'll re-test you on those in 1 day.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link
               href="/vault"
-              className="press inline-flex items-center gap-2 bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color"
+              className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
             >
               Open Mistake Vault <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/dashboard"
-              className="press inline-flex items-center border border-bone-300 px-5 py-2.5 hover:border-accent tx-color"
+              className="press inline-flex items-center border border-coal-300 px-5 py-2.5 hover:border-accent tx-color"
             >
               Back to dashboard
             </Link>
@@ -388,27 +388,27 @@ export default function DrillPage() {
         <div className="flex items-center justify-between mb-5">
           <div>
             <span className="text-xs uppercase tracking-widest text-accent">Daily Drill</span>
-            <h1 className="text-2xl text-bone-900">
-              Q{qIndex + 1} <span className="text-bone-500">/ {questions.length}</span>
+            <h1 className="text-2xl text-coal-900">
+              Q{qIndex + 1} <span className="text-coal-500">/ {questions.length}</span>
             </h1>
           </div>
           <div className="text-right">
-            <div className="text-xs text-bone-500">Topic</div>
-            <div className="text-sm text-bone-800 truncate max-w-[12rem]">{q.topic}</div>
+            <div className="text-xs text-coal-500">Topic</div>
+            <div className="text-sm text-coal-800 truncate max-w-[12rem]">{q.topic}</div>
           </div>
         </div>
 
         {/* Progress bar */}
-        <div className="h-1 rounded-full bg-bone-100 mb-6 overflow-hidden">
+        <div className="h-1 rounded-full bg-coal-100 mb-6 overflow-hidden">
           <div
-            className="h-full bg-bone-900 transition-all duration-200"
+            className="h-full bg-coal-900 transition-all duration-200"
             style={{ width: `${((qIndex + 1) / questions.length) * 100}%` }}
           />
         </div>
 
         {/* Question card */}
-        <div className="border border-bone-rule bg-bone-50 p-6 mb-4">
-          <p className="text-bone-900 leading-relaxed mb-5">{q.question.text}</p>
+        <div className="border border-coal-rule bg-coal-50 p-6 mb-4">
+          <p className="text-coal-900 leading-relaxed mb-5">{q.question.text}</p>
           <div className="space-y-2">
             {q.question.options.map((opt, i) => {
               const isCorrect = i === correctIndex;
@@ -421,16 +421,16 @@ export default function DrillPage() {
                   disabled={isSubmitted}
                   className={`press w-full text-left border px-4 py-3 flex items-start gap-3 tx-color ${
                     reveal && isCorrect
-                      ? 'border-accent bg-bone-50'
+                      ? 'border-accent bg-coal-50'
                       : reveal && isPicked && !isCorrect
                       ? 'border-crimson bg-accent/5'
                       : isPicked
-                      ? 'border-accent bg-bone-50'
-                      : 'border-bone-rule hover:border-bone-300'
+                      ? 'border-accent bg-coal-50'
+                      : 'border-coal-rule hover:border-coal-300'
                   }`}
                 >
-                  <span className="font-mono text-sm text-bone-500 shrink-0">{LETTERS[i]}</span>
-                  <span className="flex-1 text-bone-800">{opt.text}</span>
+                  <span className="font-mono text-sm text-coal-500 shrink-0">{LETTERS[i]}</span>
+                  <span className="flex-1 text-coal-800">{opt.text}</span>
                   {reveal && isCorrect && <Check className="h-4 w-4 text-accent shrink-0" />}
                   {reveal && isPicked && !isCorrect && <XIcon className="h-4 w-4 text-accent shrink-0" />}
                 </button>
@@ -439,11 +439,11 @@ export default function DrillPage() {
           </div>
 
           {showExplain && (q.question.explanation || q.question.options[correctIndex]?.explanation) && (
-            <div className="mt-5 border border-bone-rule bg-bone/80 p-4">
+            <div className="mt-5 border border-coal-rule bg-coal/80 p-4">
               <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-accent mb-2">
                 <Lightbulb className="h-3.5 w-3.5" /> Explanation
               </div>
-              <p className="text-sm text-bone-700 leading-relaxed">
+              <p className="text-sm text-coal-700 leading-relaxed">
                 {q.question.explanation || q.question.options[correctIndex]?.explanation}
               </p>
             </div>
@@ -452,21 +452,21 @@ export default function DrillPage() {
 
         {/* Footer controls */}
         <div className="flex items-center justify-between gap-3">
-          <div className="text-sm text-bone-500">
-            Score so far: <span className="text-bone-900">{score}</span> / {qIndex + 1}
+          <div className="text-sm text-coal-500">
+            Score so far: <span className="text-coal-900">{score}</span> / {qIndex + 1}
           </div>
           {!isSubmitted ? (
             <button
               onClick={submitAnswer}
               disabled={selected === null}
-              className="press inline-flex items-center gap-2 bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color disabled:opacity-50"
+              className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color disabled:opacity-50"
             >
               Submit
             </button>
           ) : (
             <button
               onClick={goNext}
-              className="press inline-flex items-center gap-2 bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color"
+              className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
             >
               {qIndex < questions.length - 1 ? 'Next' : 'Finish drill'}{' '}
               <ArrowRight className="h-4 w-4" />

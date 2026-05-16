@@ -37,14 +37,14 @@ export default function Navbar() {
   const linkCls = (href: string) => {
     const active = pathname === href || pathname.startsWith(href + '/');
     return `text-sm tx-color ${
-      active ? 'text-bone-900' : 'text-bone-500 hover:text-bone-900'
+      active ? 'text-coal-900' : 'text-coal-500 hover:text-coal-900'
     }`;
   };
 
   return (
-    <header className="border-b border-bone-rule">
+    <header className="border-b border-coal-rule">
       <div className="mx-auto max-w-6xl px-6 md:px-10 h-16 flex items-center justify-between">
-        <Link href="/" className="text-bone-900 text-base font-medium tracking-tight">
+        <Link href="/" className="text-coal-900 text-base font-medium tracking-tight">
           Premeth
           {isPlus && <span className="text-accent ml-0.5">+</span>}
         </Link>
@@ -74,25 +74,25 @@ export default function Navbar() {
             <>
               <Link
                 href="/profile"
-                className="text-sm text-bone-500 hover:text-bone-900 tx-color truncate max-w-[10rem]"
+                className="text-sm text-coal-500 hover:text-coal-900 tx-color truncate max-w-[10rem]"
               >
                 {user.email}
               </Link>
               <button
                 onClick={signOut}
-                className="text-sm text-bone-500 hover:text-bone-900 tx-color"
+                className="text-sm text-coal-500 hover:text-coal-900 tx-color"
               >
                 Sign out
               </button>
             </>
           ) : (
             <>
-              <Link href="/login" className="text-sm text-bone-500 hover:text-bone-900 tx-color">
+              <Link href="/login" className="text-sm text-coal-500 hover:text-coal-900 tx-color">
                 Sign in
               </Link>
               <Link
                 href="/signup"
-                className="press text-sm font-medium text-bone-900 border-b border-bone-900 pb-0.5 tx-color"
+                className="press text-sm font-medium text-coal-900 border-b border-coal-900 pb-0.5 tx-color"
               >
                 Create account
               </Link>
@@ -101,7 +101,7 @@ export default function Navbar() {
         </div>
 
         <button
-          className="md:hidden p-2 -mr-2 text-bone-900"
+          className="md:hidden p-2 -mr-2 text-coal-900"
           onClick={() => setMenuOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -110,7 +110,7 @@ export default function Navbar() {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden border-t border-bone-rule bg-bone px-6 py-6 space-y-4">
+        <div className="md:hidden border-t border-coal-rule bg-coal px-6 py-6 space-y-4">
           <MobileLink href="/exams" onClick={() => setMenuOpen(false)}>Papers</MobileLink>
           {user && isPlus && (
             <>
@@ -129,12 +129,12 @@ export default function Navbar() {
                 <Link
                   href="/pricing"
                   onClick={() => setMenuOpen(false)}
-                  className="block text-base text-bone-900"
+                  className="block text-base text-coal-900"
                 >
                   Premeth<span className="text-accent">+</span>
                 </Link>
               )}
-              <button onClick={signOut} className="block text-base text-bone-600">
+              <button onClick={signOut} className="block text-base text-coal-600">
                 Sign out
               </button>
             </>
@@ -144,7 +144,7 @@ export default function Navbar() {
                 <Link
                   href="/pricing"
                   onClick={() => setMenuOpen(false)}
-                  className="block text-base text-bone-900"
+                  className="block text-base text-coal-900"
                 >
                   Premeth<span className="text-accent">+</span>
                 </Link>
@@ -167,7 +167,7 @@ function MobileLink({
   children: React.ReactNode;
 }) {
   return (
-    <Link href={href} onClick={onClick} className="block text-base text-bone-700">
+    <Link href={href} onClick={onClick} className="block text-base text-coal-700">
       {children}
     </Link>
   );

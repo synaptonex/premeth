@@ -7,31 +7,31 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        // Single family. The whole app reads in Manrope at varying weights.
         sans: ['var(--font-manrope)', 'system-ui', 'sans-serif'],
         display: ['var(--font-manrope)', 'system-ui', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       colors: {
-        // Public surfaces use this paper-toned light palette. Off-white
-        // is warmer than #FFFFFF without crossing into Organic cream.
-        bone: {
-          DEFAULT: '#F7F7F4',
-          50:  '#FBFBF9',
-          100: '#F7F7F4',
-          200: '#EFEFEA',
-          300: '#E0E0D8',
-          400: '#B8B8AE',
-          500: '#8B8B82',
-          600: '#5C5C56',
-          700: '#3F3F3A',
-          800: '#2A2A26',
-          900: '#1A1A18',
+        // Warm near-black surface. Not pure #000 — a touch of warmth keeps it
+        // from feeling like an OLED void, and Manrope sits better on it.
+        coal: {
+          DEFAULT: '#14130F',
+          50:  '#1E1C17',
+          100: '#1A1814',
+          200: '#252320',
+          300: '#322F2A',
+          400: '#4A463F',
+          500: '#6B665C',
+          600: '#928C7F',
+          700: '#B5AFA1',
+          800: '#D6D0C2',
+          900: '#F0EBDD',
         },
-        // Single accent. Used sparingly — for Premeth+ and one primary action per page.
-        accent: '#CC2936',
+        // One signal color. Warm gold reads as premium on dark, where red
+        // would muddy and blue would feel cold.
+        accent: '#E0A341',
 
-        // Existing dark theme retained for the paid feature pages.
+        // Original palette kept so nothing that still references it breaks.
         ink: {
           DEFAULT: '#0a0a0a',
           50: '#fafafa',
@@ -48,28 +48,17 @@ module.exports = {
         },
         meth: {
           DEFAULT: '#3ee089',
-          50:  '#ebfff5',
-          100: '#d2fde7',
-          200: '#a8f8cf',
-          300: '#6fefb1',
           400: '#3ee089',
           500: '#16c46a',
-          600: '#0aa055',
-          700: '#0a7e46',
-          800: '#0e633a',
-          900: '#0e5132',
-          950: '#022d1c',
         },
         paper: '#f7f3ec',
         crimson: '#e23b3b',
       },
       letterSpacing: {
-        // Tight by default for display sizes — Manrope reads better tight.
         tighter: '-0.04em',
         tight: '-0.02em',
       },
       transitionTimingFunction: {
-        // One curve. Used for every transition in the app.
         'out-soft': 'cubic-bezier(0.2, 0.8, 0.2, 1)',
       },
     },

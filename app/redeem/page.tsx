@@ -61,29 +61,29 @@ export default function RedeemPage() {
             </div>
             <div className="col-span-12 md:col-span-11">
               <p className="marginalia mb-6">Redeemed</p>
-              <h1 className="text-5xl md:text-6xl font-light tracking-tighter text-bone-900">
+              <h1 className="text-5xl md:text-6xl font-light tracking-tighter text-coal-900">
                 Welcome to Premeth<span className="text-accent">+</span>.
               </h1>
-              <p className="mt-6 text-bone-600 text-lg max-w-xl">
+              <p className="mt-6 text-coal-600 text-lg max-w-xl">
                 Your subscription runs until{' '}
-                <strong className="text-bone-900 font-medium">
+                <strong className="text-coal-900 font-medium">
                   {expiresAt.toLocaleDateString('en-GB', {
                     day: 'numeric', month: 'long', year: 'numeric',
                   })}
                 </strong>.
               </p>
-              <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-px bg-bone-rule border border-bone-rule max-w-2xl">
-                <Link href="/drill" className="press bg-bone p-8 hover:bg-bone-50 tx-color">
+              <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-px bg-coal-rule border border-coal-rule max-w-2xl">
+                <Link href="/drill" className="press bg-coal p-8 hover:bg-coal-50 tx-color">
                   <p className="marginalia mb-3">Start with</p>
-                  <h3 className="text-xl font-medium text-bone-900 mb-1">Daily Drill</h3>
-                  <p className="text-sm text-bone-500">
+                  <h3 className="text-xl font-medium text-coal-900 mb-1">Daily Drill</h3>
+                  <p className="text-sm text-coal-500">
                     Thirty MCQs from your weak topics
                   </p>
                 </Link>
-                <Link href="/dashboard" className="press bg-bone p-8 hover:bg-bone-50 tx-color">
+                <Link href="/dashboard" className="press bg-coal p-8 hover:bg-coal-50 tx-color">
                   <p className="marginalia mb-3">Or</p>
-                  <h3 className="text-xl font-medium text-bone-900 mb-1">Dashboard</h3>
-                  <p className="text-sm text-bone-500">
+                  <h3 className="text-xl font-medium text-coal-900 mb-1">Dashboard</h3>
+                  <p className="text-sm text-coal-500">
                     See your stats and weak topics
                   </p>
                 </Link>
@@ -106,10 +106,10 @@ export default function RedeemPage() {
           </div>
           <div className="col-span-12 md:col-span-11">
             <p className="marginalia mb-6">Redeem a code</p>
-            <h1 className="text-5xl md:text-6xl font-light tracking-tighter text-bone-900">
+            <h1 className="text-5xl md:text-6xl font-light tracking-tighter text-coal-900">
               Paste your code.
             </h1>
-            <p className="mt-6 text-bone-600 max-w-xl text-lg">
+            <p className="mt-6 text-coal-600 max-w-xl text-lg">
               The code we sent you after your payment. Format is
               PRMTH-XXXX-XXXX. Codes are bound to your account.
             </p>
@@ -121,24 +121,24 @@ export default function RedeemPage() {
                 value={raw}
                 onChange={(e) => setRaw(e.target.value)}
                 placeholder="PRMTH-XXXX-XXXX"
-                className="w-full bg-transparent border-b border-bone-rule py-3 text-bone-900 font-mono text-lg tracking-wider placeholder:text-bone-300 focus:border-bone-900 focus:outline-none tx-color"
+                className="w-full bg-transparent border-b border-coal-rule py-3 text-coal-900 font-mono text-lg tracking-wider placeholder:text-coal-300 focus:border-coal-900 focus:outline-none tx-color"
                 autoFocus
               />
               <button
                 onClick={handleRedeem}
                 disabled={submitting || !raw}
-                className="press mt-8 inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1 disabled:opacity-50"
+                className="press mt-8 inline-flex items-center gap-2 text-base font-medium text-coal-900 border-b border-coal-900 pb-1 disabled:opacity-50"
               >
                 {submitting ? 'Redeeming…' : 'Redeem'}
                 <span aria-hidden>→</span>
               </button>
             </div>
 
-            <p className="mt-16 text-sm text-bone-500 max-w-md">
+            <p className="mt-16 text-sm text-coal-500 max-w-md">
               Lost your code? Message us on WhatsApp at{' '}
               <a
                 href="https://wa.me/923345121203"
-                className="text-bone-900 underline underline-offset-2"
+                className="text-coal-900 underline underline-offset-2"
               >
                 +92 334 5121203
               </a>.

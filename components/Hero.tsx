@@ -39,13 +39,13 @@ export default function Hero() {
               For MDCAT 2026 candidates
             </p>
 
-            <h1 className="hero-anim text-5xl md:text-7xl lg:text-8xl font-light tracking-tighter leading-[0.95] text-bone-900 max-w-4xl">
+            <h1 className="hero-anim text-5xl md:text-7xl lg:text-8xl font-light tracking-tighter leading-[0.95] text-coal-900 max-w-4xl">
               Practice 2,500 past papers.
               <br />
-              <span className="text-bone-500">No signup. No ads.</span>
+              <span className="text-coal-500">No signup. No ads.</span>
             </h1>
 
-            <p className="hero-anim mt-8 text-lg text-bone-600 max-w-xl leading-relaxed">
+            <p className="hero-anim mt-8 text-lg text-coal-600 max-w-xl leading-relaxed">
               Premeth holds 400,000 MCQs from every public MDCAT paper since 2008.
               Practice any of them in the browser. Save your progress if you want to.
             </p>
@@ -53,7 +53,7 @@ export default function Hero() {
             <div className="hero-anim mt-10 flex flex-wrap items-center gap-x-8 gap-y-3">
               <Link
                 href="/exams"
-                className="press inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1 hover:gap-3 tx-color"
+                className="press inline-flex items-center gap-2 text-base font-medium text-coal-900 border-b border-coal-900 pb-1 hover:gap-3 tx-color"
                 style={{ transition: 'gap 200ms var(--ease-out)' }}
               >
                 Browse papers
@@ -61,14 +61,14 @@ export default function Hero() {
               </Link>
               <Link
                 href="/signup"
-                className="link-draw text-base text-bone-600 hover:text-bone-900 tx-color"
+                className="link-draw text-base text-coal-600 hover:text-coal-900 tx-color"
               >
                 Create an account
               </Link>
             </div>
 
             {/* Hairline separator and stats. Numbers as composition elements. */}
-            <div className="hero-anim mt-20 pt-8 border-t border-bone-rule">
+            <div className="hero-anim mt-20 pt-8 border-t border-coal-rule">
               <dl className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <Stat n="2,500" label="Past papers" />
                 <Stat n="400,000" label="MCQs" />
@@ -86,7 +86,7 @@ export default function Hero() {
 function Stat({ n, label }: { n: string; label: string }) {
   return (
     <div>
-      <div className="text-3xl md:text-4xl font-light tracking-tighter text-bone-900 tabular-nums">
+      <div className="text-3xl md:text-4xl font-light tracking-tighter text-coal-900 tabular-nums">
         {n}
       </div>
       <div className="marginalia mt-1">{label}</div>

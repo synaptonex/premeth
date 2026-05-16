@@ -240,7 +240,7 @@ export default function MockExamPage() {
   if (sub.loading) {
     return (
       <><Navbar />
-        <main className="mx-auto max-w-2xl px-5 py-20 text-center text-bone-600">Loading…</main>
+        <main className="mx-auto max-w-2xl px-5 py-20 text-center text-coal-600">Loading…</main>
       </>
     );
   }
@@ -250,14 +250,14 @@ export default function MockExamPage() {
       <><Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
           <Lock className="h-10 w-10 text-accent mx-auto mb-3" />
-          <h1 className="text-3xl font-light tracking-tighter text-bone-900 mb-2">Premeth+ only</h1>
-          <p className="text-bone-600 mb-6">
-            Full timed MDCAT simulations — 200 MCQs, 200 minutes, real exam UI,
+          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Premeth+ only</h1>
+          <p className="text-coal-600 mb-6">
+            Full timed MDCAT simulations. 200 MCQs, 200 minutes, real exam interface,
             per-subject breakdown when you're done.
           </p>
           <Link
             href="/pricing"
-            className="press inline-flex items-center gap-2 bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color"
+            className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
           >
             See Premeth+ <ArrowRight className="h-4 w-4" />
           </Link>
@@ -272,34 +272,34 @@ export default function MockExamPage() {
         <main className="mx-auto max-w-2xl px-5 py-12">
           <div className="text-center mb-10">
             <Clock className="h-10 w-10 text-accent mx-auto mb-3" />
-            <h1 className="text-4xl font-light tracking-tighter text-bone-900">Full timed mock exam.</h1>
-            <p className="text-bone-600 mt-2">PMDC MDCAT format — 200 MCQs, 200 minutes.</p>
+            <h1 className="text-4xl font-light tracking-tighter text-coal-900">Full timed mock exam.</h1>
+            <p className="text-coal-600 mt-2">PMDC MDCAT format. 200 MCQs in 200 minutes.</p>
           </div>
-          <div className="border border-bone-rule bg-bone-50 p-6 mb-8">
-            <h3 className="font-medium text-bone-900 mb-3">What to expect</h3>
-            <ul className="space-y-2 text-sm text-bone-700">
+          <div className="border border-coal-rule bg-coal-50 p-6 mb-8">
+            <h3 className="font-medium text-coal-900 mb-3">What to expect</h3>
+            <ul className="space-y-2 text-sm text-coal-700">
               {Object.entries(SUBJECT_QUOTAS).map(([subj, n]) => (
                 <li key={subj} className="flex justify-between">
                   <span>{subj}</span>
-                  <span className="text-bone-500">{n} MCQs</span>
+                  <span className="text-coal-500">{n} MCQs</span>
                 </li>
               ))}
-              <li className="flex justify-between border-t border-bone-rule pt-2 mt-2 font-medium">
+              <li className="flex justify-between border-t border-coal-rule pt-2 mt-2 font-medium">
                 <span>Total</span>
                 <span>{TOTAL_MCQS} MCQs · 200 min</span>
               </li>
             </ul>
           </div>
-          <div className="border border-bone-rule bg-bone-50 p-4 mb-6 flex items-start gap-3">
-            <AlertTriangle className="h-4 w-4 text-bone-600 shrink-0 mt-0.5" />
-            <p className="text-sm text-bone-700">
+          <div className="border border-coal-rule bg-coal-50 p-4 mb-6 flex items-start gap-3">
+            <AlertTriangle className="h-4 w-4 text-coal-600 shrink-0 mt-0.5" />
+            <p className="text-sm text-coal-700">
               Once you start, the timer doesn't pause. If you close the tab, the
               timer keeps going. Treat this like the real exam.
             </p>
           </div>
           <button
             onClick={buildExam}
-            className="press w-full inline-flex items-center justify-center gap-2 bg-bone-900 text-bone-50 px-5 py-3 font-medium hover:bg-bone-700 tx-color"
+            className="press w-full inline-flex items-center justify-center gap-2 bg-accent text-coal px-5 py-3 font-medium hover:opacity-90 tx-color"
           >
             Start the exam <ArrowRight className="h-4 w-4" />
           </button>
@@ -313,8 +313,8 @@ export default function MockExamPage() {
       <><Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
           <Sparkles className="h-8 w-8 text-accent mx-auto mb-3 animate-pulse" />
-          <p className="text-bone-700">Assembling your exam…</p>
-          <p className="text-xs text-bone-500 mt-1">Sampling from 2,500+ past papers</p>
+          <p className="text-coal-700">Assembling your exam…</p>
+          <p className="text-xs text-coal-500 mt-1">Sampling from 2,500+ past papers</p>
         </main>
       </>
     );
@@ -324,8 +324,8 @@ export default function MockExamPage() {
     return (
       <><Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
-          <h1 className="text-3xl font-light tracking-tighter text-bone-900 mb-2">Could not build exam</h1>
-          <p className="text-bone-600">Not enough question data available right now. Try again later.</p>
+          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Could not build exam</h1>
+          <p className="text-coal-600">Not enough question data available right now. Try again later.</p>
         </main>
       </>
     );
@@ -344,29 +344,29 @@ export default function MockExamPage() {
       <><Navbar />
         <main className="mx-auto max-w-xl px-5 py-12">
           <div className="text-center mb-8">
-            <div className="inline-grid place-items-center h-16 w-16 rounded-full bg-bone-100 border border-bone-rule mb-4">
+            <div className="inline-grid place-items-center h-16 w-16 rounded-full bg-coal-100 border border-coal-rule mb-4">
               <Trophy className="h-7 w-7 text-accent" />
             </div>
-            <h1 className="text-4xl font-light tracking-tighter text-bone-900">Exam complete.</h1>
-            <p className="text-bone-600 mt-2">
-              {score} / {questions.length} · <span className={pct >= 75 ? 'text-bone-900' : pct >= 50 ? 'text-bone-500' : 'text-accent'}>{pct}%</span>
+            <h1 className="text-4xl font-light tracking-tighter text-coal-900">Exam complete.</h1>
+            <p className="text-coal-600 mt-2">
+              {score} / {questions.length} · <span className={pct >= 75 ? 'text-coal-900' : pct >= 50 ? 'text-coal-500' : 'text-accent'}>{pct}%</span>
             </p>
           </div>
-          <div className="border border-bone-rule bg-bone-50 p-5 mb-8">
-            <h3 className="font-medium text-bone-900 mb-3">By subject</h3>
+          <div className="border border-coal-rule bg-coal-50 p-5 mb-8">
+            <h3 className="font-medium text-coal-900 mb-3">By subject</h3>
             <ul className="space-y-3">
               {Object.entries(breakdown).map(([subj, b]) => {
                 const p = b.total > 0 ? Math.round((b.correct / b.total) * 100) : 0;
                 return (
                   <li key={subj}>
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-bone-800">{subj}</span>
-                      <span className="text-bone-600">{b.correct} / {b.total} · {p}%</span>
+                      <span className="text-coal-800">{subj}</span>
+                      <span className="text-coal-600">{b.correct} / {b.total} · {p}%</span>
                     </div>
-                    <div className="h-1.5 rounded-full bg-bone-100 overflow-hidden">
+                    <div className="h-1.5 rounded-full bg-coal-100 overflow-hidden">
                       <div
                         className={`h-full ${
-                          p >= 75 ? 'bg-bone-900' : p >= 50 ? 'bg-bone-500' : 'bg-accent'
+                          p >= 75 ? 'bg-coal-900' : p >= 50 ? 'bg-coal-500' : 'bg-accent'
                         }`}
                         style={{ width: `${Math.max(p, 4)}%`, transition: 'width 600ms ease' }}
                       />
@@ -376,19 +376,19 @@ export default function MockExamPage() {
               })}
             </ul>
           </div>
-          <p className="text-center text-sm text-bone-600 mb-6">
+          <p className="text-center text-sm text-coal-600 mb-6">
             All wrong answers were added to your Mistake Vault.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link
               href="/vault"
-              className="press inline-flex items-center gap-2 bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color"
+              className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
             >
               Review mistakes
             </Link>
             <Link
               href="/dashboard"
-              className="press inline-flex items-center border border-bone-300 px-5 py-2.5 hover:border-accent tx-color"
+              className="press inline-flex items-center border border-coal-300 px-5 py-2.5 hover:border-accent tx-color"
             >
               Dashboard
             </Link>
@@ -408,20 +408,20 @@ export default function MockExamPage() {
       <Navbar />
       <main className="mx-auto max-w-6xl px-5 py-6">
         {/* Top bar: timer + counters */}
-        <div className="sticky top-14 z-20 -mx-5 px-5 py-3 mb-5 border-b border-bone-rule bg-bone/80 backdrop-blur-md">
+        <div className="sticky top-14 z-20 -mx-5 px-5 py-3 mb-5 border-b border-coal-rule bg-coal/80 backdrop-blur-md">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <Clock className={`h-5 w-5 ${timeLeft < 600 ? 'text-accent' : 'text-accent'}`} />
-              <span className={`text-2xl ${timeLeft < 600 ? 'text-accent' : 'text-bone-900'}`}>
+              <span className={`text-2xl ${timeLeft < 600 ? 'text-accent' : 'text-coal-900'}`}>
                 {fmtMMSS(timeLeft)}
               </span>
             </div>
-            <div className="text-sm text-bone-600">
-              <span className="text-bone-900">{answeredCount}</span> / {questions.length} answered
+            <div className="text-sm text-coal-600">
+              <span className="text-coal-900">{answeredCount}</span> / {questions.length} answered
             </div>
             <button
               onClick={() => setShowSubmitConfirm(true)}
-              className="press text-sm bg-bone-900 text-bone-50 px-4 py-1.5 font-medium hover:bg-bone-700 tx-color"
+              className="press text-sm bg-accent text-coal px-4 py-1.5 font-medium hover:opacity-90 tx-color"
             >
               Submit
             </button>
@@ -434,20 +434,20 @@ export default function MockExamPage() {
             <div className="flex items-center justify-between mb-3">
               <div>
                 <span className="text-xs uppercase tracking-widest text-accent">{q.subject}</span>
-                <h2 className="text-xl text-bone-900">Q{qIndex + 1}</h2>
+                <h2 className="text-xl text-coal-900">Q{qIndex + 1}</h2>
               </div>
               <button
                 onClick={toggleFlag}
                 className={`press inline-flex items-center gap-1.5 border px-3 py-1.5 text-sm tx-color ${
-                  flagged[qIndex] ? 'border-accent text-accent' : 'border-bone-rule hover:border-bone-300'
+                  flagged[qIndex] ? 'border-accent text-accent' : 'border-coal-rule hover:border-coal-300'
                 }`}
               >
                 <Flag className="h-3.5 w-3.5" /> {flagged[qIndex] ? 'Flagged' : 'Flag for review'}
               </button>
             </div>
 
-            <div className="border border-bone-rule bg-bone-50 p-6 mb-4">
-              <p className="text-bone-900 leading-relaxed mb-5">{q.question.text}</p>
+            <div className="border border-coal-rule bg-coal-50 p-6 mb-4">
+              <p className="text-coal-900 leading-relaxed mb-5">{q.question.text}</p>
               <div className="space-y-2">
                 {q.question.options.map((opt, i) => {
                   const isPicked = selected === i;
@@ -457,12 +457,12 @@ export default function MockExamPage() {
                       onClick={() => pickAnswer(i)}
                       className={`press w-full text-left border px-4 py-3 flex items-start gap-3 tx-color ${
                         isPicked
-                          ? 'border-accent bg-bone-50'
-                          : 'border-bone-rule hover:border-bone-300'
+                          ? 'border-accent bg-coal-50'
+                          : 'border-coal-rule hover:border-coal-300'
                       }`}
                     >
-                      <span className="font-mono text-sm text-bone-500 shrink-0">{LETTERS[i]}</span>
-                      <span className="flex-1 text-bone-800">{opt.text}</span>
+                      <span className="font-mono text-sm text-coal-500 shrink-0">{LETTERS[i]}</span>
+                      <span className="flex-1 text-coal-800">{opt.text}</span>
                     </button>
                   );
                 })}
@@ -473,14 +473,14 @@ export default function MockExamPage() {
               <button
                 onClick={() => setQIndex(Math.max(0, qIndex - 1))}
                 disabled={qIndex === 0}
-                className="press inline-flex items-center gap-1.5 border border-bone-300 px-3 py-2 text-sm hover:border-bone-400 disabled:opacity-40 disabled:cursor-not-allowed tx-color"
+                className="press inline-flex items-center gap-1.5 border border-coal-300 px-3 py-2 text-sm hover:border-coal-400 disabled:opacity-40 disabled:cursor-not-allowed tx-color"
               >
                 <ArrowLeft className="h-3.5 w-3.5" /> Previous
               </button>
               <button
                 onClick={() => setQIndex(Math.min(questions.length - 1, qIndex + 1))}
                 disabled={qIndex === questions.length - 1}
-                className="press inline-flex items-center gap-1.5 bg-bone-900 text-bone-50 px-4 py-2 text-sm font-medium hover:bg-bone-700 disabled:opacity-40 disabled:cursor-not-allowed tx-color"
+                className="press inline-flex items-center gap-1.5 bg-accent text-coal px-4 py-2 text-sm font-medium hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed tx-color"
               >
                 Next <ArrowRight className="h-3.5 w-3.5" />
               </button>
@@ -489,8 +489,8 @@ export default function MockExamPage() {
 
           {/* Question grid */}
           <aside className="hidden lg:block">
-            <div className="sticky top-32 border border-bone-rule bg-bone-50 p-3">
-              <div className="text-xs uppercase tracking-wider text-bone-500 mb-2 px-1">Questions</div>
+            <div className="sticky top-32 border border-coal-rule bg-coal-50 p-3">
+              <div className="text-xs uppercase tracking-wider text-coal-500 mb-2 px-1">Questions</div>
               <div className="grid grid-cols-6 gap-1">
                 {questions.map((_, i) => {
                   const isCurr = i === qIndex;
@@ -502,10 +502,10 @@ export default function MockExamPage() {
                       onClick={() => setQIndex(i)}
                       className={`press text-xs rounded h-7 w-full font-mono tx-color ${
                         isCurr
-                          ? 'bg-bone-900 text-bone-50'
+                          ? 'bg-accent text-coal'
                           : isAns
-                          ? 'bg-bone-100 text-accent border border-bone-rule'
-                          : 'border border-bone-rule text-bone-600 hover:border-bone-400'
+                          ? 'bg-coal-100 text-accent border border-coal-rule'
+                          : 'border border-coal-rule text-coal-600 hover:border-coal-400'
                       } ${isFlag ? 'ring-1 ring-accent' : ''}`}
                       title={`Q${i + 1}${isFlag ? ' (flagged)' : ''}`}
                     >
@@ -514,9 +514,9 @@ export default function MockExamPage() {
                   );
                 })}
               </div>
-              <div className="mt-3 pt-3 border-t border-bone-rule space-y-1 text-xs text-bone-600">
-                <Legend color="bg-bone-900" label="Current" />
-                <Legend color="bg-bone-100 border border-bone-rule" label="Answered" />
+              <div className="mt-3 pt-3 border-t border-coal-rule space-y-1 text-xs text-coal-600">
+                <Legend color="bg-accent" label="Current" />
+                <Legend color="bg-coal-100 border border-coal-rule" label="Answered" />
                 <Legend color="ring-1 ring-accent" label="Flagged" />
               </div>
             </div>
@@ -525,11 +525,11 @@ export default function MockExamPage() {
 
         {/* Submit confirm */}
         {showSubmitConfirm && (
-          <div className="fixed inset-0 z-50 grid place-items-center bg-bone/80 backdrop-blur-sm p-5">
-            <div className="w-full max-w-md border border-bone-rule bg-bone-100 p-6">
-              <h3 className="text-xl text-bone-900 mb-2">Submit your exam?</h3>
-              <p className="text-sm text-bone-700 mb-5">
-                You've answered <strong className="text-bone-900">{answeredCount}</strong> of {questions.length} questions.
+          <div className="fixed inset-0 z-50 grid place-items-center bg-coal/80 backdrop-blur-sm p-5">
+            <div className="w-full max-w-md border border-coal-rule bg-coal-100 p-6">
+              <h3 className="text-xl text-coal-900 mb-2">Submit your exam?</h3>
+              <p className="text-sm text-coal-700 mb-5">
+                You've answered <strong className="text-coal-900">{answeredCount}</strong> of {questions.length} questions.
                 {questions.length - answeredCount > 0 && (
                   <> {questions.length - answeredCount} will be marked as skipped.</>
                 )}
@@ -537,13 +537,13 @@ export default function MockExamPage() {
               <div className="flex gap-2">
                 <button
                   onClick={() => setShowSubmitConfirm(false)}
-                  className="press flex-1 border border-bone-300 px-4 py-2.5 hover:border-bone-400 tx-color"
+                  className="press flex-1 border border-coal-300 px-4 py-2.5 hover:border-coal-400 tx-color"
                 >
                   Keep going
                 </button>
                 <button
                   onClick={() => { setShowSubmitConfirm(false); finish(); }}
-                  className="press flex-1 bg-bone-900 text-bone-50 px-4 py-2.5 font-medium hover:bg-bone-700 tx-color"
+                  className="press flex-1 bg-accent text-coal px-4 py-2.5 font-medium hover:opacity-90 tx-color"
                 >
                   Yes, submit
                 </button>

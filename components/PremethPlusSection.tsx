@@ -13,7 +13,7 @@ const PLUS_FEATURES = [
     n: '01',
     title: 'Adaptive Daily Drill',
     body:
-      'Thirty MCQs every day, drawn from the topics you are weakest on. The drill recomposes as you improve.',
+      'Thirty MCQs a day, pulled from whatever you\'re worst at right now. It shifts as you get better.',
   },
   {
     n: '02',
@@ -69,7 +69,7 @@ export default function PremethPlusSection() {
   );
 
   return (
-    <section ref={root} className="border-t border-bone-rule bg-bone-50">
+    <section ref={root} className="border-t border-coal-rule bg-coal-50">
       <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-28">
         <div className="grid grid-cols-12 gap-6 mb-16">
           <div className="hidden md:block col-span-1 marginalia pt-1">
@@ -79,7 +79,7 @@ export default function PremethPlusSection() {
             <p className="marginalia mb-6">
               Premeth<span className="text-accent">+</span>
             </p>
-            <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-bone-900 max-w-3xl leading-[1.05]">
+            <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-coal-900 max-w-3xl leading-[1.05]">
               For the candidate who wants the app to coach them, not just hold the papers.
             </h2>
           </div>
@@ -88,19 +88,19 @@ export default function PremethPlusSection() {
         <div className="grid grid-cols-12 gap-6 mb-16">
           <div className="hidden md:block col-span-1" />
           <div className="col-span-12 md:col-span-11">
-            <ul className="border-t border-bone-rule">
+            <ul className="border-t border-coal-rule">
               {PLUS_FEATURES.map((f) => (
                 <li
                   key={f.n}
-                  className="plus-row grid grid-cols-12 gap-4 py-7 border-b border-bone-rule"
+                  className="plus-row grid grid-cols-12 gap-4 py-7 border-b border-coal-rule"
                 >
                   <span className="col-span-12 md:col-span-1 marginalia pt-1">
                     {f.n}
                   </span>
-                  <h3 className="col-span-12 md:col-span-4 text-xl text-bone-900 font-medium leading-snug">
+                  <h3 className="col-span-12 md:col-span-4 text-xl text-coal-900 font-medium leading-snug">
                     {f.title}
                   </h3>
-                  <p className="col-span-12 md:col-span-7 text-bone-600 leading-relaxed">
+                  <p className="col-span-12 md:col-span-7 text-coal-600 leading-relaxed">
                     {f.body}
                   </p>
                 </li>
@@ -112,16 +112,16 @@ export default function PremethPlusSection() {
         <div className="grid grid-cols-12 gap-6">
           <div className="hidden md:block col-span-1" />
           <div className="col-span-12 md:col-span-11">
-            <div className="border-t border-bone-rule pt-8 grid grid-cols-12 gap-6">
+            <div className="border-t border-coal-rule pt-8 grid grid-cols-12 gap-6">
               <div className="col-span-12 md:col-span-7">
                 <p className="marginalia mb-2">Founders pricing</p>
                 <div className="flex items-baseline gap-3">
-                  <span className="text-6xl font-light tracking-tighter text-bone-900 tabular-nums">
+                  <span className="text-6xl font-light tracking-tighter text-coal-900 tabular-nums">
                     Rs 999
                   </span>
-                  <span className="text-bone-500">/ 6 months</span>
+                  <span className="text-coal-500">/ 6 months</span>
                 </div>
-                <p className="mt-3 text-bone-600 max-w-md">
+                <p className="mt-3 text-coal-600 max-w-md">
                   First 100 buyers. After that, Rs 1,499 / 6 months.
                   Pay via JazzCash or EasyPaisa.
                 </p>
@@ -130,7 +130,7 @@ export default function PremethPlusSection() {
                 <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
                   <Link
                     href="/pricing"
-                    className="press inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1 hover:gap-3 tx-color"
+                    className="press inline-flex items-center gap-2 text-base font-medium text-coal-900 border-b border-coal-900 pb-1 hover:gap-3 tx-color"
                     style={{ transition: 'gap 200ms var(--ease-out)' }}
                   >
                     See full breakdown
@@ -138,7 +138,7 @@ export default function PremethPlusSection() {
                   </Link>
                   <Link
                     href="/redeem"
-                    className="link-draw text-base text-bone-600 hover:text-bone-900 tx-color"
+                    className="link-draw text-base text-coal-600 hover:text-coal-900 tx-color"
                   >
                     I have a code
                   </Link>
@@ -146,7 +146,7 @@ export default function PremethPlusSection() {
               </div>
             </div>
 
-            <p className="mt-12 text-sm text-bone-500 max-w-2xl">
+            <p className="mt-12 text-sm text-coal-500 max-w-2xl">
               Free Premeth stays free. The 2,500 papers, the aggregate calculator,
               the syllabus guide and the dashboard cost nothing and require no
               account. Premeth<span className="text-accent">+</span> is additive.

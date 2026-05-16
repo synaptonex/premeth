@@ -2,17 +2,17 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-bone-rule mt-12">
+    <footer className="border-t border-coal-rule mt-12">
       <div className="mx-auto max-w-6xl px-6 md:px-10 py-16">
         <div className="grid grid-cols-12 gap-6">
           <div className="hidden md:block col-span-1 marginalia pt-1">
             End / Notes
           </div>
           <div className="col-span-12 md:col-span-5">
-            <div className="text-bone-900 text-base font-medium mb-3">
+            <div className="text-coal-900 text-base font-medium mb-3">
               Premeth
             </div>
-            <p className="text-bone-600 text-sm leading-relaxed max-w-sm">
+            <p className="text-coal-600 text-sm leading-relaxed max-w-sm">
               MDCAT practice from 2,500 past papers. Built by students who
               took the test, for the ones taking it next.
             </p>
@@ -21,31 +21,31 @@ export default function Footer() {
           <div className="col-span-6 md:col-span-3">
             <p className="marginalia mb-4">Practice</p>
             <ul className="space-y-2.5 text-sm">
-              <li><Link href="/papers/subject_biology" className="text-bone-600 hover:text-bone-900 tx-color">Biology</Link></li>
-              <li><Link href="/papers/subject_chemistry" className="text-bone-600 hover:text-bone-900 tx-color">Chemistry</Link></li>
-              <li><Link href="/papers/subject_physics" className="text-bone-600 hover:text-bone-900 tx-color">Physics</Link></li>
-              <li><Link href="/papers/subject_english" className="text-bone-600 hover:text-bone-900 tx-color">English</Link></li>
-              <li><Link href="/exams" className="text-bone-600 hover:text-bone-900 tx-color">All papers</Link></li>
+              <li><Link href="/papers/subject_biology" className="text-coal-600 hover:text-coal-900 tx-color">Biology</Link></li>
+              <li><Link href="/papers/subject_chemistry" className="text-coal-600 hover:text-coal-900 tx-color">Chemistry</Link></li>
+              <li><Link href="/papers/subject_physics" className="text-coal-600 hover:text-coal-900 tx-color">Physics</Link></li>
+              <li><Link href="/papers/subject_english" className="text-coal-600 hover:text-coal-900 tx-color">English</Link></li>
+              <li><Link href="/exams" className="text-coal-600 hover:text-coal-900 tx-color">All papers</Link></li>
             </ul>
           </div>
 
           <div className="col-span-6 md:col-span-3">
             <p className="marginalia mb-4">More</p>
             <ul className="space-y-2.5 text-sm">
-              <li><Link href="/draw" className="text-bone-600 hover:text-bone-900 tx-color">Scratchpad</Link></li>
-              <li><Link href="/about" className="text-bone-600 hover:text-bone-900 tx-color">About</Link></li>
+              <li><Link href="/draw" className="text-coal-600 hover:text-coal-900 tx-color">Scratchpad</Link></li>
+              <li><Link href="/about" className="text-coal-600 hover:text-coal-900 tx-color">About</Link></li>
               <li>
-                <Link href="/pricing" className="text-bone-600 hover:text-bone-900 tx-color">
+                <Link href="/pricing" className="text-coal-600 hover:text-coal-900 tx-color">
                   Premeth<span className="text-accent">+</span>
                 </Link>
               </li>
-              <li><Link href="/redeem" className="text-bone-600 hover:text-bone-900 tx-color">Redeem code</Link></li>
-              <li><Link href="/signup" className="text-bone-600 hover:text-bone-900 tx-color">Create account</Link></li>
+              <li><Link href="/redeem" className="text-coal-600 hover:text-coal-900 tx-color">Redeem code</Link></li>
+              <li><Link href="/signup" className="text-coal-600 hover:text-coal-900 tx-color">Create account</Link></li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-bone-rule flex items-baseline justify-between">
+        <div className="mt-16 pt-8 border-t border-coal-rule flex items-baseline justify-between">
           <span className="marginalia">
             © {new Date().getFullYear()} Premeth
           </span>

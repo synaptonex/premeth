@@ -149,12 +149,12 @@ export default function PricingPage() {
             </div>
             <div className="col-span-12 md:col-span-11">
               <p className="marginalia mb-4">Your subscription</p>
-              <h1 className="text-5xl md:text-6xl font-light tracking-tighter text-bone-900">
+              <h1 className="text-5xl md:text-6xl font-light tracking-tighter text-coal-900">
                 Premeth<span className="text-accent">+</span> is active.
               </h1>
-              <p className="mt-6 text-bone-600 max-w-xl text-lg">
+              <p className="mt-6 text-coal-600 max-w-xl text-lg">
                 Your subscription runs until{' '}
-                <strong className="text-bone-900 font-medium">
+                <strong className="text-coal-900 font-medium">
                   {expiresAt?.toLocaleDateString('en-GB', {
                     day: 'numeric', month: 'long', year: 'numeric',
                   })}
@@ -163,14 +163,14 @@ export default function PricingPage() {
               <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3">
                 <Link
                   href="/drill"
-                  className="press inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1"
+                  className="press inline-flex items-center gap-2 text-base font-medium text-coal-900 border-b border-coal-900 pb-1"
                 >
                   Go to Daily Drill
                   <span aria-hidden>→</span>
                 </Link>
                 <Link
                   href="/dashboard"
-                  className="link-draw text-base text-bone-600 hover:text-bone-900 tx-color"
+                  className="link-draw text-base text-coal-600 hover:text-coal-900 tx-color"
                 >
                   Back to dashboard
                 </Link>
@@ -194,12 +194,12 @@ export default function PricingPage() {
           </div>
           <div className="col-span-12 md:col-span-11">
             <p className="price-anim marginalia mb-6">Pricing</p>
-            <h1 className="price-anim text-5xl md:text-7xl font-light tracking-tighter text-bone-900 max-w-3xl leading-[0.95]">
+            <h1 className="price-anim text-5xl md:text-7xl font-light tracking-tighter text-coal-900 max-w-3xl leading-[0.95]">
               Free is free.
               <br />
-              <span className="text-bone-500">Plus is</span>{' '}
+              <span className="text-coal-500">Plus is</span>{' '}
               <span className="tabular-nums">Rs {price.toLocaleString()}</span>
-              <span className="text-bone-500"> / 6 months.</span>
+              <span className="text-coal-500"> / 6 months.</span>
             </h1>
             {isFounders && foundersTaken !== null && (
               <p className="price-anim marginalia mt-8">
@@ -215,8 +215,8 @@ export default function PricingPage() {
             02 / Compare
           </div>
           <div className="col-span-12 md:col-span-11">
-            <div className="border-t border-bone-rule">
-              <div className="grid grid-cols-12 py-4 border-b border-bone-rule">
+            <div className="border-t border-coal-rule">
+              <div className="grid grid-cols-12 py-4 border-b border-coal-rule">
                 <div className="col-span-6 md:col-span-8 marginalia">Feature</div>
                 <div className="col-span-3 md:col-span-2 marginalia text-right">Free</div>
                 <div className="col-span-3 md:col-span-2 marginalia text-right text-accent">Plus</div>
@@ -224,16 +224,16 @@ export default function PricingPage() {
               {FEATURES.map((f, i) => (
                 <div
                   key={i}
-                  className="grid grid-cols-12 py-4 border-b border-bone-rule items-center"
+                  className="grid grid-cols-12 py-4 border-b border-coal-rule items-center"
                 >
-                  <div className="col-span-6 md:col-span-8 text-bone-800">
+                  <div className="col-span-6 md:col-span-8 text-coal-800">
                     {f.label}
                   </div>
                   <div className="col-span-3 md:col-span-2 text-right">
                     {f.free ? (
-                      <Check className="inline h-4 w-4 text-bone-900" strokeWidth={2.5} />
+                      <Check className="inline h-4 w-4 text-coal-900" strokeWidth={2.5} />
                     ) : (
-                      <span className="text-bone-300">—</span>
+                      <span className="text-coal-300">—</span>
                     )}
                   </div>
                   <div className="col-span-3 md:col-span-2 text-right">
@@ -252,9 +252,9 @@ export default function PricingPage() {
           <div className="grid grid-cols-12 gap-6 mb-16">
             <div className="hidden md:block col-span-1" />
             <div className="col-span-12 md:col-span-11">
-              <div className="border-t border-bone-rule pt-6">
+              <div className="border-t border-coal-rule pt-6">
                 <p className="marginalia mb-2">Pending review</p>
-                <p className="text-bone-700 text-lg">
+                <p className="text-coal-700 text-lg">
                   Your payment was submitted on{' '}
                   {new Date(latestRequest.created_at).toLocaleDateString('en-GB')}.
                   We confirm within 12 hours and message you the code.
@@ -273,24 +273,24 @@ export default function PricingPage() {
             {step === 'choose' && (
               <>
                 <p className="marginalia mb-6">Choose a method</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-bone-rule border border-bone-rule">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-coal-rule border border-coal-rule">
                   <button
                     onClick={() => { setMethod('jazzcash'); setStep('pay'); }}
-                    className="press text-left bg-bone p-8 hover:bg-bone-50 tx-color"
+                    className="press text-left bg-coal p-8 hover:bg-coal-50 tx-color"
                   >
                     <p className="marginalia mb-3">Option A</p>
-                    <h3 className="text-2xl font-medium text-bone-900 mb-1">JazzCash</h3>
-                    <p className="text-bone-500 text-sm">
+                    <h3 className="text-2xl font-medium text-coal-900 mb-1">JazzCash</h3>
+                    <p className="text-coal-500 text-sm">
                       Pay from any JazzCash account
                     </p>
                   </button>
                   <button
                     onClick={() => { setMethod('easypaisa'); setStep('pay'); }}
-                    className="press text-left bg-bone p-8 hover:bg-bone-50 tx-color"
+                    className="press text-left bg-coal p-8 hover:bg-coal-50 tx-color"
                   >
                     <p className="marginalia mb-3">Option B</p>
-                    <h3 className="text-2xl font-medium text-bone-900 mb-1">EasyPaisa</h3>
-                    <p className="text-bone-500 text-sm">
+                    <h3 className="text-2xl font-medium text-coal-900 mb-1">EasyPaisa</h3>
+                    <p className="text-coal-500 text-sm">
                       Pay from any EasyPaisa account
                     </p>
                   </button>
@@ -302,47 +302,47 @@ export default function PricingPage() {
               <>
                 <button
                   onClick={() => setStep('choose')}
-                  className="marginalia mb-6 text-bone-500 hover:text-bone-900 tx-color"
+                  className="marginalia mb-6 text-coal-500 hover:text-coal-900 tx-color"
                 >
                   ← Back
                 </button>
-                <h2 className="text-3xl font-light tracking-tight text-bone-900 mb-2">
+                <h2 className="text-3xl font-light tracking-tight text-coal-900 mb-2">
                   Send Rs {price.toLocaleString()} to this number.
                 </h2>
-                <p className="text-bone-600 mb-10">
+                <p className="text-coal-600 mb-10">
                   Open your {method === 'jazzcash' ? 'JazzCash' : 'EasyPaisa'} app,
                   send the payment, then come back here with your transaction ID.
                 </p>
 
-                <dl className="border-t border-bone-rule">
-                  <div className="grid grid-cols-12 py-5 border-b border-bone-rule">
+                <dl className="border-t border-coal-rule">
+                  <div className="grid grid-cols-12 py-5 border-b border-coal-rule">
                     <dt className="col-span-4 marginalia pt-1">Account number</dt>
-                    <dd className="col-span-7 text-bone-900 font-medium tabular-nums">
+                    <dd className="col-span-7 text-coal-900 font-medium tabular-nums">
                       {account.accountNumber}
                     </dd>
                     <button
                       onClick={() => copy(account.accountNumber, 'Number')}
-                      className="col-span-1 text-bone-500 hover:text-bone-900 tx-color justify-self-end"
+                      className="col-span-1 text-coal-500 hover:text-coal-900 tx-color justify-self-end"
                       aria-label="Copy number"
                     >
                       <Copy className="h-4 w-4" />
                     </button>
                   </div>
-                  <div className="grid grid-cols-12 py-5 border-b border-bone-rule">
+                  <div className="grid grid-cols-12 py-5 border-b border-coal-rule">
                     <dt className="col-span-4 marginalia pt-1">Account name</dt>
-                    <dd className="col-span-8 text-bone-900 font-medium">
+                    <dd className="col-span-8 text-coal-900 font-medium">
                       {account.accountName}
                     </dd>
                   </div>
-                  <div className="grid grid-cols-12 py-5 border-b border-bone-rule">
+                  <div className="grid grid-cols-12 py-5 border-b border-coal-rule">
                     <dt className="col-span-4 marginalia pt-1">Amount</dt>
-                    <dd className="col-span-8 text-bone-900 font-medium tabular-nums">
+                    <dd className="col-span-8 text-coal-900 font-medium tabular-nums">
                       Rs {price.toLocaleString()}
                     </dd>
                   </div>
-                  <div className="grid grid-cols-12 py-5 border-b border-bone-rule">
+                  <div className="grid grid-cols-12 py-5 border-b border-coal-rule">
                     <dt className="col-span-4 marginalia pt-1">Duration</dt>
-                    <dd className="col-span-8 text-bone-900 font-medium">
+                    <dd className="col-span-8 text-coal-900 font-medium">
                       {PREMETH_PLUS_DURATION_MONTHS} months from approval
                     </dd>
                   </div>
@@ -350,7 +350,7 @@ export default function PricingPage() {
 
                 <button
                   onClick={() => setStep('submit')}
-                  className="press mt-10 inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1"
+                  className="press mt-10 inline-flex items-center gap-2 text-base font-medium text-coal-900 border-b border-coal-900 pb-1"
                 >
                   I have sent the money
                   <span aria-hidden>→</span>
@@ -362,14 +362,14 @@ export default function PricingPage() {
               <>
                 <button
                   onClick={() => setStep('pay')}
-                  className="marginalia mb-6 text-bone-500 hover:text-bone-900 tx-color"
+                  className="marginalia mb-6 text-coal-500 hover:text-coal-900 tx-color"
                 >
                   ← Back
                 </button>
-                <h2 className="text-3xl font-light tracking-tight text-bone-900 mb-2">
+                <h2 className="text-3xl font-light tracking-tight text-coal-900 mb-2">
                   Submit your transaction ID.
                 </h2>
-                <p className="text-bone-600 mb-10 max-w-xl">
+                <p className="text-coal-600 mb-10 max-w-xl">
                   We use the TID to verify the payment in our own JazzCash or
                   EasyPaisa account. On match, we generate your code.
                 </p>
@@ -384,9 +384,9 @@ export default function PricingPage() {
                       value={senderPhone}
                       onChange={(e) => setSenderPhone(e.target.value)}
                       placeholder="03XX-XXXXXXX"
-                      className="w-full bg-transparent border-b border-bone-rule py-2 text-bone-900 placeholder:text-bone-400 focus:border-bone-900 focus:outline-none tx-color"
+                      className="w-full bg-transparent border-b border-coal-rule py-2 text-coal-900 placeholder:text-coal-400 focus:border-coal-900 focus:outline-none tx-color"
                     />
-                    <p className="text-xs text-bone-500 mt-2">
+                    <p className="text-xs text-coal-500 mt-2">
                       The number you sent the payment from
                     </p>
                   </div>
@@ -400,7 +400,7 @@ export default function PricingPage() {
                       value={transactionId}
                       onChange={(e) => setTransactionId(e.target.value)}
                       placeholder="From your SMS receipt"
-                      className="w-full bg-transparent border-b border-bone-rule py-2 text-bone-900 font-mono placeholder:text-bone-400 focus:border-bone-900 focus:outline-none tx-color"
+                      className="w-full bg-transparent border-b border-coal-rule py-2 text-coal-900 font-mono placeholder:text-coal-400 focus:border-coal-900 focus:outline-none tx-color"
                     />
                   </div>
                 </div>
@@ -408,7 +408,7 @@ export default function PricingPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={submitting}
-                  className="press mt-10 inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1 disabled:opacity-50"
+                  className="press mt-10 inline-flex items-center gap-2 text-base font-medium text-coal-900 border-b border-coal-900 pb-1 disabled:opacity-50"
                 >
                   {submitting ? 'Submitting…' : 'Submit for review'}
                   <span aria-hidden>→</span>
@@ -419,26 +419,26 @@ export default function PricingPage() {
             {step === 'confirm' && (
               <>
                 <p className="marginalia mb-6">Submitted</p>
-                <h2 className="text-3xl md:text-4xl font-light tracking-tight text-bone-900 mb-4">
+                <h2 className="text-3xl md:text-4xl font-light tracking-tight text-coal-900 mb-4">
                   Got it. We will verify within 12 hours.
                 </h2>
-                <p className="text-bone-600 mb-10 max-w-xl">
+                <p className="text-coal-600 mb-10 max-w-xl">
                   Once we match your TID to our records, we generate a
                   redemption code bound to your account and message it to{' '}
-                  <strong className="text-bone-900 font-medium">{senderPhone}</strong>.
+                  <strong className="text-coal-900 font-medium">{senderPhone}</strong>.
                   Then you paste it at /redeem.
                 </p>
                 <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
                   <Link
                     href="/"
-                    className="press inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1"
+                    className="press inline-flex items-center gap-2 text-base font-medium text-coal-900 border-b border-coal-900 pb-1"
                   >
                     Back to home
                     <span aria-hidden>→</span>
                   </Link>
                   <Link
                     href="/redeem"
-                    className="link-draw text-base text-bone-600 hover:text-bone-900 tx-color"
+                    className="link-draw text-base text-coal-600 hover:text-coal-900 tx-color"
                   >
                     Go to redeem
                   </Link>

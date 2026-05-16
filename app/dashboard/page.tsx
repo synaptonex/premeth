@@ -151,7 +151,7 @@ export default function DashboardPage() {
     return (
       <>
         <Navbar />
-        <main className="mx-auto max-w-6xl px-6 md:px-10 py-24 text-bone-500">
+        <main className="mx-auto max-w-6xl px-6 md:px-10 py-24 text-coal-500">
           Loading…
         </main>
       </>
@@ -175,11 +175,11 @@ export default function DashboardPage() {
                 'Dashboard'
               )}
             </p>
-            <h1 className="dash-anim text-5xl md:text-6xl font-light tracking-tighter text-bone-900">
+            <h1 className="dash-anim text-5xl md:text-6xl font-light tracking-tighter text-coal-900">
               {username ? `Welcome back, ${username}.` : 'Welcome back.'}
             </h1>
             {attempts.length > 0 && (
-              <p className="dash-anim mt-6 text-bone-600 text-lg">
+              <p className="dash-anim mt-6 text-coal-600 text-lg">
                 {stats.totalAttempts} papers attempted ·{' '}
                 {stats.totalQuestions.toLocaleString()} questions answered ·{' '}
                 {stats.accuracy.toFixed(0)}% accuracy
@@ -193,14 +193,14 @@ export default function DashboardPage() {
           <div className="grid grid-cols-12 gap-6">
             <div className="hidden md:block col-span-1" />
             <div className="col-span-12 md:col-span-11">
-              <p className="text-bone-600 text-lg max-w-xl mb-8">
+              <p className="text-coal-600 text-lg max-w-xl mb-8">
                 You have not attempted any papers yet. Once you complete one,
                 this dashboard fills in with stats, weak topics, and revision
                 suggestions.
               </p>
               <Link
                 href="/exams"
-                className="press inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1"
+                className="press inline-flex items-center gap-2 text-base font-medium text-coal-900 border-b border-coal-900 pb-1"
               >
                 Pick a paper
                 <span aria-hidden>→</span>
@@ -218,7 +218,7 @@ export default function DashboardPage() {
                   02 / Plus
                 </div>
                 <div className="col-span-12 md:col-span-11">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-bone-rule border border-bone-rule">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-coal-rule border border-coal-rule">
                     <DashStat
                       href="/drill"
                       label="Daily Drill"
@@ -255,20 +255,20 @@ export default function DashboardPage() {
                   02 / Plus
                 </div>
                 <div className="col-span-12 md:col-span-11">
-                  <div className="border-t border-bone-rule pt-6">
+                  <div className="border-t border-coal-rule pt-6">
                     <p className="marginalia mb-3">
                       Upgrade · Premeth<span className="text-accent">+</span>
                     </p>
-                    <h2 className="text-2xl md:text-3xl font-light tracking-tight text-bone-900 max-w-2xl">
+                    <h2 className="text-2xl md:text-3xl font-light tracking-tight text-coal-900 max-w-2xl">
                       You have answered {stats.totalQuestions.toLocaleString()} questions. Now make every wrong answer earn its keep.
                     </h2>
-                    <p className="mt-4 text-bone-600 max-w-xl">
+                    <p className="mt-4 text-coal-600 max-w-xl">
                       Adaptive Daily Drill, Mistake Vault, full mock exams.
                       Rs 999 for 6 months while founders pricing lasts.
                     </p>
                     <Link
                       href="/pricing"
-                      className="press mt-6 inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1"
+                      className="press mt-6 inline-flex items-center gap-2 text-base font-medium text-coal-900 border-b border-coal-900 pb-1"
                     >
                       See pricing
                       <span aria-hidden>→</span>
@@ -284,7 +284,7 @@ export default function DashboardPage() {
                 {isPlus ? '03' : '02'} / Numbers
               </div>
               <div className="col-span-12 md:col-span-11">
-                <div className="grid grid-cols-2 md:grid-cols-4 border-t border-bone-rule">
+                <div className="grid grid-cols-2 md:grid-cols-4 border-t border-coal-rule">
                   <StatBox label="Papers" value={stats.totalAttempts.toLocaleString()} />
                   <StatBox label="Accuracy" value={`${stats.accuracy.toFixed(0)}%`} />
                   <StatBox label="Questions" value={stats.totalQuestions.toLocaleString()} />
@@ -301,37 +301,37 @@ export default function DashboardPage() {
                 </div>
                 <div className="col-span-12 md:col-span-11">
                   <div className="flex items-baseline justify-between mb-6">
-                    <h2 className="text-3xl font-light tracking-tight text-bone-900">
+                    <h2 className="text-3xl font-light tracking-tight text-coal-900">
                       Topics to revise.
                     </h2>
                     {isPlus && (
                       <Link
                         href="/dashboard/export"
-                        className="link-draw text-sm text-bone-600 hover:text-bone-900 tx-color"
+                        className="link-draw text-sm text-coal-600 hover:text-coal-900 tx-color"
                       >
                         Export PDF
                       </Link>
                     )}
                   </div>
-                  <ul className="border-t border-bone-rule">
+                  <ul className="border-t border-coal-rule">
                     {topicStats.slice(0, 6).map((t) => (
                       <li
                         key={t.topic}
-                        className="grid grid-cols-12 gap-4 py-5 border-b border-bone-rule items-center"
+                        className="grid grid-cols-12 gap-4 py-5 border-b border-coal-rule items-center"
                       >
                         <div className="col-span-12 md:col-span-5">
-                          <div className="text-bone-900 font-medium">{t.topic}</div>
+                          <div className="text-coal-900 font-medium">{t.topic}</div>
                           <div className="marginalia mt-1">{t.subject}</div>
                         </div>
                         <div className="col-span-8 md:col-span-5">
-                          <div className="h-1 bg-bone-200 overflow-hidden">
+                          <div className="h-1 bg-coal-200 overflow-hidden">
                             <div
                               className={
                                 t.accuracy < 50
                                   ? 'h-full bg-accent'
                                   : t.accuracy < 75
-                                  ? 'h-full bg-bone-700'
-                                  : 'h-full bg-bone-900'
+                                  ? 'h-full bg-coal-700'
+                                  : 'h-full bg-coal-900'
                               }
                               style={{
                                 width: `${Math.max(t.accuracy, 4)}%`,
@@ -341,7 +341,7 @@ export default function DashboardPage() {
                           </div>
                         </div>
                         <div className="col-span-4 md:col-span-2 text-right">
-                          <div className="text-bone-900 font-medium tabular-nums">
+                          <div className="text-coal-900 font-medium tabular-nums">
                             {t.accuracy.toFixed(0)}%
                           </div>
                           <div className="marginalia mt-1">~{t.total} Qs</div>
@@ -360,17 +360,17 @@ export default function DashboardPage() {
               </div>
               <div className="col-span-12 md:col-span-11">
                 <div className="flex items-baseline justify-between mb-6">
-                  <h2 className="text-3xl font-light tracking-tight text-bone-900">
+                  <h2 className="text-3xl font-light tracking-tight text-coal-900">
                     Recent attempts.
                   </h2>
                   <Link
                     href="/exams"
-                    className="link-draw text-sm text-bone-600 hover:text-bone-900 tx-color"
+                    className="link-draw text-sm text-coal-600 hover:text-coal-900 tx-color"
                   >
                     Practice more
                   </Link>
                 </div>
-                <ul className="border-t border-bone-rule">
+                <ul className="border-t border-coal-rule">
                   {attempts.slice(0, 20).map((a) => {
                     const info = getCategory(a.category);
                     const paperMeta = INDEXES[a.category]?.papers.find((p) => p.id === a.paper_id);
@@ -378,12 +378,12 @@ export default function DashboardPage() {
                     return (
                       <li
                         key={a.id}
-                        className="grid grid-cols-12 gap-4 py-5 border-b border-bone-rule items-center"
+                        className="grid grid-cols-12 gap-4 py-5 border-b border-coal-rule items-center"
                       >
                         <div className="col-span-12 md:col-span-7 min-w-0">
                           <Link
                             href={`/practice/${a.category}/${a.paper_id}`}
-                            className="text-bone-900 font-medium hover:text-accent tx-color truncate block"
+                            className="text-coal-900 font-medium hover:text-accent tx-color truncate block"
                           >
                             {paperMeta?.name ?? a.paper_id}
                           </Link>
@@ -392,13 +392,13 @@ export default function DashboardPage() {
                           </div>
                         </div>
                         <div className="col-span-6 md:col-span-3">
-                          <div className="h-1 bg-bone-200 overflow-hidden">
+                          <div className="h-1 bg-coal-200 overflow-hidden">
                             <div
                               className={
                                 pct >= 75
-                                  ? 'h-full bg-bone-900'
+                                  ? 'h-full bg-coal-900'
                                   : pct >= 50
-                                  ? 'h-full bg-bone-700'
+                                  ? 'h-full bg-coal-700'
                                   : 'h-full bg-accent'
                               }
                               style={{ width: `${Math.max(pct, 4)}%` }}
@@ -406,9 +406,9 @@ export default function DashboardPage() {
                           </div>
                         </div>
                         <div className="col-span-6 md:col-span-2 text-right">
-                          <div className="text-bone-900 font-medium tabular-nums">
+                          <div className="text-coal-900 font-medium tabular-nums">
                             {a.score}
-                            <span className="text-bone-400"> / {a.total}</span>
+                            <span className="text-coal-400"> / {a.total}</span>
                           </div>
                           <div className="marginalia mt-1">{pct}%</div>
                         </div>
@@ -432,22 +432,22 @@ function DashStat({
   return (
     <Link
       href={href}
-      className="press bg-bone p-6 hover:bg-bone-50 tx-color block"
+      className="press bg-coal p-6 hover:bg-coal-50 tx-color block"
     >
       <p className="marginalia mb-3">{label}</p>
-      <div className="text-3xl font-light tracking-tighter text-bone-900 tabular-nums">
+      <div className="text-3xl font-light tracking-tighter text-coal-900 tabular-nums">
         {value}
       </div>
-      <p className="text-xs text-bone-500 mt-1">{sub}</p>
+      <p className="text-xs text-coal-500 mt-1">{sub}</p>
     </Link>
   );
 }
 
 function StatBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="py-6 px-4 border-b border-bone-rule md:border-b-0 md:border-r last:border-r-0 border-bone-rule">
+    <div className="py-6 px-4 border-b border-coal-rule md:border-b-0 md:border-r last:border-r-0 border-coal-rule">
       <p className="marginalia mb-2">{label}</p>
-      <div className="text-3xl font-light tracking-tighter text-bone-900 tabular-nums">
+      <div className="text-3xl font-light tracking-tighter text-coal-900 tabular-nums">
         {value}
       </div>
     </div>

@@ -30,7 +30,7 @@ const FEATURES = [
     n: '04',
     title: 'Optional account',
     body:
-      'Sign up if you want to track attempts and weak topics. Skip it if you do not. Either way the papers are the same.',
+      'Sign up if you want to track attempts and weak topics. Skip it if you\'d rather not. The papers are the same either way.',
   },
   {
     n: '05',
@@ -70,7 +70,7 @@ export default function Features() {
   return (
     <section
       ref={root}
-      className="border-t border-bone-rule"
+      className="border-t border-coal-rule"
     >
       <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-28">
         <div className="grid grid-cols-12 gap-6 mb-16">
@@ -78,7 +78,7 @@ export default function Features() {
             02 / Free
           </div>
           <div className="col-span-12 md:col-span-11">
-            <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-bone-900 max-w-2xl">
+            <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-coal-900 max-w-2xl">
               What is free, and stays free.
             </h2>
           </div>
@@ -87,19 +87,19 @@ export default function Features() {
         <div className="grid grid-cols-12 gap-6">
           <div className="hidden md:block col-span-1" />
           <div className="col-span-12 md:col-span-11">
-            <ul className="border-t border-bone-rule">
+            <ul className="border-t border-coal-rule">
               {FEATURES.map((f) => (
                 <li
                   key={f.n}
-                  className="feat-row grid grid-cols-12 gap-4 py-7 border-b border-bone-rule"
+                  className="feat-row grid grid-cols-12 gap-4 py-7 border-b border-coal-rule"
                 >
                   <span className="col-span-12 md:col-span-1 marginalia pt-1">
                     {f.n}
                   </span>
-                  <h3 className="col-span-12 md:col-span-4 text-xl text-bone-900 font-medium leading-snug">
+                  <h3 className="col-span-12 md:col-span-4 text-xl text-coal-900 font-medium leading-snug">
                     {f.title}
                   </h3>
-                  <p className="col-span-12 md:col-span-7 text-bone-600 leading-relaxed">
+                  <p className="col-span-12 md:col-span-7 text-coal-600 leading-relaxed">
                     {f.body}
                   </p>
                 </li>
