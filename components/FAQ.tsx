@@ -10,19 +10,23 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: 'Are there ads?',
-    a: 'None. There never have been. Premeth runs on a single small Vercel deploy and free-tier Supabase storage. No tracking pixels, no third-party scripts.',
+    a: 'None. There never have been. Enid runs on a single small Vercel deploy and free-tier Supabase storage. No tracking pixels, no third-party scripts.',
   },
   {
-    q: 'How many questions does Premeth have?',
+    q: 'How many questions does Enid have?',
     a: 'Around 400,000 MCQs across 2,500+ papers, spread over 31 categories. The catalog covers UHS, NUMS, ETEA, DUHS, SZABMU, KMU, AKU, FMDC, PMC, and FSc board.',
   },
   {
     q: 'A question is wrong. What do I do?',
-    a: 'On any question, hit the flag icon. Pick the reason (wrong answer, wrong explanation, typo, missing diagram, duplicate) and submit. Reports go to the maintainers and the fix shows up the next time the data updates.',
+    a: 'Hit the flag icon on the question. Tell us what the answer should be and why — paste a source if you have one. We check every report, and the fix shows up the next time the data updates.',
+  },
+  {
+    q: 'How do I reach the team?',
+    a: 'Email syncrasy26@gmail.com or message +92 334 5121203 on WhatsApp. Both go straight to us.',
   },
   {
     q: 'Where do the past papers come from?',
-    a: 'The dataset is open-source at github.com/eldrickbnt/premeth-data — 2,500+ papers compiled by students from publicly circulated PDFs and official board releases.',
+    a: 'Students compiled them — 2,500+ papers from publicly circulated PDFs and official board releases, transcribed and checked by hand.',
   },
   {
     q: 'Does it cover the 2026 syllabus?',
@@ -35,11 +39,11 @@ export default function FAQ() {
 
   return (
     <section className="relative mx-auto max-w-3xl px-5 py-24">
-      <h2 className="font-display text-4xl md:text-5xl text-paper tracking-tight mb-8">
+      <h2 className="font-display text-4xl md:text-5xl text-coal-900 tracking-tight mb-8">
         Frequently asked questions.
       </h2>
 
-      <div className="divide-y divide-ink-800 border-t border-b border-ink-800">
+      <div className="divide-y divide-coal-rule border-t border-b border-coal-rule">
         {FAQS.map((item, i) => {
           const isOpen = open === i;
           return (
@@ -49,11 +53,11 @@ export default function FAQ() {
                 className="w-full flex items-center justify-between py-5 text-left group"
                 aria-expanded={isOpen}
               >
-                <span className="font-medium text-paper pr-6 group-hover:text-meth tx-color">
+                <span className="font-medium text-coal-900 pr-6 group-hover:text-accent tx-color">
                   {item.q}
                 </span>
                 <ChevronDown
-                  className={`h-4 w-4 text-ink-400 shrink-0`}
+                  className={`h-4 w-4 text-coal-600 shrink-0`}
                   style={{
                     transition: 'transform 200ms var(--ease-out)',
                     transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -68,7 +72,7 @@ export default function FAQ() {
                 }}
               >
                 <div className="overflow-hidden">
-                  <p className="pb-5 pr-8 text-ink-400 leading-relaxed">{item.a}</p>
+                  <p className="pb-5 pr-8 text-coal-600 leading-relaxed">{item.a}</p>
                 </div>
               </div>
             </div>

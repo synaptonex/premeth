@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Export to PDF — Premeth+ feature.
+ * Export to PDF — Enid+ feature.
  *
  * Rather than pulling in jsPDF (300kb+) and trying to lay out a document
  * with code, we render a clean print-stylesheet HTML page and let the
@@ -21,7 +21,7 @@ import Navbar from '@/components/Navbar';
 import { createClient } from '@/lib/supabase/client';
 import { fetchPaper } from '@/lib/data';
 import { INDEXES } from '@/lib/data/indexes';
-import { usePremethPlus } from '@/lib/premeth-plus.client';
+import { useEnidPlus } from '@/lib/enid-plus.client';
 import type { Question } from '@/lib/types';
 import { Printer, Loader2, Lock, ArrowRight, ArrowLeft } from 'lucide-react';
 
@@ -48,7 +48,7 @@ const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'] as const;
 export default function ExportPage() {
   const router = useRouter();
   const supabase = createClient();
-  const { isPlus, loading: plusLoading } = usePremethPlus();
+  const { isPlus, loading: plusLoading } = useEnidPlus();
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<ResolvedItem[]>([]);
   const [username, setUsername] = useState<string | null>(null);
@@ -145,7 +145,7 @@ export default function ExportPage() {
           <div className="border border-coal-rule bg-coal-50 p-10 text-center">
             <Lock className="h-8 w-8 text-accent mx-auto mb-3" />
             <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">
-              PDF export is a Premeth+ feature.
+              PDF export is an Enid+ feature.
             </h1>
             <p className="text-coal-700 max-w-md mx-auto mb-6">
               Print your wrong-answer notebook for offline revision.
@@ -154,7 +154,7 @@ export default function ExportPage() {
               href="/pricing"
               className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
             >
-              See Premeth+ pricing <ArrowRight className="h-4 w-4" />
+              See Enid+ pricing <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </main>
@@ -197,7 +197,7 @@ export default function ExportPage() {
           <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
             <div>
               <span className="text-xs uppercase tracking-widest text-accent">
-                Premeth+ · Export
+                Enid+ · Export
               </span>
               <h1 className="text-3xl font-light tracking-tighter text-coal-900 mt-1">
                 Wrong-answer notebook.
@@ -296,7 +296,7 @@ function PrintContent({
           {items.length} mistakes · Generated {new Date().toLocaleDateString()}
         </p>
         <p className="text-xs text-gray-500 mt-4 italic">
-          From premeth.com — Premeth+ subscriber
+          From enid.app — Enid+ subscriber
         </p>
       </div>
 
@@ -326,7 +326,7 @@ function PrintContent({
                         key={oi}
                         className={`text-sm pl-2 ${
                           isCorrect
-                            ? 'font-semibold text-green-800'
+                            ? 'font-semibold text-accent'
                             : isUserChoice
                             ? 'line-through text-red-700'
                             : 'text-gray-800'

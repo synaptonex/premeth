@@ -10,7 +10,7 @@ export default function Footer() {
           </div>
           <div className="col-span-12 md:col-span-5">
             <div className="text-coal-900 text-base font-medium mb-3">
-              Premeth
+              Enid
             </div>
             <p className="text-coal-600 text-sm leading-relaxed max-w-sm">
               MDCAT practice from 2,500 past papers. Built by students who
@@ -36,21 +36,40 @@ export default function Footer() {
               <li><Link href="/about" className="text-coal-600 hover:text-coal-900 tx-color">About</Link></li>
               <li>
                 <Link href="/pricing" className="text-coal-600 hover:text-coal-900 tx-color">
-                  Premeth<span className="text-accent">+</span>
+                  Enid<span className="text-accent">+</span>
                 </Link>
               </li>
-              <li><Link href="/redeem" className="text-coal-600 hover:text-coal-900 tx-color">Redeem code</Link></li>
+              <li><Link href="/aggregate" className="text-coal-600 hover:text-coal-900 tx-color">Aggregate Calculator</Link></li>
               <li><Link href="/signup" className="text-coal-600 hover:text-coal-900 tx-color">Create account</Link></li>
+            </ul>
+
+            <p className="marginalia mt-8 mb-3">Contact</p>
+            <ul className="space-y-2.5 text-sm">
+              <li>
+                <a href="mailto:syncrasy26@gmail.com" className="text-coal-600 hover:text-coal-900 tx-color">
+                  syncrasy26@gmail.com
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://wa.me/923345121203"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-coal-600 hover:text-coal-900 tx-color"
+                >
+                  WhatsApp: +92 334 5121203
+                </a>
+              </li>
             </ul>
           </div>
         </div>
 
         <div className="mt-16 pt-8 border-t border-coal-rule flex items-baseline justify-between">
-          <span className="marginalia">
-            © {new Date().getFullYear()} Premeth
+          <span className="marginalia italic">
+            Enid, by Syncrasy
           </span>
           <span className="marginalia">
-            Karachi
+            © {new Date().getFullYear()} · Karachi
           </span>
         </div>
       </div>

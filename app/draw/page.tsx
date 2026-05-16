@@ -9,7 +9,7 @@ import {
 
 type Tool = 'pen' | 'eraser';
 
-const COLORS = ['#f7f3ec', '#3ee089', '#e23b3b', '#60a5fa', '#fbbf24', '#c084fc'];
+const COLORS = ['#f7f3ec', '#E0A341', '#e23b3b', '#60a5fa', '#fbbf24', '#c084fc'];
 const SIZES = [2, 4, 8, 14];
 
 export default function ScratchpadPage() {
@@ -164,7 +164,7 @@ export default function ScratchpadPage() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const link = document.createElement('a');
-    link.download = `premeth-scratchpad-${new Date().toISOString().slice(0, 10)}.png`;
+    link.download = `enid-scratchpad-${new Date().toISOString().slice(0, 10)}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   }
@@ -179,18 +179,18 @@ export default function ScratchpadPage() {
       <Navbar />
       <main className="mx-auto max-w-6xl px-5 py-10">
         <div className="mb-6">
-          <span className="text-xs uppercase tracking-widest text-meth">Scratchpad</span>
-          <h1 className="font-display text-4xl md:text-5xl text-paper tracking-tight mt-2">
+          <span className="text-xs uppercase tracking-widest text-accent">Scratchpad</span>
+          <h1 className="font-display text-4xl md:text-5xl text-coal-900 tracking-tight mt-2">
             Sketch it out.
           </h1>
-          <p className="text-ink-400 mt-2 max-w-xl">
+          <p className="text-coal-600 mt-2 max-w-xl">
             Free-body diagrams, organic structures, working-out — same tab as your
             paper. Works with touch, mouse, and stylus.
           </p>
         </div>
 
         {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-2 mb-4 rounded-xl border border-ink-800 bg-ink-900/40 p-2">
+        <div className="flex flex-wrap items-center gap-2 mb-4 rounded-xl border border-coal-rule bg-coal-50/40 p-2">
           <ToolBtn
             active={tool === 'pen'}
             onClick={() => setTool('pen')}
@@ -213,7 +213,7 @@ export default function ScratchpadPage() {
                 key={c}
                 onClick={() => { setColor(c); setTool('pen'); }}
                 className={`h-7 w-7 rounded-full border tx-color ${
-                  color === c && tool === 'pen' ? 'border-paper' : 'border-ink-700'
+                  color === c && tool === 'pen' ? 'border-coal-900' : 'border-coal-rule'
                 }`}
                 style={{
                   background: c,
@@ -234,13 +234,13 @@ export default function ScratchpadPage() {
                 key={s}
                 onClick={() => setSize(s)}
                 className={`h-8 w-8 rounded-md grid place-items-center border tx-color ${
-                  size === s ? 'border-meth bg-meth/10' : 'border-ink-800 hover:border-ink-700'
+                  size === s ? 'border-accent bg-accent/10' : 'border-coal-rule hover:border-coal-400'
                 }`}
                 aria-label={`Brush size ${s}`}
                 title={`${s}px`}
               >
                 <span
-                  className="rounded-full bg-paper"
+                  className="rounded-full bg-coal-900"
                   style={{ width: s, height: s }}
                 />
               </button>
@@ -271,20 +271,20 @@ export default function ScratchpadPage() {
 
           <button
             onClick={download}
-            className="press inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-md border border-ink-800 text-ink-300 hover:text-meth hover:border-meth/40 tx-color"
+            className="press inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-md border border-coal-rule text-coal-700 hover:text-accent hover:border-accent/40 tx-color"
           >
             <Download className="h-4 w-4" /> Download PNG
           </button>
           <button
             onClick={() => { if (confirm('Clear the whole canvas?')) clear(); }}
-            className="press inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-md border border-ink-800 text-ink-300 hover:text-crimson hover:border-crimson/40 tx-color"
+            className="press inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-md border border-coal-rule text-coal-700 hover:text-crimson hover:border-crimson/40 tx-color"
           >
             <Trash2 className="h-4 w-4" /> Clear
           </button>
         </div>
 
         {/* Canvas */}
-        <div className={`relative h-[60vh] rounded-xl border border-ink-800 overflow-hidden ${backgroundClasses}`}>
+        <div className={`relative h-[60vh] rounded-xl border border-coal-rule overflow-hidden ${backgroundClasses}`}>
           <canvas
             ref={canvasRef}
             onPointerDown={onPointerDown}
@@ -296,7 +296,7 @@ export default function ScratchpadPage() {
           />
         </div>
 
-        <p className="mt-3 text-xs text-ink-500">
+        <p className="mt-3 text-xs text-coal-500">
           Shortcuts: <kbd className="kbd-sm">P</kbd> pen ·{' '}
           <kbd className="kbd-sm">E</kbd> eraser ·{' '}
           <kbd className="kbd-sm">⌘Z</kbd> undo ·{' '}
@@ -321,8 +321,8 @@ function ToolBtn({
       aria-label={label}
       className={`press h-8 px-2.5 rounded-md inline-flex items-center gap-1.5 text-xs border tx-color ${
         active
-          ? 'border-meth/40 bg-meth/10 text-meth'
-          : 'border-ink-800 text-ink-300 hover:border-ink-700 hover:text-paper'
+          ? 'border-accent/40 bg-accent/10 text-accent'
+          : 'border-coal-rule text-coal-700 hover:border-coal-rule hover:text-coal-900'
       }`}
     >
       {icon}
@@ -332,5 +332,5 @@ function ToolBtn({
 }
 
 function Divider() {
-  return <span aria-hidden className="h-5 w-px bg-ink-800" />;
+  return <span aria-hidden className="h-5 w-px bg-coal-200" />;
 }

@@ -2,7 +2,7 @@
 
 // app/mock/page.tsx
 // ─────────────────────────────────────────────────────────────────────────────
-// Timed Mock Exam (Premeth+).
+// Timed Mock Exam (Enid+).
 //
 // PMDC MDCAT format: 200 MCQs in 200 minutes, broken down by subject
 // per the official PMDC weightages (34/27/27/9/3):
@@ -25,7 +25,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import { createClient } from '@/lib/supabase/client';
-import { usePremethPlus } from '@/lib/premeth-plus.client';
+import { useEnidPlus } from '@/lib/enid-plus.client';
 import { INDEXES } from '@/lib/data/indexes';
 import { fetchPaper } from '@/lib/data';
 import type { Question } from '@/lib/types';
@@ -63,7 +63,7 @@ type Status = 'gate' | 'intro' | 'building' | 'taking' | 'finished' | 'empty';
 export default function MockExamPage() {
   const supabase = createClient();
   const router = useRouter();
-  const sub = usePremethPlus();
+  const sub = useEnidPlus();
 
   const [status, setStatus] = useState<Status>('gate');
   const [questions, setQuestions] = useState<MockQuestion[]>([]);
@@ -250,7 +250,7 @@ export default function MockExamPage() {
       <><Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
           <Lock className="h-10 w-10 text-accent mx-auto mb-3" />
-          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Premeth+ only</h1>
+          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Enid+ only</h1>
           <p className="text-coal-600 mb-6">
             Full timed MDCAT simulations. 200 MCQs, 200 minutes, real exam interface,
             per-subject breakdown when you're done.
@@ -259,7 +259,7 @@ export default function MockExamPage() {
             href="/pricing"
             className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
           >
-            See Premeth+ <ArrowRight className="h-4 w-4" />
+            See Enid+ <ArrowRight className="h-4 w-4" />
           </Link>
         </main>
       </>

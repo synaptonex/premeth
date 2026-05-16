@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 
-const TOKEN_KEY = 'premeth_session_token';
+const TOKEN_KEY = 'enid_session_token';
 const POLL_MS = 60_000;
 
 export default function SessionHeartbeat() {
@@ -52,7 +52,7 @@ export default function SessionHeartbeat() {
           await supabase.auth.signOut();
           toast.error('Signed out', {
             description:
-              'Your Premeth+ account was signed in on another device. Only one device can be active at a time.',
+              'Your Enid+ account was signed in on another device. Only one device can be active at a time.',
             duration: 8000,
           });
           router.push('/login?kicked=1');

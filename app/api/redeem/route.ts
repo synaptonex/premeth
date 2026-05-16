@@ -14,7 +14,7 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { normalizeRedemptionCode } from '@/lib/premeth-plus';
+import { normalizeRedemptionCode } from '@/lib/enid-plus';
 
 export async function POST(req: Request) {
   const supabase = createClient();

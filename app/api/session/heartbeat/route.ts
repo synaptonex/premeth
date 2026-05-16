@@ -12,7 +12,7 @@
 //     in 7 days, we flag the account for admin review. Flagging doesn't block
 //     access — it just shows up in your admin dashboard.
 //
-// Only applies to Premeth+ users. Free users are not tracked.
+// Only applies to Enid+ users. Free users are not tracked.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { NextResponse } from 'next/server';
@@ -51,13 +51,13 @@ export async function POST(req: Request) {
     .maybeSingle();
 
   // No sub means free user — nothing to enforce, just return active.
-  if (!sub) return NextResponse.json({ active: true, premethPlus: false });
+  if (!sub) return NextResponse.json({ active: true, enidPlus: false });
 
   const isActive =
     sub.status === 'active' && new Date(sub.current_period_end) > new Date();
 
   if (!isActive) {
-    return NextResponse.json({ active: true, premethPlus: false, expired: true });
+    return NextResponse.json({ active: true, enidPlus: false, expired: true });
   }
 
   // ─── Layer 2: Concurrent session enforcement ──────────────────────────────
@@ -73,14 +73,14 @@ export async function POST(req: Request) {
       })
       .eq('user_id', user.id);
     await logFingerprint(supabase, user.id, fp, ip, ua);
-    return NextResponse.json({ active: true, premethPlus: true, token: newToken });
+    return NextResponse.json({ active: true, enidPlus: true, token: newToken });
   }
 
   if (sub.current_session_token && sub.current_session_token !== clientToken) {
     // Someone else logged in. This session is dead.
     return NextResponse.json({
       active: false,
-      premethPlus: true,
+      enidPlus: true,
       kicked: true,
       reason: 'signed_in_elsewhere',
     });
@@ -88,7 +88,7 @@ export async function POST(req: Request) {
 
   // Token matches. Refresh activity timestamp.
   await logFingerprint(supabase, user.id, fp, ip, ua);
-  return NextResponse.json({ active: true, premethPlus: true, token: clientToken });
+  return NextResponse.json({ active: true, enidPlus: true, token: clientToken });
 }
 
 async function logFingerprint(

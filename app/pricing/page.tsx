@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Pricing and payment flow for Premeth+.
+ * Pricing and payment flow for Enid+.
  *
  * Steps:
  *  1. Visitor lands and sees the comparison.
@@ -19,13 +19,13 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/client';
 import {
-  PREMETH_PLUS_PRICE_PKR,
-  PREMETH_PLUS_FOUNDERS_PRICE_PKR,
-  PREMETH_PLUS_FOUNDERS_LIMIT,
-  PREMETH_PLUS_DURATION_MONTHS,
+  ENID_PLUS_PRICE_PKR,
+  ENID_PLUS_FOUNDERS_PRICE_PKR,
+  ENID_PLUS_FOUNDERS_LIMIT,
+  ENID_PLUS_DURATION_MONTHS,
   PAYMENT_ACCOUNTS,
-} from '@/lib/premeth-plus';
-import { usePremethPlus } from '@/lib/premeth-plus.client';
+} from '@/lib/enid-plus';
+import { useEnidPlus } from '@/lib/enid-plus.client';
 import { toast } from 'sonner';
 import { Copy, Check } from 'lucide-react';
 import gsap from 'gsap';
@@ -53,7 +53,7 @@ export default function PricingPage() {
   const router = useRouter();
   const supabase = createClient();
   const root = useRef<HTMLElement>(null);
-  const { isPlus, expiresAt, loading: plusLoading } = usePremethPlus();
+  const { isPlus, expiresAt, loading: plusLoading } = useEnidPlus();
 
   const [userId, setUserId] = useState<string | null>(null);
   const [foundersTaken, setFoundersTaken] = useState<number | null>(null);
@@ -88,8 +88,8 @@ export default function PricingPage() {
   }, [supabase]);
 
   const isFounders =
-    foundersTaken !== null && foundersTaken < PREMETH_PLUS_FOUNDERS_LIMIT;
-  const price = isFounders ? PREMETH_PLUS_FOUNDERS_PRICE_PKR : PREMETH_PLUS_PRICE_PKR;
+    foundersTaken !== null && foundersTaken < ENID_PLUS_FOUNDERS_LIMIT;
+  const price = isFounders ? ENID_PLUS_FOUNDERS_PRICE_PKR : ENID_PLUS_PRICE_PKR;
 
   const account = useMemo(() => (method ? PAYMENT_ACCOUNTS[method] : null), [method]);
 
@@ -150,7 +150,7 @@ export default function PricingPage() {
             <div className="col-span-12 md:col-span-11">
               <p className="marginalia mb-4">Your subscription</p>
               <h1 className="text-5xl md:text-6xl font-light tracking-tighter text-coal-900">
-                Premeth<span className="text-accent">+</span> is active.
+                Enid<span className="text-accent">+</span> is active.
               </h1>
               <p className="mt-6 text-coal-600 max-w-xl text-lg">
                 Your subscription runs until{' '}
@@ -203,7 +203,7 @@ export default function PricingPage() {
             </h1>
             {isFounders && foundersTaken !== null && (
               <p className="price-anim marginalia mt-8">
-                Founders pricing: {PREMETH_PLUS_FOUNDERS_LIMIT - foundersTaken} of {PREMETH_PLUS_FOUNDERS_LIMIT} remaining
+                Founders pricing: {ENID_PLUS_FOUNDERS_LIMIT - foundersTaken} of {ENID_PLUS_FOUNDERS_LIMIT} remaining
               </p>
             )}
           </div>
@@ -343,7 +343,7 @@ export default function PricingPage() {
                   <div className="grid grid-cols-12 py-5 border-b border-coal-rule">
                     <dt className="col-span-4 marginalia pt-1">Duration</dt>
                     <dd className="col-span-8 text-coal-900 font-medium">
-                      {PREMETH_PLUS_DURATION_MONTHS} months from approval
+                      {ENID_PLUS_DURATION_MONTHS} months from approval
                     </dd>
                   </div>
                 </dl>

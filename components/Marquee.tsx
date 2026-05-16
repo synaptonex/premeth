@@ -50,10 +50,10 @@ export default function Marquee() {
             key={i}
             className={`px-6 ${
               big ? 'font-display text-4xl md:text-6xl' : 'text-sm uppercase tracking-widest'
-            } text-paper`}
+            } text-coal-900`}
           >
             {s}
-            <span className="text-meth ml-6">⋆</span>
+            <span className="text-accent ml-6">⋆</span>
           </span>
         ))}
       </div>
@@ -61,7 +61,7 @@ export default function Marquee() {
   );
 
   return (
-    <section ref={root} className="py-12 border-y border-ink-800 bg-ink-950 space-y-6">
+    <section ref={root} className="py-12 border-y border-coal-rule bg-coal space-y-6">
       <Row items={ROW_B} big />
       <Row items={ROW_A} />
     </section>

@@ -30,7 +30,7 @@ export default function QuestionImage({ src, alt, className = '' }: Props) {
   if (errored) {
     return (
       <div
-        className={`flex items-center gap-2 px-3 py-2 rounded-md bg-ink-900 border border-ink-800 text-ink-400 text-xs ${className}`}
+        className={`flex items-center gap-2 px-3 py-2 rounded-md bg-coal-50 border border-coal-rule text-coal-600 text-xs ${className}`}
       >
         <ImageOff className="h-4 w-4" />
         Diagram could not be loaded. You can flag this question to help fix it.
@@ -44,7 +44,7 @@ export default function QuestionImage({ src, alt, className = '' }: Props) {
       src={resolveSrc(src)}
       alt={alt}
       onError={() => setErrored(true)}
-      className={`max-w-full rounded-md border border-ink-800 bg-ink-900 ${className}`}
+      className={`max-w-full rounded-md border border-coal-rule bg-coal-50 ${className}`}
       loading="lazy"
     />
   );

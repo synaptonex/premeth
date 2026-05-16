@@ -1,5 +1,5 @@
 /**
- * Streaks — Premeth+ feature.
+ * Streaks — Enid+ feature.
  *
  * A "streak day" is a day where the user answered at least
  * `daily_question_target` MCQs (or 20 if no goal is set).

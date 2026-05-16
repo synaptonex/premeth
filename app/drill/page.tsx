@@ -2,7 +2,7 @@
 
 // app/drill/page.tsx
 // ─────────────────────────────────────────────────────────────────────────────
-// Adaptive Daily Drill (Premeth+).
+// Adaptive Daily Drill (Enid+).
 //
 // On open:
 //   1. Compute the user's weakest topics from past attempts (same calc as
@@ -22,15 +22,16 @@ import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { createClient } from '@/lib/supabase/client';
-import { usePremethPlus } from '@/lib/premeth-plus.client';
+import { useEnidPlus } from '@/lib/enid-plus.client';
 import { INDEXES } from '@/lib/data/indexes';
 import { fetchPaper } from '@/lib/data';
 import type { Question } from '@/lib/types';
 import { toast } from 'sonner';
 import {
   ArrowLeft, ArrowRight, Check, X as XIcon, Lightbulb, Sparkles, Target,
-  Lock, Trophy, RotateCcw,
+  Lock, Trophy, RotateCcw, Flag,
 } from 'lucide-react';
+import ReportModal from '@/components/ReportModal';
 
 const DRILL_SIZE = 30;
 const LETTERS = ['A', 'B', 'C', 'D', 'E'];
@@ -45,7 +46,7 @@ type Status = 'gate' | 'building' | 'ready' | 'finished' | 'empty';
 
 export default function DrillPage() {
   const supabase = createClient();
-  const sub = usePremethPlus();
+  const sub = useEnidPlus();
 
   const [status, setStatus] = useState<Status>('gate');
   const [questions, setQuestions] = useState<DrillQuestion[]>([]);
@@ -54,6 +55,7 @@ export default function DrillPage() {
   const [submitted, setSubmitted] = useState<boolean[]>([]);
   const [startedAt] = useState(() => Date.now());
   const [showExplain, setShowExplain] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   // ─── Gate ──────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -301,16 +303,16 @@ export default function DrillPage() {
         <Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
           <Lock className="h-10 w-10 text-accent mx-auto mb-3" />
-          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Premeth+ only</h1>
+          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Enid+ only</h1>
           <p className="text-coal-600 mb-6">
-            The Adaptive Daily Drill is part of Premeth+. It picks 30 fresh MCQs
+            The Adaptive Daily Drill is part of Enid+. It picks 30 fresh MCQs
             every day from your weakest chapters.
           </p>
           <Link
             href="/pricing"
             className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
           >
-            See Premeth+ <ArrowRight className="h-4 w-4" />
+            See Enid+ <ArrowRight className="h-4 w-4" />
           </Link>
         </main>
       </>
@@ -392,9 +394,19 @@ export default function DrillPage() {
               Q{qIndex + 1} <span className="text-coal-500">/ {questions.length}</span>
             </h1>
           </div>
-          <div className="text-right">
-            <div className="text-xs text-coal-500">Topic</div>
-            <div className="text-sm text-coal-800 truncate max-w-[12rem]">{q.topic}</div>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <div className="text-xs text-coal-500">Topic</div>
+              <div className="text-sm text-coal-800 truncate max-w-[12rem]">{q.topic}</div>
+            </div>
+            <button
+              onClick={() => setReportOpen(true)}
+              className="press inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md border border-coal-rule text-coal-600 hover:text-crimson hover:border-crimson/40 tx-color"
+              title="Report this question"
+            >
+              <Flag className="h-3.5 w-3.5" />
+              Report
+            </button>
           </div>
         </div>
 
@@ -423,7 +435,7 @@ export default function DrillPage() {
                     reveal && isCorrect
                       ? 'border-accent bg-coal-50'
                       : reveal && isPicked && !isCorrect
-                      ? 'border-crimson bg-accent/5'
+                      ? 'border-crimson bg-crimson/5'
                       : isPicked
                       ? 'border-accent bg-coal-50'
                       : 'border-coal-rule hover:border-coal-300'
@@ -432,7 +444,7 @@ export default function DrillPage() {
                   <span className="font-mono text-sm text-coal-500 shrink-0">{LETTERS[i]}</span>
                   <span className="flex-1 text-coal-800">{opt.text}</span>
                   {reveal && isCorrect && <Check className="h-4 w-4 text-accent shrink-0" />}
-                  {reveal && isPicked && !isCorrect && <XIcon className="h-4 w-4 text-accent shrink-0" />}
+                  {reveal && isPicked && !isCorrect && <XIcon className="h-4 w-4 text-crimson shrink-0" />}
                 </button>
               );
             })}
@@ -474,6 +486,15 @@ export default function DrillPage() {
           )}
         </div>
       </main>
+
+      <ReportModal
+        open={reportOpen}
+        onClose={() => setReportOpen(false)}
+        category={q.source.category}
+        paperId={q.source.paper_id}
+        questionIndex={q.source.question_index}
+        questionText={q.question.text}
+      />
     </>
   );
 }
