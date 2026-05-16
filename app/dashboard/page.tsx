@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/client';
 import { INDEXES } from '@/lib/data/indexes';
 import { getCategory } from '@/lib/categories';
-import { usePremethPlus } from '@/lib/premeth-plus.client';
+import { useEnidPlus } from '@/lib/enid-plus.client';
 import { computeStreak } from '@/lib/streaks';
 import type { Attempt } from '@/lib/types';
 import gsap from 'gsap';
@@ -20,7 +20,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const supabase = createClient();
   const root = useRef<HTMLDivElement>(null);
-  const { isPlus } = usePremethPlus();
+  const { isPlus } = useEnidPlus();
 
   const [loading, setLoading] = useState(true);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
@@ -170,7 +170,7 @@ export default function DashboardPage() {
           <div className="col-span-12 md:col-span-11">
             <p className="dash-anim marginalia mb-4">
               {isPlus ? (
-                <>Premeth<span className="text-accent">+</span> subscriber</>
+                <>Enid<span className="text-accent">+</span> subscriber</>
               ) : (
                 'Dashboard'
               )}
@@ -211,7 +211,7 @@ export default function DashboardPage() {
 
         {attempts.length > 0 && (
           <>
-            {/* Premeth+ row */}
+            {/* Enid+ row */}
             {isPlus && (
               <div className="grid grid-cols-12 gap-6 mb-20">
                 <div className="hidden md:block col-span-1 marginalia pt-1">
@@ -257,7 +257,7 @@ export default function DashboardPage() {
                 <div className="col-span-12 md:col-span-11">
                   <div className="border-t border-coal-rule pt-6">
                     <p className="marginalia mb-3">
-                      Upgrade · Premeth<span className="text-accent">+</span>
+                      Upgrade · Enid<span className="text-accent">+</span>
                     </p>
                     <h2 className="text-2xl md:text-3xl font-light tracking-tight text-coal-900 max-w-2xl">
                       You have answered {stats.totalQuestions.toLocaleString()} questions. Now make every wrong answer earn its keep.

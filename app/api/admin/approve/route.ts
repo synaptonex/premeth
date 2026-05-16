@@ -7,14 +7,14 @@
 //   4. Return the code to the admin (they'll send it to the buyer via WhatsApp).
 //
 // The code is NOT auto-applied. The buyer types it into /redeem themselves.
-// This is intentional — it gives the buyer a moment of "I'm using my code"
+// This is intentional - it gives the buyer a moment of "I'm using my code"
 // ownership, and means a fat-fingered approval doesn't silently activate
 // someone's account.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { generateRedemptionCode, PREMETH_PLUS_DURATION_MONTHS } from '@/lib/premeth-plus';
+import { generateRedemptionCode, ENID_PLUS_DURATION_MONTHS } from '@/lib/enid-plus';
 
 export async function POST(req: Request) {
   const supabase = createClient();
@@ -88,7 +88,7 @@ export async function POST(req: Request) {
       code,
       issued_to: pr.user_id,
       payment_request_id: pr.id,
-      duration_months: PREMETH_PLUS_DURATION_MONTHS,
+      duration_months: ENID_PLUS_DURATION_MONTHS,
     });
 
   if (codeErr) {
@@ -112,6 +112,6 @@ export async function POST(req: Request) {
   return NextResponse.json({
     code,
     issued_to: pr.user_id,
-    duration_months: PREMETH_PLUS_DURATION_MONTHS,
+    duration_months: ENID_PLUS_DURATION_MONTHS,
   });
 }

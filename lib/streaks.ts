@@ -1,5 +1,5 @@
 /**
- * Streaks — Premeth+ feature.
+ * Streaks - Enid+ feature.
  *
  * A "streak day" is a day where the user answered at least
  * `daily_question_target` MCQs (or 20 if no goal is set).
@@ -61,7 +61,7 @@ export async function computeStreak(
   let cursor = new Date();
   const todayActive = (dayTotals.get(today) ?? 0) >= target;
 
-  // If today isn't active yet, don't break the streak — start counting from yesterday.
+  // If today isn't active yet, don't break the streak - start counting from yesterday.
   if (!todayActive) {
     cursor = new Date(Date.now() - 24 * 60 * 60 * 1000);
   }
@@ -98,7 +98,7 @@ export async function computeStreak(
 
   longest = Math.max(longest, current);
 
-  // Cache the result (best effort — don't block on it)
+  // Cache the result (best effort - don't block on it)
   void supabase
     .from('streaks')
     .upsert(

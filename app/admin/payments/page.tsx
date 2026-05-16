@@ -132,7 +132,7 @@ export default function AdminPaymentsPage() {
         <main className="mx-auto max-w-md px-5 py-20 text-center">
           <ShieldAlert className="h-10 w-10 text-accent mx-auto mb-3" />
           <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Not authorized</h1>
-          <p className="text-coal-600">This page is for Premeth admins only.</p>
+          <p className="text-coal-600">This page is for Enid admins only.</p>
         </main>
       </>
     );
@@ -200,7 +200,7 @@ export default function AdminPaymentsPage() {
                 <h2 className="text-lg text-coal-900">Accounts flagged for review</h2>
               </div>
               <p className="text-sm text-coal-600 mb-4">
-                These Premeth+ accounts have logged in from {'>'}5 distinct devices/networks
+                These Enid+ accounts have logged in from {'>'}5 distinct devices/networks
                 in the last 7 days. Worth checking in case the code is being shared.
               </p>
               <ul className="space-y-2">
@@ -247,7 +247,7 @@ export default function AdminPaymentsPage() {
                     <span className={`text-[10px] uppercase px-1.5 py-0.5 rounded ${
                       p.status === 'approved'
                         ? 'bg-coal-100 text-accent border border-coal-rule'
-                        : 'bg-accent/15 text-accent border border-crimson/30'
+                        : 'bg-crimson/15 text-crimson border border-crimson/30'
                     }`}>
                       {p.status}
                     </span>
@@ -286,7 +286,7 @@ function PaymentCard({
         <div className="flex gap-2 shrink-0">
           <button
             onClick={onReject}
-            className="press inline-flex items-center gap-1.5 border border-coal-300 hover:border-crimson hover:text-accent px-3 py-1.5 text-sm tx-color"
+            className="press inline-flex items-center gap-1.5 border border-coal-300 hover:border-crimson hover:text-crimson px-3 py-1.5 text-sm tx-color"
           >
             <X className="h-3.5 w-3.5" /> Reject
           </button>
