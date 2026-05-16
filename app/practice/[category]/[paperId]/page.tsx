@@ -149,7 +149,7 @@ export default function PracticePage() {
 
     toast.success('Attempt saved to your dashboard');
 
-    // ─── Premeth+ : auto-add wrong answers to the Mistake Vault ─────────────
+    // ─── Enid+ : auto-add wrong answers to the Mistake Vault ─────────────
     // Check if this user has an active subscription. If they do, every
     // question they got wrong gets upserted into the vault so it shows up in
     // their spaced-repetition queue. Free users skip this entirely.
@@ -161,7 +161,7 @@ export default function PracticePage() {
       .gt('current_period_end', new Date().toISOString())
       .maybeSingle();
 
-    if (!sub) return; // free user — nothing more to do
+    if (!sub) return; // free user, nothing more to do
 
     const vaultRows = paper.questions
       .map((qq, i) => ({ qq, i }))
@@ -235,7 +235,7 @@ export default function PracticePage() {
     questionCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [qIndex]);
 
-  // GSAP: animate question card swap. Keep this restrained — Emil rule:
+  // GSAP: animate question card swap. Keep this restrained - Emil rule:
   // questions are seen many times per session, so the animation must be fast
   // (under 200ms) and never block input.
   useGSAP(
@@ -256,8 +256,8 @@ export default function PracticePage() {
       <>
         <Navbar />
         <main className="mx-auto max-w-3xl px-5 py-20 text-center">
-          <div className="inline-flex items-center gap-3 text-ink-400">
-            <div className="h-2 w-2 rounded-full bg-meth animate-pulse-dot" />
+          <div className="inline-flex items-center gap-3 text-coal-600">
+            <div className="h-2 w-2 rounded-full bg-accent animate-pulse" />
             <span>Loading paper…</span>
           </div>
         </main>
@@ -270,14 +270,14 @@ export default function PracticePage() {
       <>
         <Navbar />
         <main className="mx-auto max-w-2xl px-5 py-20 text-center">
-          <h1 className="font-display text-3xl text-paper mb-3">Paper not available</h1>
-          <p className="text-ink-400 mb-6">
+          <h1 className="font-display text-3xl text-coal-900 mb-3">Paper not available</h1>
+          <p className="text-coal-600 mb-6">
             This paper hasn't been uploaded to storage yet, or the data is malformed.
             Try another paper or report this to the maintainers.
           </p>
           <Link
             href={`/papers/${category}`}
-            className="press inline-flex items-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-2.5 font-medium hover:bg-meth-300 tx-color"
+            className="press inline-flex items-center gap-2 rounded-md bg-accent text-coal px-5 py-2.5 font-medium hover:bg-accent/90 tx-color"
           >
             <ArrowLeft className="h-4 w-4" /> Back to papers
           </Link>
@@ -295,13 +295,13 @@ export default function PracticePage() {
         <Navbar />
         <main className="mx-auto max-w-2xl px-5 py-16">
           <div className="text-center mb-10">
-            <div className="inline-grid place-items-center h-16 w-16 rounded-full bg-meth/15 border border-meth/30 mb-4">
-              <Trophy className="h-7 w-7 text-meth" />
+            <div className="inline-grid place-items-center h-16 w-16 rounded-full bg-accent/15 border border-accent/30 mb-4">
+              <Trophy className="h-7 w-7 text-accent" />
             </div>
-            <h1 className="font-display text-4xl md:text-5xl text-paper tracking-tight">
+            <h1 className="font-display text-4xl md:text-5xl text-coal-900 tracking-tight">
               Paper complete.
             </h1>
-            <p className="text-ink-400 mt-2">{meta?.name}</p>
+            <p className="text-coal-600 mt-2">{meta?.name}</p>
           </div>
 
           <div className="grid grid-cols-3 gap-3 mb-8">
@@ -310,17 +310,17 @@ export default function PracticePage() {
             <Stat icon={<Clock className="h-4 w-4" />} label="Time" value={fmt(duration)} />
           </div>
 
-          <div className="space-y-2 max-h-96 overflow-auto rounded-md border border-ink-800 p-2 mb-8">
+          <div className="space-y-2 max-h-96 overflow-auto rounded-md border border-coal-rule p-2 mb-8">
             {paper.questions.map((qq, i) => {
               const a = answers[i];
               const correct = a !== null && qq.options[a]?.isCorrect;
               return (
                 <div key={i} className="flex items-center gap-2 px-2 py-1.5 text-sm">
-                  <span className="text-ink-500 w-8">Q{i + 1}</span>
+                  <span className="text-coal-500 w-8">Q{i + 1}</span>
                   {a === null ? (
-                    <span className="text-ink-500 text-xs">Skipped</span>
+                    <span className="text-coal-500 text-xs">Skipped</span>
                   ) : correct ? (
-                    <span className="text-meth flex items-center gap-1">
+                    <span className="text-accent flex items-center gap-1">
                       <Check className="h-3.5 w-3.5" /> Correct
                     </span>
                   ) : (
@@ -328,7 +328,7 @@ export default function PracticePage() {
                       <XIcon className="h-3.5 w-3.5" /> Incorrect
                     </span>
                   )}
-                  <span className="text-ink-400 truncate">{qq.text.slice(0, 80)}</span>
+                  <span className="text-coal-600 truncate">{qq.text.slice(0, 80)}</span>
                 </div>
               );
             })}
@@ -343,13 +343,13 @@ export default function PracticePage() {
                 setStatus('loaded');
                 setShowExplain(false);
               }}
-              className="press inline-flex items-center gap-2 rounded-md border border-ink-700 px-4 py-2 text-paper hover:border-meth/50 tx-color"
+              className="press inline-flex items-center gap-2 rounded-md border border-coal-rule px-4 py-2 text-coal-900 hover:border-accent/50 tx-color"
             >
               <RotateCcw className="h-4 w-4" /> Retry this paper
             </button>
             <Link
               href={`/papers/${category}`}
-              className="press inline-flex items-center gap-2 rounded-md bg-meth text-ink-950 px-4 py-2 font-medium hover:bg-meth-300 tx-color"
+              className="press inline-flex items-center gap-2 rounded-md bg-accent text-coal px-4 py-2 font-medium hover:bg-accent/90 tx-color"
             >
               Pick another paper
             </Link>
@@ -366,35 +366,35 @@ export default function PracticePage() {
       <Navbar />
 
       {/* Top bar with progress + paper meta */}
-      <div className="sticky top-14 z-20 border-b border-ink-800 bg-ink-950/90 backdrop-blur-md">
+      <div className="sticky top-14 z-20 border-b border-coal-rule bg-coal/90 backdrop-blur-md">
         <div className="mx-auto max-w-5xl px-5 py-2.5">
           <div className="flex items-center justify-between gap-3 mb-2">
             <Link
               href={`/papers/${category}`}
-              className="inline-flex items-center gap-1.5 text-xs text-ink-400 hover:text-meth tx-color"
+              className="inline-flex items-center gap-1.5 text-xs text-coal-600 hover:text-accent tx-color"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               {meta?.name ?? 'Papers'}
             </Link>
-            <div className="flex items-center gap-3 text-xs text-ink-500">
+            <div className="flex items-center gap-3 text-xs text-coal-500">
               <span>
-                Q <span className="text-paper font-medium">{qIndex + 1}</span> / {total}
+                Q <span className="text-coal-900 font-medium">{qIndex + 1}</span> / {total}
               </span>
-              <span className="text-ink-700">·</span>
+              <span className="text-coal-400">·</span>
               <span>
-                Score: <span className="text-meth font-medium">{score}</span>
+                Score: <span className="text-accent font-medium">{score}</span>
               </span>
               <button
                 onClick={finish}
-                className="press text-xs px-2.5 py-1 rounded border border-ink-700 hover:border-crimson hover:text-crimson tx-color"
+                className="press text-xs px-2.5 py-1 rounded border border-coal-rule hover:border-crimson hover:text-crimson tx-color"
               >
                 Finish
               </button>
             </div>
           </div>
-          <div className="h-1 rounded-full bg-ink-900 overflow-hidden">
+          <div className="h-1 rounded-full bg-coal-50 overflow-hidden">
             <div
-              className="h-full bg-meth"
+              className="h-full bg-accent"
               style={{
                 width: `${progressPct}%`,
                 transition: 'width 320ms var(--ease-out)',
@@ -413,21 +413,21 @@ export default function PracticePage() {
                 <span
                   className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded border ${
                     SUBJECT_COLORS[q.subject] ??
-                    'bg-ink-800 text-ink-300 border-ink-700'
+                    'bg-coal-200 text-coal-700 border-coal-rule'
                   }`}
                 >
                   {q.subject}
                 </span>
                 {q.topic && (
-                  <span className="text-xs text-ink-500">{q.topic}</span>
+                  <span className="text-xs text-coal-500">{q.topic}</span>
                 )}
                 {q.year && (
-                  <span className="text-xs text-ink-500">· {q.year}</span>
+                  <span className="text-xs text-coal-500">· {q.year}</span>
                 )}
               </div>
               <button
                 onClick={() => setReportOpen(true)}
-                className="press inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md border border-ink-800 text-ink-400 hover:text-crimson hover:border-crimson/40 tx-color"
+                className="press inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md border border-coal-rule text-coal-600 hover:text-crimson hover:border-crimson/40 tx-color"
                 title="Report this question (F)"
               >
                 <Flag className="h-3.5 w-3.5" />
@@ -436,7 +436,7 @@ export default function PracticePage() {
             </div>
 
             {/* Question text */}
-            <h2 className="font-display text-2xl md:text-3xl text-paper leading-snug">
+            <h2 className="font-display text-2xl md:text-3xl text-coal-900 leading-snug">
               {q.text}
             </h2>
 
@@ -450,11 +450,11 @@ export default function PracticePage() {
             {/* Hints */}
             {q.hints?.length > 0 && (
               <details className="mt-4 group">
-                <summary className="cursor-pointer text-xs text-meth inline-flex items-center gap-1.5">
+                <summary className="cursor-pointer text-xs text-accent inline-flex items-center gap-1.5">
                   <Lightbulb className="h-3.5 w-3.5" />
                   Show hint{q.hints.length > 1 ? 's' : ''}
                 </summary>
-                <ul className="mt-2 space-y-1 text-sm text-ink-300 pl-5 list-disc">
+                <ul className="mt-2 space-y-1 text-sm text-coal-700 pl-5 list-disc">
                   {q.hints.map((h, i) => <li key={i}>{h}</li>)}
                 </ul>
               </details>
@@ -468,19 +468,19 @@ export default function PracticePage() {
                 const showResult = isSubmitted;
 
                 let stateCls =
-                  'border-ink-800 bg-ink-900/40 hover:border-ink-700 hover:bg-ink-900/60';
-                let badgeCls = 'border-ink-700 text-ink-300';
+                  'border-coal-rule bg-coal-50/40 hover:border-coal-rule hover:bg-coal-50/60';
+                let badgeCls = 'border-coal-rule text-coal-700';
                 if (showResult) {
                   if (isCorrect) {
-                    stateCls = 'border-meth/40 bg-meth/10 text-paper';
-                    badgeCls = 'border-meth/40 bg-meth/15 text-meth';
+                    stateCls = 'border-accent/40 bg-accent/10 text-coal-900';
+                    badgeCls = 'border-accent/40 bg-accent/15 text-accent';
                   } else if (isSelected) {
-                    stateCls = 'border-crimson/40 bg-crimson/10 text-paper';
+                    stateCls = 'border-crimson/40 bg-crimson/10 text-coal-900';
                     badgeCls = 'border-crimson/40 bg-crimson/15 text-crimson';
                   }
                 } else if (isSelected) {
-                  stateCls = 'border-meth/40 bg-meth/5 text-paper';
-                  badgeCls = 'border-meth/50 bg-meth/15 text-meth';
+                  stateCls = 'border-accent/40 bg-accent/5 text-coal-900';
+                  badgeCls = 'border-accent/50 bg-accent/15 text-accent';
                 }
 
                 return (
@@ -515,7 +515,7 @@ export default function PracticePage() {
               <button
                 onClick={goPrev}
                 disabled={qIndex === 0}
-                className="press inline-flex items-center gap-1.5 text-sm px-3 py-2 rounded-md border border-ink-800 text-ink-300 hover:text-paper hover:border-ink-700 disabled:opacity-40 disabled:cursor-not-allowed tx-color"
+                className="press inline-flex items-center gap-1.5 text-sm px-3 py-2 rounded-md border border-coal-rule text-coal-700 hover:text-coal-900 hover:border-coal-rule disabled:opacity-40 disabled:cursor-not-allowed tx-color"
               >
                 <ArrowLeft className="h-4 w-4" /> Previous
               </button>
@@ -524,15 +524,15 @@ export default function PracticePage() {
                 <button
                   onClick={submitAnswer}
                   disabled={selected === null}
-                  className="press inline-flex items-center gap-2 text-sm px-5 py-2 rounded-md bg-meth text-ink-950 font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-meth-300 tx-color"
+                  className="press inline-flex items-center gap-2 text-sm px-5 py-2 rounded-md bg-accent text-coal font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-accent/90 tx-color"
                 >
                   Check answer
-                  <span className="text-[10px] px-1 py-0.5 rounded bg-ink-950/30 hidden sm:inline">↵</span>
+                  <span className="text-[10px] px-1 py-0.5 rounded bg-coal/30 hidden sm:inline">↵</span>
                 </button>
               ) : qIndex < total - 1 ? (
                 <button
                   onClick={goNext}
-                  className="press inline-flex items-center gap-1.5 text-sm px-5 py-2 rounded-md bg-meth text-ink-950 font-medium hover:bg-meth-300 tx-color"
+                  className="press inline-flex items-center gap-1.5 text-sm px-5 py-2 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 tx-color"
                 >
                   Next question
                   <ArrowRight className="h-4 w-4" />
@@ -540,7 +540,7 @@ export default function PracticePage() {
               ) : (
                 <button
                   onClick={finish}
-                  className="press inline-flex items-center gap-2 text-sm px-5 py-2 rounded-md bg-meth text-ink-950 font-medium hover:bg-meth-300 tx-color"
+                  className="press inline-flex items-center gap-2 text-sm px-5 py-2 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 tx-color"
                 >
                   <Trophy className="h-4 w-4" />
                   Finish paper
@@ -551,27 +551,27 @@ export default function PracticePage() {
             {/* Explanation card */}
             {isSubmitted && showExplain && (
               <div
-                className="mt-6 bg-paper rounded-xl p-6 shadow-crisp animate-fade-up"
+                className="mt-6 bg-paper rounded-xl p-6 animate-fade-up"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-xs uppercase tracking-widest text-ink-500">
+                  <div className="text-xs uppercase tracking-widest text-coal-500">
                     Explanation
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     {selected !== null && q.options[selected]?.isCorrect ? (
-                      <span className="text-meth-700 inline-flex items-center gap-1">
+                      <span className="text-accent inline-flex items-center gap-1">
                         <Check className="h-4 w-4" /> Correct
                       </span>
                     ) : (
                       <span className="text-crimson inline-flex items-center gap-1">
                         <XIcon className="h-4 w-4" />
-                        Incorrect — correct answer was{' '}
+                        Incorrect. The correct answer was{' '}
                         {q.options[correctIndex]?.letter ?? LETTERS[correctIndex]}
                       </span>
                     )}
                   </div>
                 </div>
-                <div className="font-display text-ink-900 text-lg leading-relaxed">
+                <div className="font-display text-coal-100 text-lg leading-relaxed">
                   {q.explanation || 'No explanation provided for this question.'}
                 </div>
                 {q.explanationImage && (
@@ -579,25 +579,25 @@ export default function PracticePage() {
                     <QuestionImage
                       src={q.explanationImage}
                       alt="Explanation diagram"
-                      className="border-ink-300"
+                      className="border-coal-rule"
                     />
                   </div>
                 )}
                 {/* Per-option breakdown if any options have explanations */}
                 {q.options.some((o) => o.explanation) && (
-                  <div className="mt-5 pt-5 border-t border-ink-200">
-                    <div className="text-xs uppercase tracking-widest text-ink-500 mb-3">
+                  <div className="mt-5 pt-5 border-t border-coal-rule">
+                    <div className="text-xs uppercase tracking-widest text-coal-500 mb-3">
                       Why each option
                     </div>
                     <div className="space-y-2">
                       {q.options.map((o, i) =>
                         o.explanation ? (
-                          <div key={i} className="text-sm text-ink-800 flex gap-3">
+                          <div key={i} className="text-sm text-coal-300 flex gap-3">
                             <span
                               className={`shrink-0 inline-grid place-items-center h-5 w-5 rounded text-[11px] font-medium ${
                                 o.isCorrect
-                                  ? 'bg-meth-700 text-paper'
-                                  : 'bg-ink-200 text-ink-700'
+                                  ? 'bg-accent text-coal-900'
+                                  : 'bg-coal-800 text-coal-400'
                               }`}
                             >
                               {o.letter || LETTERS[i]}
@@ -616,7 +616,7 @@ export default function PracticePage() {
 
         {/* Sidebar question grid */}
         <aside className="lg:sticky lg:top-32 lg:self-start space-y-3">
-          <div className="text-xs uppercase tracking-widest text-ink-500">
+          <div className="text-xs uppercase tracking-widest text-coal-500">
             Questions
           </div>
           <div className="grid grid-cols-8 lg:grid-cols-5 gap-1.5">
@@ -626,11 +626,11 @@ export default function PracticePage() {
               const correct = a !== null && paper.questions[i].options[a]?.isCorrect;
               const cls = sub
                 ? correct
-                  ? 'bg-meth/15 text-meth border-meth/40'
+                  ? 'bg-accent/15 text-accent border-accent/40'
                   : 'bg-crimson/15 text-crimson border-crimson/40'
                 : a !== null
-                ? 'bg-meth/5 text-paper border-meth/30'
-                : 'bg-ink-900/40 text-ink-400 border-ink-800 hover:border-ink-700';
+                ? 'bg-accent/5 text-coal-900 border-accent/30'
+                : 'bg-coal-50/40 text-coal-600 border-coal-rule hover:border-coal-rule';
               return (
                 <button
                   key={i}
@@ -639,7 +639,7 @@ export default function PracticePage() {
                     setQIndex(i);
                   }}
                   className={`press text-[11px] font-medium h-8 rounded border tx-color ${
-                    i === qIndex ? 'ring-1 ring-meth ring-offset-1 ring-offset-ink-950' : ''
+                    i === qIndex ? 'ring-1 ring-accent ring-offset-1 ring-offset-coal' : ''
                   } ${cls}`}
                 >
                   {i + 1}
@@ -648,8 +648,8 @@ export default function PracticePage() {
             })}
           </div>
 
-          <div className="hidden lg:block mt-5 text-xs text-ink-500 space-y-1.5 leading-relaxed">
-            <div className="text-ink-400 font-medium mb-2">Keyboard</div>
+          <div className="hidden lg:block mt-5 text-xs text-coal-500 space-y-1.5 leading-relaxed">
+            <div className="text-coal-600 font-medium mb-2">Keyboard</div>
             <div><kbd className="kbd">A</kbd>–<kbd className="kbd">D</kbd> pick answer</div>
             <div><kbd className="kbd">↵</kbd> submit / next</div>
             <div><kbd className="kbd">→</kbd> <kbd className="kbd">←</kbd> nav</div>
@@ -674,11 +674,11 @@ export default function PracticePage() {
 
 function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-4">
-      <div className="text-ink-400 inline-flex items-center gap-1.5 text-xs uppercase tracking-wider">
+    <div className="rounded-xl border border-coal-rule bg-coal-50/40 p-4">
+      <div className="text-coal-600 inline-flex items-center gap-1.5 text-xs uppercase tracking-wider">
         {icon} {label}
       </div>
-      <div className="font-display text-2xl text-paper mt-1">{value}</div>
+      <div className="font-display text-2xl text-coal-900 mt-1">{value}</div>
     </div>
   );
 }

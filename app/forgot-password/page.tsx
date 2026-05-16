@@ -43,18 +43,18 @@ export default function ForgotPasswordPage() {
             Wrong email?{' '}
             <button
               onClick={() => setSent(false)}
-              className="text-meth hover:underline"
+              className="text-accent hover:underline"
             >
               Try a different one
             </button>
           </>
         }
       >
-        <div className="rounded-lg border border-ink-800 bg-ink-900/40 p-5">
-          <div className="inline-grid place-items-center h-10 w-10 rounded-lg bg-meth/10 border border-meth/20 text-meth mb-3">
+        <div className="rounded-lg border border-coal-rule bg-coal-50/40 p-5">
+          <div className="inline-grid place-items-center h-10 w-10 rounded-lg bg-accent/10 border border-accent/20 text-accent mb-3">
             <Mail className="h-5 w-5" />
           </div>
-          <p className="text-sm text-ink-300 leading-relaxed">
+          <p className="text-sm text-coal-700 leading-relaxed">
             The link is good for one hour. If you don't see it, check your spam
             folder. Once you click it, you'll set a new password and you'll be
             signed in.
@@ -62,7 +62,7 @@ export default function ForgotPasswordPage() {
         </div>
         <Link
           href="/login"
-          className="block text-center mt-4 text-sm text-ink-400 hover:text-meth tx-color"
+          className="block text-center mt-4 text-sm text-coal-600 hover:text-accent tx-color"
         >
           Back to sign in
         </Link>
@@ -77,7 +77,7 @@ export default function ForgotPasswordPage() {
       footer={
         <>
           Remembered it?{' '}
-          <Link href="/login" className="text-meth hover:underline">
+          <Link href="/login" className="text-accent hover:underline">
             Sign in instead
           </Link>
         </>
@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
     >
       <form onSubmit={onSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs uppercase tracking-wider text-ink-400 mb-1.5">
+          <label className="block text-xs uppercase tracking-wider text-coal-600 mb-1.5">
             Email
           </label>
           <input
@@ -96,14 +96,14 @@ export default function ForgotPasswordPage() {
             autoComplete="email"
             required
             autoFocus
-            className="w-full px-3 py-2.5 rounded-md bg-ink-900 border border-ink-800 text-paper placeholder:text-ink-600 focus:border-meth focus:outline-none tx-color"
+            className="w-full px-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="press w-full py-2.5 rounded-md bg-meth text-ink-950 font-medium hover:bg-meth-300 disabled:opacity-50 tx-color"
+          className="press w-full py-2.5 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 disabled:opacity-50 tx-color"
         >
           {loading ? 'Sending…' : 'Send reset link'}
         </button>

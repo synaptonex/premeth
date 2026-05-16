@@ -1,12 +1,12 @@
 // app/api/payments/submit/route.ts
 // ─────────────────────────────────────────────────────────────────────────────
 // Student submits proof of JazzCash/EasyPaisa payment.
-// We don't trust anything — we just queue it for admin review.
+// We don't trust anything - we just queue it for admin review.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { PREMETH_PLUS_PRICE_PKR, PREMETH_PLUS_FOUNDERS_PRICE_PKR } from '@/lib/premeth-plus';
+import { ENID_PLUS_PRICE_PKR, ENID_PLUS_FOUNDERS_PRICE_PKR } from '@/lib/enid-plus';
 
 export async function POST(req: Request) {
   const supabase = createClient();
@@ -37,15 +37,15 @@ export async function POST(req: Request) {
   }
   const amount = Number(amount_pkr);
   // Accept either the regular price or the founders' price.
-  const validAmounts = [PREMETH_PLUS_PRICE_PKR, PREMETH_PLUS_FOUNDERS_PRICE_PKR];
+  const validAmounts = [ENID_PLUS_PRICE_PKR, ENID_PLUS_FOUNDERS_PRICE_PKR];
   if (!validAmounts.includes(amount)) {
     return NextResponse.json(
-      { error: `Amount must be ${PREMETH_PLUS_PRICE_PKR} PKR (or ${PREMETH_PLUS_FOUNDERS_PRICE_PKR} PKR for founders)` },
+      { error: `Amount must be ${ENID_PLUS_PRICE_PKR} PKR (or ${ENID_PLUS_FOUNDERS_PRICE_PKR} PKR for founders)` },
       { status: 400 }
     );
   }
 
-  // ─── Check for duplicate TID — friendlier than the DB constraint error ────
+  // ─── Check for duplicate TID - friendlier than the DB constraint error ────
   const { data: existingTid } = await supabase
     .from('payment_requests')
     .select('id, user_id, status')

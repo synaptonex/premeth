@@ -35,7 +35,7 @@ export default function ProfilePage() {
   const [savingPw, setSavingPw] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
-  // Boot — confirm auth, then load profile.
+  // Boot - confirm auth, then load profile.
   useEffect(() => {
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -88,7 +88,7 @@ export default function ProfilePage() {
     const ext = pendingFile.name.split('.').pop()?.toLowerCase() || 'png';
     const path = `${user.id}/avatar-${Date.now()}.${ext}`;
 
-    // Try to clean up old avatars (best effort — don't block on failure).
+    // Try to clean up old avatars (best effort - don't block on failure).
     if (avatar) {
       const oldPath = avatar.split('/avatars/')[1];
       if (oldPath) await supabase.storage.from('avatars').remove([oldPath]);
@@ -222,7 +222,7 @@ export default function ProfilePage() {
     return (
       <>
         <Navbar />
-        <main className="mx-auto max-w-2xl px-5 py-20 text-center text-ink-400">
+        <main className="mx-auto max-w-2xl px-5 py-20 text-center text-coal-600">
           Loading…
         </main>
       </>
@@ -236,33 +236,33 @@ export default function ProfilePage() {
       <Navbar />
       <main ref={root} className="mx-auto max-w-2xl px-5 py-12">
         <div className="mb-8">
-          <span className="text-xs uppercase tracking-widest text-meth">Profile</span>
-          <h1 className="font-display text-4xl md:text-5xl text-paper tracking-tight mt-2">
+          <span className="text-xs uppercase tracking-widest text-accent">Profile</span>
+          <h1 className="font-display text-4xl md:text-5xl text-coal-900 tracking-tight mt-2">
             Your account.
           </h1>
-          <p className="text-ink-400 mt-2">
-            Signed in as <span className="text-paper">{user.email}</span>
+          <p className="text-coal-600 mt-2">
+            Signed in as <span className="text-coal-900">{user.email}</span>
           </p>
         </div>
 
         {/* Avatar card */}
-        <section className="profile-card rounded-xl border border-ink-800 bg-ink-900/40 p-6 mb-4">
-          <h2 className="font-display text-xl text-paper mb-1">Profile picture</h2>
-          <p className="text-sm text-ink-400 mb-5">PNG, JPG, WebP — up to 2MB.</p>
+        <section className="profile-card rounded-xl border border-coal-rule bg-coal-50/40 p-6 mb-4">
+          <h2 className="font-display text-xl text-coal-900 mb-1">Profile picture</h2>
+          <p className="text-sm text-coal-600 mb-5">PNG, JPG, or WebP, up to 2MB.</p>
 
           <div className="flex items-center gap-5">
             <div className="relative">
-              <div className="h-20 w-20 rounded-full overflow-hidden bg-ink-900 border border-ink-800 grid place-items-center">
+              <div className="h-20 w-20 rounded-full overflow-hidden bg-coal-50 border border-coal-rule grid place-items-center">
                 {currentAvatar ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={currentAvatar} alt="" className="h-full w-full object-cover" />
                 ) : (
-                  <UserIcon className="h-8 w-8 text-ink-500" />
+                  <UserIcon className="h-8 w-8 text-coal-500" />
                 )}
               </div>
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="press absolute -bottom-1 -right-1 h-8 w-8 rounded-full bg-meth grid place-items-center text-ink-950 shadow-glow-sm hover:bg-meth-300 tx-color"
+                className="press absolute -bottom-1 -right-1 h-8 w-8 rounded-full bg-accent grid place-items-center text-coal hover:bg-accent/90 tx-color"
                 aria-label="Change avatar"
                 title="Change avatar"
               >
@@ -283,13 +283,13 @@ export default function ProfilePage() {
                   <button
                     onClick={uploadAvatar}
                     disabled={uploadingAvatar}
-                    className="press text-sm px-4 py-2 rounded-md bg-meth text-ink-950 font-medium hover:bg-meth-300 disabled:opacity-50 tx-color"
+                    className="press text-sm px-4 py-2 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 disabled:opacity-50 tx-color"
                   >
                     {uploadingAvatar ? 'Uploading…' : 'Save new avatar'}
                   </button>
                   <button
                     onClick={() => { setPendingFile(null); setPreviewUrl(null); }}
-                    className="press text-xs text-ink-400 hover:text-paper tx-color"
+                    className="press text-xs text-coal-600 hover:text-coal-900 tx-color"
                   >
                     Cancel
                   </button>
@@ -298,21 +298,21 @@ export default function ProfilePage() {
                 <button
                   onClick={removeAvatar}
                   disabled={uploadingAvatar}
-                  className="press inline-flex items-center gap-1.5 text-xs text-ink-400 hover:text-crimson tx-color"
+                  className="press inline-flex items-center gap-1.5 text-xs text-coal-600 hover:text-crimson tx-color"
                 >
                   <Trash2 className="h-3.5 w-3.5" /> Remove avatar
                 </button>
               ) : (
-                <p className="text-xs text-ink-500">Click the camera icon to pick a photo.</p>
+                <p className="text-xs text-coal-500">Click the camera icon to pick a photo.</p>
               )}
             </div>
           </div>
         </section>
 
         {/* Username card */}
-        <section className="profile-card rounded-xl border border-ink-800 bg-ink-900/40 p-6 mb-4">
-          <h2 className="font-display text-xl text-paper mb-1">Username</h2>
-          <p className="text-sm text-ink-400 mb-5">
+        <section className="profile-card rounded-xl border border-coal-rule bg-coal-50/40 p-6 mb-4">
+          <h2 className="font-display text-xl text-coal-900 mb-1">Username</h2>
+          <p className="text-sm text-coal-600 mb-5">
             How you'll show up on leaderboards down the road.
           </p>
 
@@ -322,12 +322,12 @@ export default function ProfilePage() {
               value={username}
               onChange={(e) => setUsername(e.target.value.trim())}
               placeholder="username"
-              className="flex-1 px-3 py-2.5 rounded-md bg-ink-900 border border-ink-800 text-paper placeholder:text-ink-600 focus:border-meth focus:outline-none tx-color"
+              className="flex-1 px-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
             />
             <button
               onClick={saveUsername}
               disabled={savingProfile || username.trim() === savedUsername || !username.trim()}
-              className="press text-sm px-4 py-2.5 rounded-md bg-meth text-ink-950 font-medium hover:bg-meth-300 disabled:opacity-40 disabled:cursor-not-allowed tx-color"
+              className="press text-sm px-4 py-2.5 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed tx-color"
             >
               {savingProfile ? 'Saving…' : 'Save'}
             </button>
@@ -335,11 +335,11 @@ export default function ProfilePage() {
         </section>
 
         {/* Password card */}
-        <section className="profile-card rounded-xl border border-ink-800 bg-ink-900/40 p-6 mb-4">
-          <h2 className="font-display text-xl text-paper mb-1">Change password</h2>
-          <p className="text-sm text-ink-400 mb-5">
+        <section className="profile-card rounded-xl border border-coal-rule bg-coal-50/40 p-6 mb-4">
+          <h2 className="font-display text-xl text-coal-900 mb-1">Change password</h2>
+          <p className="text-sm text-coal-600 mb-5">
             Forgot your current one?{' '}
-            <Link href="/forgot-password" className="text-meth hover:underline">
+            <Link href="/forgot-password" className="text-accent hover:underline">
               Reset by email
             </Link>{' '}
             instead.
@@ -347,7 +347,7 @@ export default function ProfilePage() {
 
           <form onSubmit={savePassword} className="space-y-3">
             <div>
-              <label className="block text-xs uppercase tracking-wider text-ink-400 mb-1.5">
+              <label className="block text-xs uppercase tracking-wider text-coal-600 mb-1.5">
                 Current password
               </label>
               <div className="relative">
@@ -357,12 +357,12 @@ export default function ProfilePage() {
                   onChange={(e) => setOldPw(e.target.value)}
                   autoComplete="current-password"
                   required
-                  className="w-full pl-3 pr-10 py-2.5 rounded-md bg-ink-900 border border-ink-800 text-paper focus:border-meth focus:outline-none tx-color"
+                  className="w-full pl-3 pr-10 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 focus:border-accent focus:outline-none tx-color"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPw((v) => !v)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-ink-500 hover:text-paper tx-color"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-coal-500 hover:text-coal-900 tx-color"
                   aria-label={showPw ? 'Hide password' : 'Show password'}
                 >
                   {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -371,7 +371,7 @@ export default function ProfilePage() {
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-wider text-ink-400 mb-1.5">
+              <label className="block text-xs uppercase tracking-wider text-coal-600 mb-1.5">
                 New password
               </label>
               <input
@@ -380,15 +380,15 @@ export default function ProfilePage() {
                 onChange={(e) => setNewPw(e.target.value)}
                 autoComplete="new-password"
                 required
-                className="w-full px-3 py-2.5 rounded-md bg-ink-900 border border-ink-800 text-paper focus:border-meth focus:outline-none tx-color"
+                className="w-full px-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 focus:border-accent focus:outline-none tx-color"
               />
-              <p className="text-xs text-ink-500 mt-1.5">8+ characters with letters and a number.</p>
+              <p className="text-xs text-coal-500 mt-1.5">8+ characters with letters and a number.</p>
             </div>
 
             <button
               type="submit"
               disabled={savingPw}
-              className="press text-sm px-4 py-2.5 rounded-md bg-meth text-ink-950 font-medium hover:bg-meth-300 disabled:opacity-50 tx-color"
+              className="press text-sm px-4 py-2.5 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 disabled:opacity-50 tx-color"
             >
               {savingPw ? 'Updating…' : 'Update password'}
             </button>

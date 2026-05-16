@@ -6,13 +6,13 @@ import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import { Menu, X } from 'lucide-react';
-import { usePremethPlus } from '@/lib/premeth-plus.client';
+import { useEnidPlus } from '@/lib/enid-plus.client';
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
-  const { isPlus } = usePremethPlus();
+  const { isPlus } = useEnidPlus();
 
   const [user, setUser] = useState<User | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -28,7 +28,7 @@ export default function Navbar() {
   async function signOut() {
     await supabase.auth.signOut();
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('premeth_session_token');
+      localStorage.removeItem('enid_session_token');
     }
     router.push('/');
     router.refresh();
@@ -45,15 +45,18 @@ export default function Navbar() {
     <header className="border-b border-coal-rule">
       <div className="mx-auto max-w-6xl px-6 md:px-10 h-16 flex items-center justify-between">
         <Link href="/" className="text-coal-900 text-base font-medium tracking-tight">
-          Premeth
+          Enid
           {isPlus && <span className="text-accent ml-0.5">+</span>}
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
           <Link href="/exams" className={linkCls('/exams')}>Papers</Link>
+          <Link href="/aggregate" className={linkCls('/aggregate')}>Aggregate</Link>
+          {user && (
+            <Link href="/drill" className={linkCls('/drill')}>Drill</Link>
+          )}
           {user && isPlus && (
             <>
-              <Link href="/drill" className={linkCls('/drill')}>Drill</Link>
               <Link href="/vault" className={linkCls('/vault')}>Vault</Link>
               <Link href="/mock" className={linkCls('/mock')}>Mock</Link>
             </>
@@ -64,7 +67,7 @@ export default function Navbar() {
           )}
           {!isPlus && (
             <Link href="/pricing" className={linkCls('/pricing')}>
-              Premeth<span className="text-accent">+</span>
+              Enid<span className="text-accent">+</span>
             </Link>
           )}
         </nav>
@@ -112,9 +115,12 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden border-t border-coal-rule bg-coal px-6 py-6 space-y-4">
           <MobileLink href="/exams" onClick={() => setMenuOpen(false)}>Papers</MobileLink>
+          <MobileLink href="/aggregate" onClick={() => setMenuOpen(false)}>Aggregate Calculator</MobileLink>
+          {user && (
+            <MobileLink href="/drill" onClick={() => setMenuOpen(false)}>Daily Drill</MobileLink>
+          )}
           {user && isPlus && (
             <>
-              <MobileLink href="/drill" onClick={() => setMenuOpen(false)}>Daily Drill</MobileLink>
               <MobileLink href="/vault" onClick={() => setMenuOpen(false)}>Mistake Vault</MobileLink>
               <MobileLink href="/mock" onClick={() => setMenuOpen(false)}>Mock Exam</MobileLink>
               <MobileLink href="/goal" onClick={() => setMenuOpen(false)}>Goal Tracker</MobileLink>
@@ -131,7 +137,7 @@ export default function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className="block text-base text-coal-900"
                 >
-                  Premeth<span className="text-accent">+</span>
+                  Enid<span className="text-accent">+</span>
                 </Link>
               )}
               <button onClick={signOut} className="block text-base text-coal-600">
@@ -146,7 +152,7 @@ export default function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className="block text-base text-coal-900"
                 >
-                  Premeth<span className="text-accent">+</span>
+                  Enid<span className="text-accent">+</span>
                 </Link>
               )}
               <MobileLink href="/login" onClick={() => setMenuOpen(false)}>Sign in</MobileLink>

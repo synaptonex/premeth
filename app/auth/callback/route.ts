@@ -20,6 +20,6 @@ export async function GET(request: Request) {
     }
   }
 
-  // No code or exchange failed — kick the user back to login with a hint.
+  // No code or exchange failed - kick the user back to login with a hint.
   return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
 }
