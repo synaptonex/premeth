@@ -146,7 +146,7 @@ export default function VaultPage() {
     return (
       <>
         <Navbar />
-        <main className="mx-auto max-w-2xl px-5 py-20 text-center text-ink-400">
+        <main className="mx-auto max-w-2xl px-5 py-20 text-center text-bone-600">
           Loading…
         </main>
       </>
@@ -158,16 +158,16 @@ export default function VaultPage() {
       <>
         <Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
-          <Lock className="h-10 w-10 text-meth mx-auto mb-3" />
-          <h1 className="font-display text-3xl text-paper mb-2">Premeth+ only</h1>
-          <p className="text-ink-400 mb-6">
+          <Lock className="h-10 w-10 text-accent mx-auto mb-3" />
+          <h1 className="text-3xl font-light tracking-tighter text-bone-900 mb-2">Premeth+ only</h1>
+          <p className="text-bone-600 mb-6">
             The Mistake Vault is part of Premeth+. We auto-collect every question
             you get wrong, then show it back to you on a spaced-repetition
             schedule (1, 3, 7, 14, 30 days) until you've mastered it.
           </p>
           <Link
             href="/pricing"
-            className="press inline-flex items-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-2.5 font-medium hover:bg-meth-300 tx-color"
+            className="press inline-flex items-center gap-2 bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color"
           >
             See Premeth+ <ArrowRight className="h-4 w-4" />
           </Link>
@@ -189,22 +189,22 @@ export default function VaultPage() {
         <main className="mx-auto max-w-3xl px-5 py-8">
           <button
             onClick={() => setReviewing(null)}
-            className="press inline-flex items-center gap-1.5 text-sm text-ink-400 hover:text-paper mb-5 tx-color"
+            className="press inline-flex items-center gap-1.5 text-sm text-bone-600 hover:text-bone-900 mb-5 tx-color"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Back to vault
           </button>
 
-          <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-6">
+          <div className="border border-bone-rule bg-bone-50 p-6">
             <div className="flex items-center justify-between mb-5">
-              <span className="text-xs uppercase tracking-widest text-meth">
+              <span className="text-xs uppercase tracking-widest text-accent">
                 Stage {reviewing.row.stage} review
               </span>
-              <span className="text-xs text-ink-500">
+              <span className="text-xs text-bone-500">
                 Seen wrong {reviewing.row.times_wrong} time{reviewing.row.times_wrong === 1 ? '' : 's'}
               </span>
             </div>
 
-            <p className="text-paper leading-relaxed mb-5">{q.text}</p>
+            <p className="text-bone-900 leading-relaxed mb-5">{q.text}</p>
             <div className="space-y-2 mb-5">
               {q.options.map((opt, i) => {
                 const isCorrect = i === correctIndex;
@@ -214,31 +214,31 @@ export default function VaultPage() {
                     key={i}
                     onClick={() => !submitted && setSelected(i)}
                     disabled={submitted}
-                    className={`press w-full text-left rounded-md border px-4 py-3 flex items-start gap-3 tx-color ${
+                    className={`press w-full text-left border px-4 py-3 flex items-start gap-3 tx-color ${
                       reveal && isCorrect
-                        ? 'border-meth bg-meth/5'
+                        ? 'border-accent bg-bone-50'
                         : reveal && isPicked && !isCorrect
-                        ? 'border-crimson bg-crimson/5'
+                        ? 'border-crimson bg-accent/5'
                         : isPicked
-                        ? 'border-meth bg-meth/5'
-                        : 'border-ink-800 hover:border-ink-700'
+                        ? 'border-accent bg-bone-50'
+                        : 'border-bone-rule hover:border-bone-300'
                     }`}
                   >
-                    <span className="font-mono text-sm text-ink-500 shrink-0">{LETTERS[i]}</span>
-                    <span className="flex-1 text-ink-200">{opt.text}</span>
-                    {reveal && isCorrect && <Check className="h-4 w-4 text-meth" />}
-                    {reveal && isPicked && !isCorrect && <XIcon className="h-4 w-4 text-crimson" />}
+                    <span className="font-mono text-sm text-bone-500 shrink-0">{LETTERS[i]}</span>
+                    <span className="flex-1 text-bone-800">{opt.text}</span>
+                    {reveal && isCorrect && <Check className="h-4 w-4 text-accent" />}
+                    {reveal && isPicked && !isCorrect && <XIcon className="h-4 w-4 text-accent" />}
                   </button>
                 );
               })}
             </div>
 
             {reveal && (q.explanation || q.options[correctIndex]?.explanation) && (
-              <div className="rounded-md border border-ink-800 bg-ink-950/60 p-4 mb-5">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-meth mb-2">
+              <div className="border border-bone-rule bg-bone/80 p-4 mb-5">
+                <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-accent mb-2">
                   <Lightbulb className="h-3.5 w-3.5" /> Explanation
                 </div>
-                <p className="text-sm text-ink-300 leading-relaxed">
+                <p className="text-sm text-bone-700 leading-relaxed">
                   {q.explanation || q.options[correctIndex]?.explanation}
                 </p>
               </div>
@@ -248,14 +248,14 @@ export default function VaultPage() {
               <button
                 onClick={() => setSubmitted(true)}
                 disabled={selected === null}
-                className="press w-full inline-flex items-center justify-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-2.5 font-medium hover:bg-meth-300 tx-color disabled:opacity-50"
+                className="press w-full inline-flex items-center justify-center gap-2 bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color disabled:opacity-50"
               >
                 Reveal answer
               </button>
             ) : (
               <button
                 onClick={() => submitReview(wasCorrect)}
-                className="press w-full inline-flex items-center justify-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-2.5 font-medium hover:bg-meth-300 tx-color"
+                className="press w-full inline-flex items-center justify-center gap-2 bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color"
               >
                 {wasCorrect ? 'Got it right — advance stage' : 'Got it wrong — reset to stage 1'}
               </button>
@@ -272,11 +272,11 @@ export default function VaultPage() {
       <Navbar />
       <main className="mx-auto max-w-3xl px-5 py-12">
         <div className="mb-8">
-          <span className="text-xs uppercase tracking-widest text-meth">Premeth+</span>
-          <h1 className="font-display text-4xl text-paper tracking-tight mt-2">
+          <span className="text-xs uppercase tracking-widest text-accent">Premeth+</span>
+          <h1 className="text-4xl font-light tracking-tighter text-bone-900 mt-2">
             Mistake Vault.
           </h1>
-          <p className="text-ink-400 mt-2">
+          <p className="text-bone-600 mt-2">
             Every question you got wrong, scheduled for review on a spaced
             repetition curve. Get one right at all stages and it's gone.
           </p>
@@ -289,9 +289,9 @@ export default function VaultPage() {
         </div>
 
         {rows.length === 0 ? (
-          <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-10 text-center">
-            <Brain className="h-8 w-8 text-meth mx-auto mb-3" />
-            <p className="text-ink-300 max-w-md mx-auto">
+          <div className="border border-bone-rule bg-bone-50 p-10 text-center">
+            <Brain className="h-8 w-8 text-accent mx-auto mb-3" />
+            <p className="text-bone-700 max-w-md mx-auto">
               No mistakes yet. Practice a paper or run the Daily Drill —
               anything you get wrong will land here.
             </p>
@@ -300,7 +300,7 @@ export default function VaultPage() {
           <>
             {due.length > 0 && (
               <section className="mb-8">
-                <h2 className="font-display text-xl text-paper mb-3">Due now</h2>
+                <h2 className="text-xl text-bone-900 mb-3">Due now</h2>
                 <ul className="space-y-2">
                   {due.map((r) => <VaultItem key={r.id} row={r} onReview={() => openReview(r)} />)}
                 </ul>
@@ -308,14 +308,14 @@ export default function VaultPage() {
             )}
             {upcoming.length > 0 && (
               <section className="mb-8">
-                <h2 className="font-display text-xl text-paper mb-3">Coming up</h2>
+                <h2 className="text-xl text-bone-900 mb-3">Coming up</h2>
                 <ul className="space-y-2">
                   {upcoming.slice(0, 10).map((r) => (
                     <VaultItem key={r.id} row={r} muted />
                   ))}
                 </ul>
                 {upcoming.length > 10 && (
-                  <p className="text-xs text-ink-500 mt-2">
+                  <p className="text-xs text-bone-500 mt-2">
                     +{upcoming.length - 10} more queued
                   </p>
                 )}
@@ -323,8 +323,8 @@ export default function VaultPage() {
             )}
             {mastered.length > 0 && (
               <section>
-                <h2 className="font-display text-xl text-paper mb-3">Mastered</h2>
-                <p className="text-sm text-ink-500">
+                <h2 className="text-xl text-bone-900 mb-3">Mastered</h2>
+                <p className="text-sm text-bone-500">
                   You've completed all 5 stages on {mastered.length} question
                   {mastered.length === 1 ? '' : 's'}. Nice work.
                 </p>
@@ -342,16 +342,16 @@ function Stat({ icon, label, value, highlight }: {
   icon: React.ReactNode; label: string; value: number; highlight?: boolean;
 }) {
   return (
-    <div className={`rounded-xl border p-4 ${
+    <div className={`border p-4 ${
       highlight && value > 0
-        ? 'border-meth/40 bg-meth/5'
-        : 'border-ink-800 bg-ink-900/40'
+        ? 'border-accent bg-bone-50'
+        : 'border-bone-rule bg-bone-50'
     }`}>
-      <div className="text-ink-400 inline-flex items-center gap-1.5 text-xs uppercase tracking-wider">
+      <div className="text-bone-600 inline-flex items-center gap-1.5 text-xs uppercase tracking-wider">
         {icon} {label}
       </div>
-      <div className={`font-display text-2xl mt-1.5 ${
-        highlight && value > 0 ? 'text-meth' : 'text-paper'
+      <div className={`text-2xl mt-1.5 ${
+        highlight && value > 0 ? 'text-accent' : 'text-bone-900'
       }`}>
         {value}
       </div>
@@ -367,27 +367,27 @@ function VaultItem({
   return (
     <li
       onClick={onReview}
-      className={`rounded-md border p-3 flex items-center gap-3 ${
+      className={`border p-3 flex items-center gap-3 ${
         onReview
-          ? 'border-ink-800 bg-ink-900/40 hover:border-meth/40 cursor-pointer tx-color'
-          : 'border-ink-900 bg-ink-900/20 opacity-70'
+          ? 'border-bone-rule bg-bone-50 hover:border-accent cursor-pointer tx-color'
+          : 'border-bone-rule bg-bone-50 opacity-70'
       }`}
     >
       <div className="min-w-0 flex-1">
-        <div className="text-sm text-ink-200 truncate">{row.question_text}</div>
-        <div className="text-xs text-ink-500 mt-0.5 flex items-center gap-2">
+        <div className="text-sm text-bone-800 truncate">{row.question_text}</div>
+        <div className="text-xs text-bone-500 mt-0.5 flex items-center gap-2">
           {row.topic && <span>{row.topic}</span>}
-          {row.topic && <span className="text-ink-700">·</span>}
+          {row.topic && <span className="text-bone-400">·</span>}
           <span>Stage {row.stage}</span>
           {!onReview && (
             <>
-              <span className="text-ink-700">·</span>
+              <span className="text-bone-400">·</span>
               <span>Due {dueLabel}</span>
             </>
           )}
         </div>
       </div>
-      {onReview && <ArrowRight className="h-4 w-4 text-ink-500 shrink-0" />}
+      {onReview && <ArrowRight className="h-4 w-4 text-bone-500 shrink-0" />}
     </li>
   );
 }

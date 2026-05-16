@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
-import { LogOut, User as UserIcon, Menu, X, Sparkles } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { usePremethPlus } from '@/lib/premeth-plus.client';
 
 export default function Navbar() {
@@ -15,7 +15,6 @@ export default function Navbar() {
   const { isPlus } = usePremethPlus();
 
   const [user, setUser] = useState<User | null>(null);
-  const [avatar, setAvatar] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -26,15 +25,8 @@ export default function Navbar() {
     return () => sub.subscription.unsubscribe();
   }, [supabase]);
 
-  useEffect(() => {
-    if (!user) { setAvatar(null); return; }
-    supabase.from('profiles').select('avatar_url').eq('id', user.id).single()
-      .then(({ data }) => setAvatar(data?.avatar_url ?? null));
-  }, [user, supabase]);
-
   async function signOut() {
     await supabase.auth.signOut();
-    // Clear the session token so SessionHeartbeat doesn't bounce us
     if (typeof window !== 'undefined') {
       localStorage.removeItem('premeth_session_token');
     }
@@ -42,88 +34,65 @@ export default function Navbar() {
     router.refresh();
   }
 
-  const linkCls = (href: string) =>
-    `tx-color text-sm hover:text-meth ${
-      pathname === href || pathname.startsWith(href + '/') ? 'text-meth' : 'text-ink-300'
+  const linkCls = (href: string) => {
+    const active = pathname === href || pathname.startsWith(href + '/');
+    return `text-sm tx-color ${
+      active ? 'text-bone-900' : 'text-bone-500 hover:text-bone-900'
     }`;
+  };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-ink-800/80 backdrop-blur-md bg-ink-950/70">
-      <div className="mx-auto max-w-6xl px-5 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="relative h-7 w-7 grid place-items-center rounded-md bg-meth/15 border border-meth/30 transition-transform duration-200 ease-out-strong group-hover:scale-110">
-            <span className="text-meth font-display font-bold text-sm leading-none">P</span>
-          </div>
-          <span className="font-display font-semibold text-paper tracking-tight">
-            Premeth
-          </span>
-          {isPlus && (
-            <span className="ml-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider bg-meth/15 text-meth border border-meth/30 font-mono">
-              <Sparkles className="h-2.5 w-2.5" /> +
-            </span>
-          )}
+    <header className="border-b border-bone-rule">
+      <div className="mx-auto max-w-6xl px-6 md:px-10 h-16 flex items-center justify-between">
+        <Link href="/" className="text-bone-900 text-base font-medium tracking-tight">
+          Premeth
+          {isPlus && <span className="text-accent ml-0.5">+</span>}
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-6">
-          <Link href="/exams"     className={linkCls('/exams')}>Exams</Link>
-          {/* Premeth+ feature nav, only when subscribed */}
+        <nav className="hidden md:flex items-center gap-8">
+          <Link href="/exams" className={linkCls('/exams')}>Papers</Link>
           {user && isPlus && (
             <>
               <Link href="/drill" className={linkCls('/drill')}>Drill</Link>
               <Link href="/vault" className={linkCls('/vault')}>Vault</Link>
-              <Link href="/mock"  className={linkCls('/mock')}>Mock</Link>
+              <Link href="/mock" className={linkCls('/mock')}>Mock</Link>
             </>
           )}
-          <Link href="/draw"      className={linkCls('/draw')}>Scratchpad</Link>
-          <Link href="/about"     className={linkCls('/about')}>About</Link>
-          {user ? (
+          <Link href="/about" className={linkCls('/about')}>About</Link>
+          {user && (
             <Link href="/dashboard" className={linkCls('/dashboard')}>Dashboard</Link>
-          ) : null}
+          )}
           {!isPlus && (
             <Link href="/pricing" className={linkCls('/pricing')}>
-              <span className="inline-flex items-center gap-1">
-                <Sparkles className="h-3 w-3" /> Premeth+
-              </span>
+              Premeth<span className="text-accent">+</span>
             </Link>
           )}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-6">
           {user ? (
-            <div className="flex items-center gap-2">
+            <>
               <Link
                 href="/profile"
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-md border border-ink-800 hover:border-ink-700 tx-color"
-                aria-label="Profile"
+                className="text-sm text-bone-500 hover:text-bone-900 tx-color truncate max-w-[10rem]"
               >
-                {avatar ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={avatar} alt="" className="h-6 w-6 rounded-full object-cover" />
-                ) : (
-                  <UserIcon className="h-4 w-4 text-ink-300" />
-                )}
-                <span className="text-sm text-ink-200 max-w-[8rem] truncate">
-                  {user.email}
-                </span>
+                {user.email}
               </Link>
               <button
                 onClick={signOut}
-                className="press p-2 rounded-md border border-ink-800 hover:border-ink-700 tx-color"
-                aria-label="Sign out"
-                title="Sign out"
+                className="text-sm text-bone-500 hover:text-bone-900 tx-color"
               >
-                <LogOut className="h-4 w-4" />
+                Sign out
               </button>
-            </div>
+            </>
           ) : (
             <>
-              <Link href="/login" className="text-sm text-ink-300 hover:text-paper tx-color px-2 py-1">
+              <Link href="/login" className="text-sm text-bone-500 hover:text-bone-900 tx-color">
                 Sign in
               </Link>
               <Link
                 href="/signup"
-                className="press text-sm px-3 py-1.5 rounded-md bg-meth text-ink-950 font-medium hover:bg-meth-300 tx-color"
+                className="press text-sm font-medium text-bone-900 border-b border-bone-900 pb-0.5 tx-color"
               >
                 Create account
               </Link>
@@ -132,7 +101,7 @@ export default function Navbar() {
         </div>
 
         <button
-          className="md:hidden p-2 -mr-2"
+          className="md:hidden p-2 -mr-2 text-bone-900"
           onClick={() => setMenuOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -140,50 +109,66 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile sheet */}
       {menuOpen && (
-        <div className="md:hidden border-t border-ink-800 bg-ink-950 px-5 py-4 space-y-3">
-          <Link href="/exams"     onClick={() => setMenuOpen(false)} className="block py-1 text-paper">Exams</Link>
+        <div className="md:hidden border-t border-bone-rule bg-bone px-6 py-6 space-y-4">
+          <MobileLink href="/exams" onClick={() => setMenuOpen(false)}>Papers</MobileLink>
           {user && isPlus && (
             <>
-              <Link href="/drill" onClick={() => setMenuOpen(false)} className="block py-1 text-paper">
-                <Sparkles className="inline h-3 w-3 mr-1 text-meth" /> Daily Drill
-              </Link>
-              <Link href="/vault" onClick={() => setMenuOpen(false)} className="block py-1 text-paper">
-                <Sparkles className="inline h-3 w-3 mr-1 text-meth" /> Mistake Vault
-              </Link>
-              <Link href="/mock" onClick={() => setMenuOpen(false)} className="block py-1 text-paper">
-                <Sparkles className="inline h-3 w-3 mr-1 text-meth" /> Mock Exam
-              </Link>
-              <Link href="/goal" onClick={() => setMenuOpen(false)} className="block py-1 text-paper">
-                <Sparkles className="inline h-3 w-3 mr-1 text-meth" /> Goal Tracker
-              </Link>
+              <MobileLink href="/drill" onClick={() => setMenuOpen(false)}>Daily Drill</MobileLink>
+              <MobileLink href="/vault" onClick={() => setMenuOpen(false)}>Mistake Vault</MobileLink>
+              <MobileLink href="/mock" onClick={() => setMenuOpen(false)}>Mock Exam</MobileLink>
+              <MobileLink href="/goal" onClick={() => setMenuOpen(false)}>Goal Tracker</MobileLink>
             </>
           )}
-          <Link href="/draw"      onClick={() => setMenuOpen(false)} className="block py-1 text-paper">Scratchpad</Link>
-          <Link href="/about"     onClick={() => setMenuOpen(false)} className="block py-1 text-paper">About</Link>
+          <MobileLink href="/about" onClick={() => setMenuOpen(false)}>About</MobileLink>
           {user ? (
             <>
-              <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="block py-1 text-paper">Dashboard</Link>
-              <Link href="/profile"   onClick={() => setMenuOpen(false)} className="block py-1 text-paper">Profile</Link>
+              <MobileLink href="/dashboard" onClick={() => setMenuOpen(false)}>Dashboard</MobileLink>
+              <MobileLink href="/profile" onClick={() => setMenuOpen(false)}>Profile</MobileLink>
               {!isPlus && (
-                <Link href="/pricing" onClick={() => setMenuOpen(false)} className="block py-1 text-meth">
-                  Upgrade to Premeth+
+                <Link
+                  href="/pricing"
+                  onClick={() => setMenuOpen(false)}
+                  className="block text-base text-bone-900"
+                >
+                  Premeth<span className="text-accent">+</span>
                 </Link>
               )}
-              <button onClick={signOut} className="block py-1 text-crimson">Sign out</button>
+              <button onClick={signOut} className="block text-base text-bone-600">
+                Sign out
+              </button>
             </>
           ) : (
             <>
-              <Link href="/pricing" onClick={() => setMenuOpen(false)} className="block py-1 text-meth">
-                Premeth+
-              </Link>
-              <Link href="/login"  onClick={() => setMenuOpen(false)} className="block py-1 text-paper">Sign in</Link>
-              <Link href="/signup" onClick={() => setMenuOpen(false)} className="block py-1 text-meth">Create account</Link>
+              {!isPlus && (
+                <Link
+                  href="/pricing"
+                  onClick={() => setMenuOpen(false)}
+                  className="block text-base text-bone-900"
+                >
+                  Premeth<span className="text-accent">+</span>
+                </Link>
+              )}
+              <MobileLink href="/login" onClick={() => setMenuOpen(false)}>Sign in</MobileLink>
+              <MobileLink href="/signup" onClick={() => setMenuOpen(false)}>Create account</MobileLink>
             </>
           )}
         </div>
       )}
     </header>
+  );
+}
+
+function MobileLink({
+  href, onClick, children,
+}: {
+  href: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link href={href} onClick={onClick} className="block text-base text-bone-700">
+      {children}
+    </Link>
   );
 }

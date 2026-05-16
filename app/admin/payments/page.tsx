@@ -118,7 +118,7 @@ export default function AdminPaymentsPage() {
     return (
       <>
         <Navbar />
-        <main className="mx-auto max-w-5xl px-5 py-20 text-center text-ink-400">
+        <main className="mx-auto max-w-5xl px-5 py-20 text-center text-bone-600">
           Loading…
         </main>
       </>
@@ -130,9 +130,9 @@ export default function AdminPaymentsPage() {
       <>
         <Navbar />
         <main className="mx-auto max-w-md px-5 py-20 text-center">
-          <ShieldAlert className="h-10 w-10 text-crimson mx-auto mb-3" />
-          <h1 className="font-display text-3xl text-paper mb-2">Not authorized</h1>
-          <p className="text-ink-400">This page is for Premeth admins only.</p>
+          <ShieldAlert className="h-10 w-10 text-accent mx-auto mb-3" />
+          <h1 className="text-3xl font-light tracking-tighter text-bone-900 mb-2">Not authorized</h1>
+          <p className="text-bone-600">This page is for Premeth admins only.</p>
         </main>
       </>
     );
@@ -143,11 +143,11 @@ export default function AdminPaymentsPage() {
       <Navbar />
       <main className="mx-auto max-w-5xl px-5 py-12">
         <div className="mb-8">
-          <span className="text-xs uppercase tracking-widest text-meth">Admin</span>
-          <h1 className="font-display text-4xl text-paper tracking-tight mt-2">
+          <span className="text-xs uppercase tracking-widest text-accent">Admin</span>
+          <h1 className="text-4xl font-light tracking-tighter text-bone-900 mt-2">
             Payment review.
           </h1>
-          <p className="text-ink-400 mt-2">
+          <p className="text-bone-600 mt-2">
             {pending.length} pending · {flagged.length} flagged account{flagged.length === 1 ? '' : 's'}
           </p>
         </div>
@@ -155,20 +155,20 @@ export default function AdminPaymentsPage() {
         {/* ─── Generated code modal ────────────────────────────────────── */}
         {showCode && (
           <div
-            className="fixed inset-0 z-50 grid place-items-center bg-ink-950/80 backdrop-blur-sm p-5"
+            className="fixed inset-0 z-50 grid place-items-center bg-bone/80 backdrop-blur-sm p-5"
             onClick={() => setShowCode(null)}
           >
             <div
-              className="w-full max-w-md rounded-xl border border-meth/40 bg-ink-900 p-6"
+              className="w-full max-w-md border border-accent bg-bone-100 p-6"
               onClick={(e) => e.stopPropagation()}
             >
-              <h3 className="font-display text-xl text-paper mb-1">Code generated</h3>
-              <p className="text-sm text-ink-400 mb-5">
+              <h3 className="text-xl text-bone-900 mb-1">Code generated</h3>
+              <p className="text-sm text-bone-600 mb-5">
                 Copy this code and send it to the buyer on WhatsApp. They'll
                 enter it at /redeem.
               </p>
               <div className="flex items-center gap-2 mb-5">
-                <code className="flex-1 rounded-md bg-ink-950 border border-ink-800 px-4 py-3 font-mono text-lg text-meth text-center tracking-wider">
+                <code className="flex-1 bg-bone border border-bone-rule px-4 py-3 font-mono text-lg text-accent text-center tracking-wider">
                   {showCode.code}
                 </code>
                 <button
@@ -176,14 +176,14 @@ export default function AdminPaymentsPage() {
                     navigator.clipboard.writeText(showCode.code);
                     toast.success('Copied');
                   }}
-                  className="press p-3 rounded-md border border-ink-700 hover:border-meth tx-color"
+                  className="press p-3 border border-bone-300 hover:border-accent tx-color"
                 >
                   <Copy className="h-4 w-4" />
                 </button>
               </div>
               <button
                 onClick={() => setShowCode(null)}
-                className="press w-full rounded-md bg-meth text-ink-950 px-5 py-2.5 font-medium hover:bg-meth-300 tx-color"
+                className="press w-full bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color"
               >
                 Done
               </button>
@@ -194,21 +194,21 @@ export default function AdminPaymentsPage() {
         {/* ─── Flagged accounts ────────────────────────────────────────── */}
         {flagged.length > 0 && (
           <section className="mb-10">
-            <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-5">
+            <div className="border border-bone-rule bg-bone-50 p-5">
               <div className="flex items-center gap-2 mb-3">
-                <AlertCircle className="h-5 w-5 text-amber-400" />
-                <h2 className="font-display text-lg text-paper">Accounts flagged for review</h2>
+                <AlertCircle className="h-5 w-5 text-accent" />
+                <h2 className="text-lg text-bone-900">Accounts flagged for review</h2>
               </div>
-              <p className="text-sm text-ink-400 mb-4">
+              <p className="text-sm text-bone-600 mb-4">
                 These Premeth+ accounts have logged in from {'>'}5 distinct devices/networks
                 in the last 7 days. Worth checking in case the code is being shared.
               </p>
               <ul className="space-y-2">
                 {flagged.map((f) => (
-                  <li key={f.user_id} className="rounded-md border border-ink-800 bg-ink-900/40 p-3 text-sm">
+                  <li key={f.user_id} className="border border-bone-rule bg-bone-50 p-3 text-sm">
                     <div className="flex items-center justify-between gap-3">
-                      <code className="text-ink-300 truncate">{f.user_id}</code>
-                      <span className="text-amber-400 shrink-0">
+                      <code className="text-bone-700 truncate">{f.user_id}</code>
+                      <span className="text-accent shrink-0">
                         {f.fingerprint_count} fingerprints
                       </span>
                     </div>
@@ -221,9 +221,9 @@ export default function AdminPaymentsPage() {
 
         {/* ─── Pending payments ────────────────────────────────────────── */}
         <section className="mb-10">
-          <h2 className="font-display text-2xl text-paper mb-4">Pending ({pending.length})</h2>
+          <h2 className="text-2xl text-bone-900 mb-4">Pending ({pending.length})</h2>
           {pending.length === 0 ? (
-            <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-8 text-center text-ink-500">
+            <div className="border border-bone-rule bg-bone-50 p-8 text-center text-bone-500">
               No pending payments. Inbox zero.
             </div>
           ) : (
@@ -237,26 +237,26 @@ export default function AdminPaymentsPage() {
 
         {/* ─── Recent decisions ────────────────────────────────────────── */}
         <section>
-          <h2 className="font-display text-2xl text-paper mb-4">Recent decisions</h2>
-          <ul className="divide-y divide-ink-800 border-t border-b border-ink-800">
+          <h2 className="text-2xl text-bone-900 mb-4">Recent decisions</h2>
+          <ul className="divide-y divide-bone-rule border-t border-b border-bone-rule">
             {recent.map((p) => (
               <li key={p.id} className="py-3 flex items-center justify-between gap-3 text-sm">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-ink-300 truncate">{p.transaction_id}</span>
+                    <span className="font-mono text-bone-700 truncate">{p.transaction_id}</span>
                     <span className={`text-[10px] uppercase px-1.5 py-0.5 rounded ${
                       p.status === 'approved'
-                        ? 'bg-meth/15 text-meth border border-meth/30'
-                        : 'bg-crimson/15 text-crimson border border-crimson/30'
+                        ? 'bg-bone-100 text-accent border border-bone-rule'
+                        : 'bg-accent/15 text-accent border border-crimson/30'
                     }`}>
                       {p.status}
                     </span>
                   </div>
-                  <div className="text-xs text-ink-500 mt-0.5">
+                  <div className="text-xs text-bone-500 mt-0.5">
                     {p.method} · Rs {p.amount_pkr.toLocaleString()} · {p.sender_phone}
                   </div>
                 </div>
-                <div className="text-xs text-ink-500 shrink-0">
+                <div className="text-xs text-bone-500 shrink-0">
                   {new Date(p.created_at).toLocaleDateString()}
                 </div>
               </li>
@@ -273,26 +273,26 @@ function PaymentCard({
   p, onApprove, onReject,
 }: { p: PaymentRow; onApprove: () => void; onReject: () => void }) {
   return (
-    <li className="rounded-xl border border-ink-800 bg-ink-900/40 p-5">
+    <li className="border border-bone-rule bg-bone-50 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4 mb-3">
         <div className="min-w-0">
-          <div className="font-display text-lg text-paper">
+          <div className="text-lg text-bone-900">
             Rs {p.amount_pkr.toLocaleString()} via {p.method === 'jazzcash' ? 'JazzCash' : 'EasyPaisa'}
           </div>
-          <div className="text-xs text-ink-500 mt-0.5">
+          <div className="text-xs text-bone-500 mt-0.5">
             Submitted {new Date(p.created_at).toLocaleString()}
           </div>
         </div>
         <div className="flex gap-2 shrink-0">
           <button
             onClick={onReject}
-            className="press inline-flex items-center gap-1.5 rounded-md border border-ink-700 hover:border-crimson hover:text-crimson px-3 py-1.5 text-sm tx-color"
+            className="press inline-flex items-center gap-1.5 border border-bone-300 hover:border-crimson hover:text-accent px-3 py-1.5 text-sm tx-color"
           >
             <X className="h-3.5 w-3.5" /> Reject
           </button>
           <button
             onClick={onApprove}
-            className="press inline-flex items-center gap-1.5 rounded-md bg-meth text-ink-950 px-3 py-1.5 text-sm font-medium hover:bg-meth-300 tx-color"
+            className="press inline-flex items-center gap-1.5 bg-bone-900 text-bone-50 px-3 py-1.5 text-sm font-medium hover:bg-bone-700 tx-color"
           >
             <Check className="h-3.5 w-3.5" /> Approve & generate code
           </button>
@@ -314,8 +314,8 @@ function Field({
 }: { label: string; value: string; mono?: boolean; copyable?: boolean }) {
   return (
     <div>
-      <div className="text-[10px] uppercase tracking-wider text-ink-500 mb-0.5">{label}</div>
-      <div className={`text-ink-200 flex items-center gap-2 ${mono ? 'font-mono' : ''}`}>
+      <div className="text-[10px] uppercase tracking-wider text-bone-500 mb-0.5">{label}</div>
+      <div className={`text-bone-800 flex items-center gap-2 ${mono ? 'font-mono' : ''}`}>
         <span className="truncate">{value}</span>
         {copyable && (
           <button
@@ -323,7 +323,7 @@ function Field({
               navigator.clipboard.writeText(value);
               toast.success('Copied');
             }}
-            className="press shrink-0 p-1 rounded hover:bg-ink-800 tx-color"
+            className="press shrink-0 p-1 rounded hover:bg-bone-200 tx-color"
             title="Copy"
           >
             <Copy className="h-3 w-3" />

@@ -7,13 +7,31 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
-        display: ['var(--font-display)', 'serif'],
-        mono: ['ui-monospace', 'SFMono-Regular', 'monospace'],
+        // Single family. The whole app reads in Manrope at varying weights.
+        sans: ['var(--font-manrope)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-manrope)', 'system-ui', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       colors: {
-        // Premeth's identity: lab-meth green on near-black, with a warm paper highlight.
-        // Picked to feel like Heisenberg lab notes, not a generic ed-tech app.
+        // Public surfaces use this paper-toned light palette. Off-white
+        // is warmer than #FFFFFF without crossing into Organic cream.
+        bone: {
+          DEFAULT: '#F7F7F4',
+          50:  '#FBFBF9',
+          100: '#F7F7F4',
+          200: '#EFEFEA',
+          300: '#E0E0D8',
+          400: '#B8B8AE',
+          500: '#8B8B82',
+          600: '#5C5C56',
+          700: '#3F3F3A',
+          800: '#2A2A26',
+          900: '#1A1A18',
+        },
+        // Single accent. Used sparingly — for Premeth+ and one primary action per page.
+        accent: '#CC2936',
+
+        // Existing dark theme retained for the paid feature pages.
         ink: {
           DEFAULT: '#0a0a0a',
           50: '#fafafa',
@@ -45,30 +63,14 @@ module.exports = {
         paper: '#f7f3ec',
         crimson: '#e23b3b',
       },
-      boxShadow: {
-        glow: '0 0 24px -4px rgba(62, 224, 137, 0.45)',
-        'glow-sm': '0 0 12px -2px rgba(62, 224, 137, 0.35)',
-        'crisp': '0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px -8px rgba(0,0,0,0.4)',
-      },
-      keyframes: {
-        shimmer: {
-          '0%':   { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
-        },
-        pulseDot: {
-          '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
-          '50%':      { opacity: '1',   transform: 'scale(1.4)' },
-        },
-      },
-      animation: {
-        shimmer: 'shimmer 2.4s linear infinite',
-        'pulse-dot': 'pulseDot 1.6s ease-in-out infinite',
+      letterSpacing: {
+        // Tight by default for display sizes — Manrope reads better tight.
+        tighter: '-0.04em',
+        tight: '-0.02em',
       },
       transitionTimingFunction: {
-        // Emil's strong custom curves
-        'out-strong': 'cubic-bezier(0.23, 1, 0.32, 1)',
-        'in-out-strong': 'cubic-bezier(0.77, 0, 0.175, 1)',
-        'drawer': 'cubic-bezier(0.32, 0.72, 0, 1)',
+        // One curve. Used for every transition in the app.
+        'out-soft': 'cubic-bezier(0.2, 0.8, 0.2, 1)',
       },
     },
   },

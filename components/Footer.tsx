@@ -1,51 +1,58 @@
 import Link from 'next/link';
-import { Sparkles } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-ink-800 mt-24">
-      <div className="mx-auto max-w-6xl px-5 py-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-sm">
-        <div className="col-span-2 md:col-span-2">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="h-7 w-7 grid place-items-center rounded-md bg-meth/15 border border-meth/30">
-              <span className="text-meth font-display font-bold text-sm leading-none">P</span>
-            </div>
-            <span className="font-display font-semibold text-paper">Premeth</span>
+    <footer className="border-t border-bone-rule mt-12">
+      <div className="mx-auto max-w-6xl px-6 md:px-10 py-16">
+        <div className="grid grid-cols-12 gap-6">
+          <div className="hidden md:block col-span-1 marginalia pt-1">
+            End / Notes
           </div>
-          <p className="text-ink-400 max-w-sm leading-relaxed">
-            Ensuring premed students stay premeth. Free, no ads, no signup needed
-            for practice. Built by students, for students.
-          </p>
+          <div className="col-span-12 md:col-span-5">
+            <div className="text-bone-900 text-base font-medium mb-3">
+              Premeth
+            </div>
+            <p className="text-bone-600 text-sm leading-relaxed max-w-sm">
+              MDCAT practice from 2,500 past papers. Built by students who
+              took the test, for the ones taking it next.
+            </p>
+          </div>
+
+          <div className="col-span-6 md:col-span-3">
+            <p className="marginalia mb-4">Practice</p>
+            <ul className="space-y-2.5 text-sm">
+              <li><Link href="/papers/subject_biology" className="text-bone-600 hover:text-bone-900 tx-color">Biology</Link></li>
+              <li><Link href="/papers/subject_chemistry" className="text-bone-600 hover:text-bone-900 tx-color">Chemistry</Link></li>
+              <li><Link href="/papers/subject_physics" className="text-bone-600 hover:text-bone-900 tx-color">Physics</Link></li>
+              <li><Link href="/papers/subject_english" className="text-bone-600 hover:text-bone-900 tx-color">English</Link></li>
+              <li><Link href="/exams" className="text-bone-600 hover:text-bone-900 tx-color">All papers</Link></li>
+            </ul>
+          </div>
+
+          <div className="col-span-6 md:col-span-3">
+            <p className="marginalia mb-4">More</p>
+            <ul className="space-y-2.5 text-sm">
+              <li><Link href="/draw" className="text-bone-600 hover:text-bone-900 tx-color">Scratchpad</Link></li>
+              <li><Link href="/about" className="text-bone-600 hover:text-bone-900 tx-color">About</Link></li>
+              <li>
+                <Link href="/pricing" className="text-bone-600 hover:text-bone-900 tx-color">
+                  Premeth<span className="text-accent">+</span>
+                </Link>
+              </li>
+              <li><Link href="/redeem" className="text-bone-600 hover:text-bone-900 tx-color">Redeem code</Link></li>
+              <li><Link href="/signup" className="text-bone-600 hover:text-bone-900 tx-color">Create account</Link></li>
+            </ul>
+          </div>
         </div>
 
-        <div>
-          <div className="font-medium text-paper mb-3">Practice</div>
-          <ul className="space-y-2 text-ink-400">
-            <li><Link href="/papers/subject_biology"   className="hover:text-meth tx-color">Biology</Link></li>
-            <li><Link href="/papers/subject_chemistry" className="hover:text-meth tx-color">Chemistry</Link></li>
-            <li><Link href="/papers/subject_physics"   className="hover:text-meth tx-color">Physics</Link></li>
-            <li><Link href="/papers/subject_english"   className="hover:text-meth tx-color">English</Link></li>
-          </ul>
+        <div className="mt-16 pt-8 border-t border-bone-rule flex items-baseline justify-between">
+          <span className="marginalia">
+            © {new Date().getFullYear()} Premeth
+          </span>
+          <span className="marginalia">
+            Karachi
+          </span>
         </div>
-
-        <div>
-          <div className="font-medium text-paper mb-3">Resources</div>
-          <ul className="space-y-2 text-ink-400">
-            <li><Link href="/exams"  className="hover:text-meth tx-color">All Papers</Link></li>
-            <li><Link href="/draw"   className="hover:text-meth tx-color">Scratchpad</Link></li>
-            <li><Link href="/about"  className="hover:text-meth tx-color">About</Link></li>
-            <li>
-              <Link href="/pricing" className="hover:text-meth tx-color inline-flex items-center gap-1">
-                <Sparkles className="h-3 w-3" /> Premeth+
-              </Link>
-            </li>
-            <li><Link href="/redeem" className="hover:text-meth tx-color">Redeem code</Link></li>
-            <li><Link href="/signup" className="hover:text-meth tx-color">Create account</Link></li>
-          </ul>
-        </div>
-      </div>
-      <div className="border-t border-ink-900 py-6 text-center text-xs text-ink-500">
-        © {new Date().getFullYear()} Premeth. Educational purposes only. (hopefully)
       </div>
     </footer>
   );

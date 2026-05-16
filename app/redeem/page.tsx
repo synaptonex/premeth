@@ -1,28 +1,39 @@
 'use client';
 
-// app/redeem/page.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// User types in the code they received via WhatsApp. The endpoint enforces:
-//   - code exists
-//   - not already redeemed
-//   - issued_to == auth.uid()  ← the anti-sharing check
-// ─────────────────────────────────────────────────────────────────────────────
+/**
+ * Redeem a Premeth+ code. Bound to the buyer at issuance time, so a code
+ * pasted from anyone else's account will be rejected.
+ */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Sparkles, ArrowRight, KeyRound } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
+import { normalizeRedemptionCode } from '@/lib/premeth-plus';
 import { toast } from 'sonner';
 
 export default function RedeemPage() {
   const router = useRouter();
-  const [code, setCode] = useState('');
+  const supabase = createClient();
+  const [raw, setRaw] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState<{ expiresAt: string } | null>(null);
+  const [result, setResult] = useState<{ expiresAt: string } | null>(null);
 
-  async function redeem() {
+  useEffect(() => {
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) router.replace('/login?next=/redeem');
+    })();
+  }, [router, supabase]);
+
+  async function handleRedeem() {
+    const code = normalizeRedemptionCode(raw);
+    if (!code.startsWith('PRMTH-')) {
+      toast.error('That does not look like a Premeth code');
+      return;
+    }
     setSubmitting(true);
     const res = await fetch('/api/redeem', {
       method: 'POST',
@@ -30,94 +41,110 @@ export default function RedeemPage() {
       body: JSON.stringify({ code }),
     });
     setSubmitting(false);
-
     const data = await res.json();
     if (!res.ok) {
-      toast.error('Could not redeem', { description: data.error });
+      toast.error(data.error ?? 'Could not redeem');
       return;
     }
+    setResult({ expiresAt: data.expires_at });
+  }
 
-    setSuccess({ expiresAt: data.expires_at });
-    toast.success('Welcome to Premeth+');
+  if (result) {
+    const expiresAt = new Date(result.expiresAt);
+    return (
+      <>
+        <Navbar />
+        <main className="mx-auto max-w-6xl px-6 md:px-10 py-24">
+          <div className="grid grid-cols-12 gap-6">
+            <div className="hidden md:block col-span-1 marginalia pt-1">
+              Active
+            </div>
+            <div className="col-span-12 md:col-span-11">
+              <p className="marginalia mb-6">Redeemed</p>
+              <h1 className="text-5xl md:text-6xl font-light tracking-tighter text-bone-900">
+                Welcome to Premeth<span className="text-accent">+</span>.
+              </h1>
+              <p className="mt-6 text-bone-600 text-lg max-w-xl">
+                Your subscription runs until{' '}
+                <strong className="text-bone-900 font-medium">
+                  {expiresAt.toLocaleDateString('en-GB', {
+                    day: 'numeric', month: 'long', year: 'numeric',
+                  })}
+                </strong>.
+              </p>
+              <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-px bg-bone-rule border border-bone-rule max-w-2xl">
+                <Link href="/drill" className="press bg-bone p-8 hover:bg-bone-50 tx-color">
+                  <p className="marginalia mb-3">Start with</p>
+                  <h3 className="text-xl font-medium text-bone-900 mb-1">Daily Drill</h3>
+                  <p className="text-sm text-bone-500">
+                    Thirty MCQs from your weak topics
+                  </p>
+                </Link>
+                <Link href="/dashboard" className="press bg-bone p-8 hover:bg-bone-50 tx-color">
+                  <p className="marginalia mb-3">Or</p>
+                  <h3 className="text-xl font-medium text-bone-900 mb-1">Dashboard</h3>
+                  <p className="text-sm text-bone-500">
+                    See your stats and weak topics
+                  </p>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
   }
 
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-lg px-5 py-16">
-        <div className="text-center mb-8">
-          <div className="inline-grid place-items-center h-12 w-12 rounded-full bg-meth/15 border border-meth/30 mb-3">
-            <KeyRound className="h-5 w-5 text-meth" />
+      <main className="mx-auto max-w-6xl px-6 md:px-10 py-24">
+        <div className="grid grid-cols-12 gap-6">
+          <div className="hidden md:block col-span-1 marginalia pt-1">
+            01 / Redeem
           </div>
-          <h1 className="font-display text-3xl md:text-4xl text-paper tracking-tight">
-            Redeem your code.
-          </h1>
-          <p className="text-ink-400 mt-2">
-            Type in the code we sent you via WhatsApp. It looks like{' '}
-            <span className="font-mono text-ink-300">PRMTH-XXXX-XXXX</span>.
-          </p>
+          <div className="col-span-12 md:col-span-11">
+            <p className="marginalia mb-6">Redeem a code</p>
+            <h1 className="text-5xl md:text-6xl font-light tracking-tighter text-bone-900">
+              Paste your code.
+            </h1>
+            <p className="mt-6 text-bone-600 max-w-xl text-lg">
+              The code we sent you after your payment. Format is
+              PRMTH-XXXX-XXXX. Codes are bound to your account.
+            </p>
+
+            <div className="mt-12 max-w-md">
+              <label className="block marginalia mb-2">Code</label>
+              <input
+                type="text"
+                value={raw}
+                onChange={(e) => setRaw(e.target.value)}
+                placeholder="PRMTH-XXXX-XXXX"
+                className="w-full bg-transparent border-b border-bone-rule py-3 text-bone-900 font-mono text-lg tracking-wider placeholder:text-bone-300 focus:border-bone-900 focus:outline-none tx-color"
+                autoFocus
+              />
+              <button
+                onClick={handleRedeem}
+                disabled={submitting || !raw}
+                className="press mt-8 inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1 disabled:opacity-50"
+              >
+                {submitting ? 'Redeeming…' : 'Redeem'}
+                <span aria-hidden>→</span>
+              </button>
+            </div>
+
+            <p className="mt-16 text-sm text-bone-500 max-w-md">
+              Lost your code? Message us on WhatsApp at{' '}
+              <a
+                href="https://wa.me/923345121203"
+                className="text-bone-900 underline underline-offset-2"
+              >
+                +92 334 5121203
+              </a>.
+            </p>
+          </div>
         </div>
-
-        {success ? (
-          <div className="rounded-xl border border-meth/40 bg-meth/5 p-8 text-center">
-            <div className="inline-grid place-items-center h-14 w-14 rounded-full bg-meth/20 border border-meth/40 mb-4">
-              <Sparkles className="h-6 w-6 text-meth" />
-            </div>
-            <h2 className="font-display text-2xl text-paper mb-2">You're in.</h2>
-            <p className="text-ink-300 mb-5">
-              Premeth+ is now active until{' '}
-              <strong className="text-paper">
-                {new Date(success.expiresAt).toLocaleDateString()}
-              </strong>.
-            </p>
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Link
-                href="/drill"
-                className="press inline-flex items-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-2.5 font-medium hover:bg-meth-300 tx-color"
-              >
-                Try the Daily Drill <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/dashboard"
-                className="press inline-flex items-center rounded-md border border-ink-700 px-5 py-2.5 hover:border-meth/50 tx-color"
-              >
-                Go to dashboard
-              </Link>
-            </div>
-          </div>
-        ) : (
-          <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-6">
-            <input
-              type="text"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="PRMTH-XXXX-XXXX"
-              autoFocus
-              className="w-full rounded-md bg-ink-950 border border-ink-800 px-4 py-3 text-paper font-mono text-lg text-center tracking-wider uppercase focus:outline-none focus:border-meth"
-            />
-            <button
-              onClick={redeem}
-              disabled={!code.trim() || submitting}
-              className="press w-full mt-4 inline-flex items-center justify-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-3 font-medium hover:bg-meth-300 tx-color disabled:opacity-50"
-            >
-              {submitting ? 'Verifying…' : 'Redeem'}
-            </button>
-
-            <p className="text-xs text-ink-500 mt-5 leading-relaxed">
-              Codes are bound to the account that paid for them. If this code was
-              shared with you by a friend, it won't work — you'd need to sign in
-              with that friend's account, which we don't recommend. Each code
-              redeems exactly once.
-            </p>
-          </div>
-        )}
-
-        <p className="text-center text-sm text-ink-500 mt-6">
-          Don't have a code yet?{' '}
-          <Link href="/pricing" className="text-meth hover:underline">
-            See pricing
-          </Link>
-        </p>
       </main>
       <Footer />
     </>

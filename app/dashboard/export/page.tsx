@@ -130,7 +130,7 @@ export default function ExportPage() {
     return (
       <>
         <Navbar />
-        <main className="mx-auto max-w-3xl px-5 py-20 text-center text-ink-400">
+        <main className="mx-auto max-w-3xl px-5 py-20 text-center text-bone-600">
           Loading…
         </main>
       </>
@@ -142,17 +142,17 @@ export default function ExportPage() {
       <>
         <Navbar />
         <main className="mx-auto max-w-2xl px-5 py-20">
-          <div className="rounded-2xl border border-ink-800 bg-ink-900/40 p-10 text-center">
-            <Lock className="h-8 w-8 text-meth mx-auto mb-3" />
-            <h1 className="font-display text-3xl text-paper tracking-tight mb-2">
+          <div className="border border-bone-rule bg-bone-50 p-10 text-center">
+            <Lock className="h-8 w-8 text-accent mx-auto mb-3" />
+            <h1 className="text-3xl text-bone-900 tracking-tight mb-2">
               PDF export is a Premeth+ feature.
             </h1>
-            <p className="text-ink-300 max-w-md mx-auto mb-6">
+            <p className="text-bone-700 max-w-md mx-auto mb-6">
               Print your wrong-answer notebook for offline revision.
             </p>
             <Link
               href="/pricing"
-              className="press inline-flex items-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-2.5 font-medium hover:bg-meth-300 tx-color"
+              className="press inline-flex items-center gap-2 bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color"
             >
               See Premeth+ pricing <ArrowRight className="h-4 w-4" />
             </Link>
@@ -166,7 +166,7 @@ export default function ExportPage() {
     return (
       <>
         <Navbar />
-        <main className="mx-auto max-w-3xl px-5 py-20 text-center text-ink-400">
+        <main className="mx-auto max-w-3xl px-5 py-20 text-center text-bone-600">
           <Loader2 className="h-6 w-6 animate-spin mx-auto mb-3" />
           Building your notebook… this can take a moment for large vaults.
         </main>
@@ -190,39 +190,39 @@ export default function ExportPage() {
         <div className="mx-auto max-w-3xl px-5 py-8">
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm text-ink-400 hover:text-paper tx-color mb-4"
+            className="inline-flex items-center gap-1.5 text-sm text-bone-600 hover:text-bone-900 tx-color mb-4"
           >
             <ArrowLeft className="h-4 w-4" /> Back to dashboard
           </Link>
           <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
             <div>
-              <span className="text-xs uppercase tracking-widest text-meth">
+              <span className="text-xs uppercase tracking-widest text-accent">
                 Premeth+ · Export
               </span>
-              <h1 className="font-display text-3xl text-paper tracking-tight mt-1">
+              <h1 className="text-3xl text-bone-900 tracking-tight mt-1">
                 Wrong-answer notebook.
               </h1>
-              <p className="text-ink-400 text-sm mt-1">
+              <p className="text-bone-600 text-sm mt-1">
                 {items.length} mistakes from your vault. Use your browser's "Save as PDF" option.
               </p>
             </div>
             <button
               onClick={handlePrint}
               disabled={items.length === 0}
-              className="press inline-flex items-center gap-2 rounded-md bg-meth text-ink-950 px-4 py-2 font-medium hover:bg-meth-300 tx-color disabled:opacity-50"
+              className="press inline-flex items-center gap-2 bg-bone-900 text-bone-50 px-4 py-2 font-medium hover:bg-bone-700 tx-color disabled:opacity-50"
             >
               <Printer className="h-4 w-4" /> Print / Save as PDF
             </button>
           </div>
 
           {items.length === 0 ? (
-            <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-10 text-center">
-              <p className="text-ink-300">
+            <div className="border border-bone-rule bg-bone-50 p-10 text-center">
+              <p className="text-bone-700">
                 Your vault is empty. Get something wrong first, then come back.
               </p>
             </div>
           ) : (
-            <div className="rounded-xl border border-ink-800 bg-paper p-1 overflow-hidden">
+            <div className="border border-bone-rule bg-paper p-1 overflow-hidden">
               {/* preview of the printable content */}
               <div className="max-h-96 overflow-y-auto">
                 <PrintContent
@@ -278,7 +278,7 @@ function PrintContent({
   preview?: boolean;
 }) {
   const rootClass = preview
-    ? 'p-8 text-ink-950 bg-paper'
+    ? 'p-8 text-bone-50 bg-paper'
     : 'p-0 text-black bg-white';
 
   return (

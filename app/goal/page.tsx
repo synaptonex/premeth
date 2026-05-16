@@ -142,7 +142,7 @@ export default function GoalPage() {
   useGSAP(
     () => {
       if (loading || plusLoading) return;
-      gsap.from('.goal-card', { y: 14, autoAlpha: 0, duration: 0.4, stagger: 0.08, ease: 'power3.out' });
+      gsap.from('.goal-card', { y: 8, autoAlpha: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out' });
     },
     { scope: root, dependencies: [loading, plusLoading] }
   );
@@ -151,7 +151,7 @@ export default function GoalPage() {
     return (
       <>
         <Navbar />
-        <main className="mx-auto max-w-3xl px-5 py-20 text-center text-ink-400">
+        <main className="mx-auto max-w-3xl px-5 py-20 text-center text-bone-600">
           Loading…
         </main>
       </>
@@ -164,18 +164,18 @@ export default function GoalPage() {
       <>
         <Navbar />
         <main className="mx-auto max-w-2xl px-5 py-20">
-          <div className="rounded-2xl border border-ink-800 bg-ink-900/40 p-10 text-center">
-            <Lock className="h-8 w-8 text-meth mx-auto mb-3" />
-            <h1 className="font-display text-3xl text-paper tracking-tight mb-2">
+          <div className="border border-bone-rule bg-bone-50 p-10 text-center">
+            <Lock className="h-8 w-8 text-accent mx-auto mb-3" />
+            <h1 className="text-3xl font-light tracking-tighter text-bone-900 mb-2">
               Goal Tracker is a Premeth+ feature.
             </h1>
-            <p className="text-ink-300 max-w-md mx-auto mb-6">
+            <p className="text-bone-700 max-w-md mx-auto mb-6">
               Set your MDCAT date, target accuracy, and daily MCQ pace. We compute
               the right daily target based on your weak topics and time left.
             </p>
             <Link
               href="/pricing"
-              className="press inline-flex items-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-2.5 font-medium hover:bg-meth-300 tx-color"
+              className="press inline-flex items-center gap-2 bg-bone-900 text-bone-50 px-5 py-2.5 font-medium hover:bg-bone-700 tx-color"
             >
               See Premeth+ pricing <ArrowRight className="h-4 w-4" />
             </Link>
@@ -190,36 +190,36 @@ export default function GoalPage() {
       <Navbar />
       <main ref={root} className="mx-auto max-w-3xl px-5 py-12">
         <div className="mb-10">
-          <span className="text-xs uppercase tracking-widest text-meth">Premeth+ · Goal Tracker</span>
-          <h1 className="font-display text-4xl md:text-5xl text-paper tracking-tight mt-2">
+          <span className="text-xs uppercase tracking-widest text-accent">Premeth+ · Goal Tracker</span>
+          <h1 className="text-4xl md:text-5xl font-light tracking-tighter text-bone-900 mt-2">
             Your countdown.
           </h1>
-          <p className="text-ink-400 mt-2">
+          <p className="text-bone-600 mt-2">
             Set your MDCAT date and target — we'll work out a daily pace.
           </p>
         </div>
 
         {/* Today's progress */}
-        <section className="goal-card mb-6 rounded-xl border border-ink-800 bg-ink-900/40 p-6">
+        <section className="goal-card mb-6 border border-bone-rule bg-bone-50 p-6">
           <div className="flex items-center justify-between mb-3">
-            <div className="inline-flex items-center gap-2 text-sm text-ink-300">
+            <div className="inline-flex items-center gap-2 text-sm text-bone-700">
               <TrendingUp className="h-4 w-4" /> Today
             </div>
-            <div className="font-mono text-sm text-ink-400">
-              <span className="text-paper">{todayMCQs}</span>
+            <div className="font-mono text-sm text-bone-600">
+              <span className="text-bone-900">{todayMCQs}</span>
               <span> / {dailyTarget}</span>
             </div>
           </div>
-          <div className="h-2 rounded-full bg-ink-900 overflow-hidden">
+          <div className="h-2 rounded-full bg-bone-100 overflow-hidden">
             <div
-              className={`h-full ${todayProgress >= 100 ? 'bg-meth' : 'bg-amber-400'}`}
+              className={`h-full ${todayProgress >= 100 ? 'bg-bone-900' : 'bg-bone-400'}`}
               style={{ width: `${todayProgress}%`, transition: 'width 600ms var(--ease-out)' }}
             />
           </div>
           {todayProgress >= 100 ? (
-            <p className="text-xs text-meth mt-2">You've hit today's target. Good.</p>
+            <p className="text-xs text-accent mt-2">You've hit today's target. Good.</p>
           ) : (
-            <p className="text-xs text-ink-500 mt-2">
+            <p className="text-xs text-bone-500 mt-2">
               {dailyTarget - todayMCQs} more MCQs to hit today's target.
             </p>
           )}
@@ -227,28 +227,28 @@ export default function GoalPage() {
 
         {/* Countdown */}
         {daysToExam !== null && (
-          <section className="goal-card mb-6 rounded-xl border border-ink-800 bg-ink-900/40 p-6">
+          <section className="goal-card mb-6 border border-bone-rule bg-bone-50 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="inline-flex items-center gap-2 text-sm text-ink-300 mb-1">
+                <div className="inline-flex items-center gap-2 text-sm text-bone-700 mb-1">
                   <Calendar className="h-4 w-4" /> Until your exam
                 </div>
-                <div className="font-display text-5xl text-paper tracking-tight">
+                <div className="text-5xl text-bone-900 tracking-tight">
                   {daysToExam}
                 </div>
-                <div className="text-xs text-ink-500 mt-1">
+                <div className="text-xs text-bone-500 mt-1">
                   {daysToExam === 1 ? 'day' : 'days'} remaining
                 </div>
               </div>
               {recommendedDaily && (
                 <div className="text-right">
-                  <div className="text-xs uppercase tracking-wider text-ink-400 mb-1">
+                  <div className="text-xs uppercase tracking-wider text-bone-600 mb-1">
                     Suggested pace
                   </div>
-                  <div className="font-display text-3xl text-meth">
+                  <div className="text-3xl text-accent">
                     {recommendedDaily}
                   </div>
-                  <div className="text-xs text-ink-500">MCQs / day</div>
+                  <div className="text-xs text-bone-500">MCQs / day</div>
                 </div>
               )}
             </div>
@@ -256,13 +256,13 @@ export default function GoalPage() {
         )}
 
         {/* Goal form */}
-        <section className="goal-card rounded-xl border border-ink-800 bg-ink-900/40 p-6 space-y-5">
-          <h2 className="font-display text-2xl text-paper tracking-tight">
+        <section className="goal-card border border-bone-rule bg-bone-50 p-6 space-y-5">
+          <h2 className="text-2xl text-bone-900 tracking-tight">
             Set your goal.
           </h2>
 
           <div>
-            <label className="block text-sm text-ink-300 mb-1.5">
+            <label className="block text-sm text-bone-700 mb-1.5">
               MDCAT exam date
             </label>
             <input
@@ -270,14 +270,14 @@ export default function GoalPage() {
               value={examDate}
               onChange={(e) => setExamDate(e.target.value)}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full rounded-md bg-ink-950 border border-ink-800 px-3 py-2 text-paper focus:border-meth focus:outline-none"
+              className="w-full bg-bone border border-bone-rule px-3 py-2 text-bone-900 focus:border-accent focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm text-ink-300 mb-1.5">
+            <label className="block text-sm text-bone-700 mb-1.5">
               <Target className="inline h-3.5 w-3.5 mr-1" />
-              Target accuracy: <span className="text-meth font-mono">{targetAccuracy}%</span>
+              Target accuracy: <span className="text-accent font-mono">{targetAccuracy}%</span>
             </label>
             <input
               type="range"
@@ -286,17 +286,17 @@ export default function GoalPage() {
               step={5}
               value={targetAccuracy}
               onChange={(e) => setTargetAccuracy(Number(e.target.value))}
-              className="w-full accent-meth"
+              className="w-full accent-bone-900"
             />
-            <div className="flex justify-between text-xs text-ink-500 mt-1">
+            <div className="flex justify-between text-xs text-bone-500 mt-1">
               <span>50%</span>
               <span>100%</span>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm text-ink-300 mb-1.5">
-              Daily MCQ target: <span className="text-meth font-mono">{dailyTarget}</span>
+            <label className="block text-sm text-bone-700 mb-1.5">
+              Daily MCQ target: <span className="text-accent font-mono">{dailyTarget}</span>
             </label>
             <input
               type="range"
@@ -305,14 +305,14 @@ export default function GoalPage() {
               step={10}
               value={dailyTarget}
               onChange={(e) => setDailyTarget(Number(e.target.value))}
-              className="w-full accent-meth"
+              className="w-full accent-bone-900"
             />
-            <div className="flex justify-between text-xs text-ink-500 mt-1">
+            <div className="flex justify-between text-xs text-bone-500 mt-1">
               <span>10</span>
               <span>200</span>
             </div>
             {recommendedDaily && dailyTarget < recommendedDaily && (
-              <div className="mt-2 flex items-start gap-2 rounded-md border border-amber-400/30 bg-amber-400/5 px-3 py-2 text-xs text-amber-200">
+              <div className="mt-2 flex items-start gap-2 border border-bone-rule bg-bone-50 px-3 py-2 text-xs text-bone-700">
                 <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
                 <span>
                   Based on your time remaining, we recommend at least{' '}
@@ -325,7 +325,7 @@ export default function GoalPage() {
           <button
             onClick={saveGoal}
             disabled={saving}
-            className="press w-full inline-flex items-center justify-center gap-2 rounded-md bg-meth text-ink-950 px-4 py-2.5 font-medium hover:bg-meth-300 tx-color disabled:opacity-50"
+            className="press w-full inline-flex items-center justify-center gap-2 bg-bone-900 text-bone-50 px-4 py-2.5 font-medium hover:bg-bone-700 tx-color disabled:opacity-50"
           >
             <Save className="h-4 w-4" />
             {saving ? 'Saving…' : 'Save goal'}
@@ -336,19 +336,19 @@ export default function GoalPage() {
         <section className="goal-card mt-6 grid grid-cols-2 gap-3">
           <Link
             href="/drill"
-            className="rounded-xl border border-ink-800 bg-ink-900/40 p-5 hover:border-meth/40 tx-color"
+            className="border border-bone-rule bg-bone-50 p-5 hover:border-accent tx-color"
           >
-            <div className="text-meth text-sm font-medium mb-1">Daily Drill</div>
-            <div className="text-xs text-ink-400">
+            <div className="text-accent text-sm font-medium mb-1">Daily Drill</div>
+            <div className="text-xs text-bone-600">
               30 MCQs targeted at your weak topics
             </div>
           </Link>
           <Link
             href="/vault"
-            className="rounded-xl border border-ink-800 bg-ink-900/40 p-5 hover:border-meth/40 tx-color"
+            className="border border-bone-rule bg-bone-50 p-5 hover:border-accent tx-color"
           >
-            <div className="text-meth text-sm font-medium mb-1">Mistake Vault</div>
-            <div className="text-xs text-ink-400">
+            <div className="text-accent text-sm font-medium mb-1">Mistake Vault</div>
+            <div className="text-xs text-bone-600">
               Review wrong answers on a spaced schedule
             </div>
           </Link>

@@ -1,16 +1,18 @@
 'use client';
 
-// app/pricing/page.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// The pricing page. Shows the free vs Premeth+ comparison table, then a
-// JazzCash/EasyPaisa payment instructions block, then a form for the user to
-// submit their transaction ID once they've sent the money.
-//
-// After submission they see "We're verifying — you'll get your code on
-// WhatsApp within 24 hours". The admin reviews in /admin/payments.
-// ─────────────────────────────────────────────────────────────────────────────
+/**
+ * Pricing and payment flow for Premeth+.
+ *
+ * Steps:
+ *  1. Visitor lands and sees the comparison.
+ *  2. Picks JazzCash or EasyPaisa.
+ *  3. Sees the destination phone number and amount to send.
+ *  4. Sends the money from their own app, comes back with the transaction ID.
+ *  5. Submits the TID. The request goes into the admin queue.
+ *  6. On approval, the admin sends them a redemption code.
+ */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
@@ -25,379 +27,428 @@ import {
 } from '@/lib/premeth-plus';
 import { usePremethPlus } from '@/lib/premeth-plus.client';
 import { toast } from 'sonner';
-import {
-  Check, X, Sparkles, Wallet, Smartphone, Copy, ArrowRight, ShieldCheck, Clock,
-} from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(useGSAP);
 
 const FEATURES: { label: string; free: boolean; plus: boolean }[] = [
-  { label: 'All 400,000+ MCQs and 2,500+ past papers', free: true, plus: true },
-  { label: 'Diagrams, scratchpad, question reporting', free: true, plus: true },
-  { label: 'Account, save attempts, weak-topic dashboard', free: true, plus: true },
-  { label: 'Adaptive Daily Drill — 30 MCQs from your weakest chapters', free: false, plus: true },
-  { label: 'Full timed mock exams (180-MCQ, 180-min PMDC simulation)', free: false, plus: true },
-  { label: 'Mistake Vault — spaced repetition on every wrong answer', free: false, plus: true },
-  { label: 'Goal tracker + adaptive study plan', free: false, plus: true },
-  { label: 'Streaks & accountability', free: false, plus: true },
-  { label: 'Export attempts as PDF', free: false, plus: true },
-  { label: 'No "Support Premeth" prompts', free: false, plus: true },
+  { label: 'All 2,500 past papers',           free: true,  plus: true  },
+  { label: 'Aggregate calculator',            free: true,  plus: true  },
+  { label: 'Save attempts and weak topics',   free: true,  plus: true  },
+  { label: 'Scratchpad and syllabus guide',   free: true,  plus: true  },
+  { label: 'Adaptive Daily Drill',            free: false, plus: true  },
+  { label: 'Mistake Vault',                   free: false, plus: true  },
+  { label: 'Full timed mock exams',           free: false, plus: true  },
+  { label: 'Goal tracker and study streaks',  free: false, plus: true  },
+  { label: 'Export wrong-answer notebook',    free: false, plus: true  },
+  { label: 'Priority question reports',       free: false, plus: true  },
 ];
+
+type Step = 'choose' | 'pay' | 'submit' | 'confirm';
+type Method = 'jazzcash' | 'easypaisa';
 
 export default function PricingPage() {
   const router = useRouter();
-  const root = useRef<HTMLDivElement>(null);
-  const sub = usePremethPlus();
+  const supabase = createClient();
+  const root = useRef<HTMLElement>(null);
+  const { isPlus, expiresAt, loading: plusLoading } = usePremethPlus();
 
-  const [step, setStep] = useState<'choose' | 'pay' | 'submit' | 'done'>('choose');
-  const [method, setMethod] = useState<'jazzcash' | 'easypaisa'>('jazzcash');
-  const [amount, setAmount] = useState(PREMETH_PLUS_PRICE_PKR);
-
+  const [userId, setUserId] = useState<string | null>(null);
+  const [foundersTaken, setFoundersTaken] = useState<number | null>(null);
+  const [step, setStep] = useState<Step>('choose');
+  const [method, setMethod] = useState<Method | null>(null);
   const [senderPhone, setSenderPhone] = useState('');
-  const [txid, setTxid] = useState('');
-  const [notes, setNotes] = useState('');
+  const [transactionId, setTransactionId] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [latestRequest, setLatestRequest] = useState<any>(null);
 
-  useGSAP(() => {
-    gsap.from('.pricing-row', {
-      autoAlpha: 0, y: 8, duration: 0.4, stagger: 0.03, ease: 'power3.out',
-    });
-  }, { scope: root });
+  useEffect(() => {
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) setUserId(user.id);
 
-  async function submitPayment() {
+      const { count } = await supabase
+        .from('redemption_codes')
+        .select('code', { count: 'exact', head: true });
+      setFoundersTaken(count ?? 0);
+
+      if (user) {
+        const { data } = await supabase
+          .from('payment_requests')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        setLatestRequest(data);
+      }
+    })();
+  }, [supabase]);
+
+  const isFounders =
+    foundersTaken !== null && foundersTaken < PREMETH_PLUS_FOUNDERS_LIMIT;
+  const price = isFounders ? PREMETH_PLUS_FOUNDERS_PRICE_PKR : PREMETH_PLUS_PRICE_PKR;
+
+  const account = useMemo(() => (method ? PAYMENT_ACCOUNTS[method] : null), [method]);
+
+  useGSAP(
+    () => {
+      gsap.from('.price-anim', {
+        y: 8, autoAlpha: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out',
+      });
+    },
+    { scope: root }
+  );
+
+  async function copy(text: string, label: string) {
+    await navigator.clipboard.writeText(text);
+    toast.success(`${label} copied`);
+  }
+
+  async function handleSubmit() {
+    if (!userId) {
+      router.push('/login?next=/pricing');
+      return;
+    }
+    if (!method || !senderPhone || !transactionId) {
+      toast.error('Fill in every field');
+      return;
+    }
     setSubmitting(true);
     const res = await fetch('/api/payments/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         method,
-        sender_phone: senderPhone,
-        transaction_id: txid,
-        amount_pkr: amount,
-        notes,
+        sender_phone: senderPhone.trim(),
+        transaction_id: transactionId.trim(),
+        amount_pkr: price,
       }),
     });
     setSubmitting(false);
-
+    const data = await res.json();
     if (!res.ok) {
-      const { error } = await res.json();
-      toast.error('Could not submit', { description: error });
+      toast.error(data.error ?? 'Could not submit');
       return;
     }
-
-    setStep('done');
-    toast.success('Payment proof submitted', {
-      description: "We'll verify and send your code within 24 hours.",
-    });
+    setLatestRequest(data.payment_request);
+    setStep('confirm');
   }
 
-  const account = PAYMENT_ACCOUNTS[method];
+  // Active subscriber path
+  if (!plusLoading && isPlus) {
+    return (
+      <>
+        <Navbar />
+        <main className="mx-auto max-w-6xl px-6 md:px-10 py-24">
+          <div className="grid grid-cols-12 gap-6">
+            <div className="hidden md:block col-span-1 marginalia pt-1">
+              Active
+            </div>
+            <div className="col-span-12 md:col-span-11">
+              <p className="marginalia mb-4">Your subscription</p>
+              <h1 className="text-5xl md:text-6xl font-light tracking-tighter text-bone-900">
+                Premeth<span className="text-accent">+</span> is active.
+              </h1>
+              <p className="mt-6 text-bone-600 max-w-xl text-lg">
+                Your subscription runs until{' '}
+                <strong className="text-bone-900 font-medium">
+                  {expiresAt?.toLocaleDateString('en-GB', {
+                    day: 'numeric', month: 'long', year: 'numeric',
+                  })}
+                </strong>.
+              </p>
+              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3">
+                <Link
+                  href="/drill"
+                  className="press inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1"
+                >
+                  Go to Daily Drill
+                  <span aria-hidden>→</span>
+                </Link>
+                <Link
+                  href="/dashboard"
+                  className="link-draw text-base text-bone-600 hover:text-bone-900 tx-color"
+                >
+                  Back to dashboard
+                </Link>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
       <Navbar />
-      <main ref={root} className="mx-auto max-w-5xl px-5 py-12">
-        {/* ─── Header ─────────────────────────────────────────────────────── */}
-        <div className="mb-10 text-center">
-          <span className="text-xs uppercase tracking-widest text-meth">Premeth+</span>
-          <h1 className="font-display text-4xl md:text-5xl text-paper tracking-tight mt-2">
-            All the data. Now with a coach.
-          </h1>
-          <p className="text-ink-400 mt-3 max-w-2xl mx-auto">
-            Practice is — and always will be — free. Premeth+ adds the tools we
-            wished we had for our own MDCAT prep: a personalized daily drill, a
-            mistake vault that won't let you forget, and full mock-exam mode.
-          </p>
+      <main ref={root} className="mx-auto max-w-6xl px-6 md:px-10 py-16 md:py-24">
+        {/* Header */}
+        <div className="grid grid-cols-12 gap-6 mb-20">
+          <div className="hidden md:block col-span-1 marginalia pt-1">
+            01 / Plans
+          </div>
+          <div className="col-span-12 md:col-span-11">
+            <p className="price-anim marginalia mb-6">Pricing</p>
+            <h1 className="price-anim text-5xl md:text-7xl font-light tracking-tighter text-bone-900 max-w-3xl leading-[0.95]">
+              Free is free.
+              <br />
+              <span className="text-bone-500">Plus is</span>{' '}
+              <span className="tabular-nums">Rs {price.toLocaleString()}</span>
+              <span className="text-bone-500"> / 6 months.</span>
+            </h1>
+            {isFounders && foundersTaken !== null && (
+              <p className="price-anim marginalia mt-8">
+                Founders pricing: {PREMETH_PLUS_FOUNDERS_LIMIT - foundersTaken} of {PREMETH_PLUS_FOUNDERS_LIMIT} remaining
+              </p>
+            )}
+          </div>
         </div>
 
-        {/* If already subscribed, show their status instead of the upsell. */}
-        {sub.isActive ? (
-          <div className="rounded-xl border border-meth/40 bg-meth/5 p-8 text-center mb-10">
-            <div className="inline-grid place-items-center h-12 w-12 rounded-full bg-meth/20 border border-meth/40 mb-3">
-              <ShieldCheck className="h-6 w-6 text-meth" />
-            </div>
-            <h2 className="font-display text-2xl text-paper">You're on Premeth+.</h2>
-            <p className="text-ink-300 mt-2">
-              {sub.daysRemaining} day{sub.daysRemaining === 1 ? '' : 's'} remaining
-              {sub.expiresAt && ` · expires ${sub.expiresAt.toLocaleDateString()}`}
-            </p>
-            <div className="mt-5 flex flex-wrap gap-3 justify-center">
-              <Link
-                href="/drill"
-                className="press inline-flex items-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-2.5 font-medium hover:bg-meth-300 tx-color"
-              >
-                Open Daily Drill <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/vault"
-                className="press inline-flex items-center rounded-md border border-ink-700 px-5 py-2.5 hover:border-meth/50 hover:text-meth tx-color"
-              >
-                Mistake Vault
-              </Link>
-            </div>
+        {/* Comparison */}
+        <div className="grid grid-cols-12 gap-6 mb-24">
+          <div className="hidden md:block col-span-1 marginalia pt-1">
+            02 / Compare
           </div>
-        ) : (
-          <>
-            {/* ─── Comparison table ──────────────────────────────────────── */}
-            <div className="overflow-hidden rounded-xl border border-ink-800 mb-10">
-              <div className="grid grid-cols-[1fr,90px,90px] md:grid-cols-[1fr,140px,140px] bg-ink-900/60 border-b border-ink-800">
-                <div className="p-4 text-xs uppercase tracking-wider text-ink-500">What you get</div>
-                <div className="p-4 text-center">
-                  <div className="text-xs uppercase tracking-wider text-ink-500">Free</div>
-                  <div className="font-display text-paper">Rs 0</div>
-                </div>
-                <div className="p-4 text-center bg-meth/5 border-l border-meth/20">
-                  <div className="text-xs uppercase tracking-wider text-meth">Premeth+</div>
-                  <div className="font-display text-paper">Rs {PREMETH_PLUS_PRICE_PKR.toLocaleString()}</div>
-                  <div className="text-[10px] text-ink-500 mt-0.5">/ {PREMETH_PLUS_DURATION_MONTHS} months</div>
-                </div>
+          <div className="col-span-12 md:col-span-11">
+            <div className="border-t border-bone-rule">
+              <div className="grid grid-cols-12 py-4 border-b border-bone-rule">
+                <div className="col-span-6 md:col-span-8 marginalia">Feature</div>
+                <div className="col-span-3 md:col-span-2 marginalia text-right">Free</div>
+                <div className="col-span-3 md:col-span-2 marginalia text-right text-accent">Plus</div>
               </div>
-              {FEATURES.map((f) => (
+              {FEATURES.map((f, i) => (
                 <div
-                  key={f.label}
-                  className="pricing-row grid grid-cols-[1fr,90px,90px] md:grid-cols-[1fr,140px,140px] border-b border-ink-900 last:border-b-0"
+                  key={i}
+                  className="grid grid-cols-12 py-4 border-b border-bone-rule items-center"
                 >
-                  <div className="p-4 text-sm text-ink-200">{f.label}</div>
-                  <div className="p-4 grid place-items-center">
+                  <div className="col-span-6 md:col-span-8 text-bone-800">
+                    {f.label}
+                  </div>
+                  <div className="col-span-3 md:col-span-2 text-right">
                     {f.free ? (
-                      <Check className="h-4 w-4 text-meth" />
+                      <Check className="inline h-4 w-4 text-bone-900" strokeWidth={2.5} />
                     ) : (
-                      <X className="h-4 w-4 text-ink-700" />
+                      <span className="text-bone-300">—</span>
                     )}
                   </div>
-                  <div className="p-4 grid place-items-center bg-meth/[0.03] border-l border-meth/10">
-                    {f.plus ? (
-                      <Check className="h-4 w-4 text-meth" />
-                    ) : (
-                      <X className="h-4 w-4 text-ink-700" />
+                  <div className="col-span-3 md:col-span-2 text-right">
+                    {f.plus && (
+                      <Check className="inline h-4 w-4 text-accent" strokeWidth={2.5} />
                     )}
                   </div>
                 </div>
               ))}
             </div>
+          </div>
+        </div>
 
-            <div className="rounded-xl border border-meth/30 bg-meth/5 p-4 mb-10 text-sm flex items-start gap-3">
-              <Sparkles className="h-5 w-5 text-meth shrink-0 mt-0.5" />
-              <div>
-                <strong className="text-paper">Founders' pricing.</strong>{' '}
-                <span className="text-ink-300">
-                  First {PREMETH_PLUS_FOUNDERS_LIMIT} buyers pay Rs{' '}
-                  {PREMETH_PLUS_FOUNDERS_PRICE_PKR} instead of Rs {PREMETH_PLUS_PRICE_PKR}.
-                  Pick that amount below if you qualify — we'll confirm when we
-                  verify your transaction.
-                </span>
+        {/* Pending payment notice */}
+        {latestRequest?.status === 'pending' && step !== 'confirm' && (
+          <div className="grid grid-cols-12 gap-6 mb-16">
+            <div className="hidden md:block col-span-1" />
+            <div className="col-span-12 md:col-span-11">
+              <div className="border-t border-bone-rule pt-6">
+                <p className="marginalia mb-2">Pending review</p>
+                <p className="text-bone-700 text-lg">
+                  Your payment was submitted on{' '}
+                  {new Date(latestRequest.created_at).toLocaleDateString('en-GB')}.
+                  We confirm within 12 hours and message you the code.
+                </p>
               </div>
             </div>
+          </div>
+        )}
 
-            {/* ─── Step: choose & pay ──────────────────────────────────── */}
+        {/* Payment flow */}
+        <div className="grid grid-cols-12 gap-6">
+          <div className="hidden md:block col-span-1 marginalia pt-1">
+            03 / Pay
+          </div>
+          <div className="col-span-12 md:col-span-11">
             {step === 'choose' && (
-              <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-6 md:p-8">
-                <h2 className="font-display text-2xl text-paper mb-1">
-                  Step 1 — pick your payment method.
-                </h2>
-                <p className="text-sm text-ink-400 mb-6">
-                  We'll show you the account number to send to.
-                </p>
-
-                <div className="grid sm:grid-cols-2 gap-3 mb-6">
+              <>
+                <p className="marginalia mb-6">Choose a method</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-bone-rule border border-bone-rule">
                   <button
-                    onClick={() => setMethod('jazzcash')}
-                    className={`press rounded-lg border p-4 text-left tx-color ${
-                      method === 'jazzcash'
-                        ? 'border-meth bg-meth/5'
-                        : 'border-ink-800 hover:border-ink-700'
-                    }`}
+                    onClick={() => { setMethod('jazzcash'); setStep('pay'); }}
+                    className="press text-left bg-bone p-8 hover:bg-bone-50 tx-color"
                   >
-                    <Wallet className="h-5 w-5 text-meth mb-2" />
-                    <div className="font-medium text-paper">JazzCash</div>
-                    <div className="text-xs text-ink-400">Send to our mobile account, then submit the TID.</div>
+                    <p className="marginalia mb-3">Option A</p>
+                    <h3 className="text-2xl font-medium text-bone-900 mb-1">JazzCash</h3>
+                    <p className="text-bone-500 text-sm">
+                      Pay from any JazzCash account
+                    </p>
                   </button>
                   <button
-                    onClick={() => setMethod('easypaisa')}
-                    className={`press rounded-lg border p-4 text-left tx-color ${
-                      method === 'easypaisa'
-                        ? 'border-meth bg-meth/5'
-                        : 'border-ink-800 hover:border-ink-700'
-                    }`}
+                    onClick={() => { setMethod('easypaisa'); setStep('pay'); }}
+                    className="press text-left bg-bone p-8 hover:bg-bone-50 tx-color"
                   >
-                    <Smartphone className="h-5 w-5 text-meth mb-2" />
-                    <div className="font-medium text-paper">EasyPaisa</div>
-                    <div className="text-xs text-ink-400">Send to our mobile account, then submit the TID.</div>
+                    <p className="marginalia mb-3">Option B</p>
+                    <h3 className="text-2xl font-medium text-bone-900 mb-1">EasyPaisa</h3>
+                    <p className="text-bone-500 text-sm">
+                      Pay from any EasyPaisa account
+                    </p>
                   </button>
                 </div>
-
-                <div className="grid sm:grid-cols-2 gap-3 mb-6">
-                  <button
-                    onClick={() => setAmount(PREMETH_PLUS_PRICE_PKR)}
-                    className={`press rounded-lg border p-4 text-left tx-color ${
-                      amount === PREMETH_PLUS_PRICE_PKR
-                        ? 'border-meth bg-meth/5'
-                        : 'border-ink-800 hover:border-ink-700'
-                    }`}
-                  >
-                    <div className="text-xs uppercase tracking-wider text-ink-500">Standard</div>
-                    <div className="font-display text-2xl text-paper">Rs {PREMETH_PLUS_PRICE_PKR.toLocaleString()}</div>
-                  </button>
-                  <button
-                    onClick={() => setAmount(PREMETH_PLUS_FOUNDERS_PRICE_PKR)}
-                    className={`press rounded-lg border p-4 text-left tx-color ${
-                      amount === PREMETH_PLUS_FOUNDERS_PRICE_PKR
-                        ? 'border-meth bg-meth/5'
-                        : 'border-ink-800 hover:border-ink-700'
-                    }`}
-                  >
-                    <div className="text-xs uppercase tracking-wider text-meth">Founders (first {PREMETH_PLUS_FOUNDERS_LIMIT})</div>
-                    <div className="font-display text-2xl text-paper">Rs {PREMETH_PLUS_FOUNDERS_PRICE_PKR.toLocaleString()}</div>
-                  </button>
-                </div>
-
-                <button
-                  onClick={() => setStep('pay')}
-                  className="press w-full inline-flex items-center justify-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-3 font-medium hover:bg-meth-300 tx-color"
-                >
-                  Show me the account number <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
+              </>
             )}
 
-            {step === 'pay' && (
-              <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-6 md:p-8">
-                <h2 className="font-display text-2xl text-paper mb-1">
-                  Step 2 — send Rs {amount.toLocaleString()} to this number.
+            {step === 'pay' && account && (
+              <>
+                <button
+                  onClick={() => setStep('choose')}
+                  className="marginalia mb-6 text-bone-500 hover:text-bone-900 tx-color"
+                >
+                  ← Back
+                </button>
+                <h2 className="text-3xl font-light tracking-tight text-bone-900 mb-2">
+                  Send Rs {price.toLocaleString()} to this number.
                 </h2>
-                <p className="text-sm text-ink-400 mb-6">
-                  Open your {method === 'jazzcash' ? 'JazzCash' : 'EasyPaisa'} app, send
-                  the money, then come back here.
+                <p className="text-bone-600 mb-10">
+                  Open your {method === 'jazzcash' ? 'JazzCash' : 'EasyPaisa'} app,
+                  send the payment, then come back here with your transaction ID.
                 </p>
 
-                <div className="rounded-lg border border-ink-800 bg-ink-950/60 p-5 mb-6">
-                  <div className="text-xs uppercase tracking-wider text-ink-500 mb-2">
-                    {method === 'jazzcash' ? 'JazzCash account' : 'EasyPaisa account'}
-                  </div>
-                  <div className="flex items-center justify-between gap-3 mb-2">
-                    <div>
-                      <div className="font-display text-2xl text-paper">{account.accountNumber}</div>
-                      <div className="text-sm text-ink-400">{account.accountName}</div>
-                    </div>
+                <dl className="border-t border-bone-rule">
+                  <div className="grid grid-cols-12 py-5 border-b border-bone-rule">
+                    <dt className="col-span-4 marginalia pt-1">Account number</dt>
+                    <dd className="col-span-7 text-bone-900 font-medium tabular-nums">
+                      {account.accountNumber}
+                    </dd>
                     <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(account.accountNumber);
-                        toast.success('Copied');
-                      }}
-                      className="press inline-flex items-center gap-2 rounded-md border border-ink-700 px-3 py-2 text-sm hover:border-meth/50 tx-color"
+                      onClick={() => copy(account.accountNumber, 'Number')}
+                      className="col-span-1 text-bone-500 hover:text-bone-900 tx-color justify-self-end"
+                      aria-label="Copy number"
                     >
-                      <Copy className="h-3.5 w-3.5" /> Copy
+                      <Copy className="h-4 w-4" />
                     </button>
                   </div>
-                  <p className="text-xs text-ink-500 mt-3">{account.note}</p>
-                </div>
+                  <div className="grid grid-cols-12 py-5 border-b border-bone-rule">
+                    <dt className="col-span-4 marginalia pt-1">Account name</dt>
+                    <dd className="col-span-8 text-bone-900 font-medium">
+                      {account.accountName}
+                    </dd>
+                  </div>
+                  <div className="grid grid-cols-12 py-5 border-b border-bone-rule">
+                    <dt className="col-span-4 marginalia pt-1">Amount</dt>
+                    <dd className="col-span-8 text-bone-900 font-medium tabular-nums">
+                      Rs {price.toLocaleString()}
+                    </dd>
+                  </div>
+                  <div className="grid grid-cols-12 py-5 border-b border-bone-rule">
+                    <dt className="col-span-4 marginalia pt-1">Duration</dt>
+                    <dd className="col-span-8 text-bone-900 font-medium">
+                      {PREMETH_PLUS_DURATION_MONTHS} months from approval
+                    </dd>
+                  </div>
+                </dl>
 
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setStep('choose')}
-                    className="press inline-flex items-center rounded-md border border-ink-700 px-4 py-2.5 hover:border-ink-500 tx-color"
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={() => setStep('submit')}
-                    className="press flex-1 inline-flex items-center justify-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-2.5 font-medium hover:bg-meth-300 tx-color"
-                  >
-                    I've sent it — let me submit my TID <ArrowRight className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
+                <button
+                  onClick={() => setStep('submit')}
+                  className="press mt-10 inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1"
+                >
+                  I have sent the money
+                  <span aria-hidden>→</span>
+                </button>
+              </>
             )}
 
             {step === 'submit' && (
-              <div className="rounded-xl border border-ink-800 bg-ink-900/40 p-6 md:p-8">
-                <h2 className="font-display text-2xl text-paper mb-1">
-                  Step 3 — tell us the transaction details.
+              <>
+                <button
+                  onClick={() => setStep('pay')}
+                  className="marginalia mb-6 text-bone-500 hover:text-bone-900 tx-color"
+                >
+                  ← Back
+                </button>
+                <h2 className="text-3xl font-light tracking-tight text-bone-900 mb-2">
+                  Submit your transaction ID.
                 </h2>
-                <p className="text-sm text-ink-400 mb-6">
-                  We'll verify against our account log. The TID is on the SMS
-                  receipt from {method === 'jazzcash' ? 'JazzCash' : 'EasyPaisa'}.
+                <p className="text-bone-600 mb-10 max-w-xl">
+                  We use the TID to verify the payment in our own JazzCash or
+                  EasyPaisa account. On match, we generate your code.
                 </p>
 
-                <div className="space-y-4">
-                  <Field
-                    label="The number you sent from"
-                    value={senderPhone}
-                    onChange={setSenderPhone}
-                    placeholder="03XX XXXXXXX"
-                  />
-                  <Field
-                    label={`${method === 'jazzcash' ? 'JazzCash' : 'EasyPaisa'} Transaction ID (TID)`}
-                    value={txid}
-                    onChange={setTxid}
-                    placeholder="e.g. 39248302394"
-                  />
-                  <Field
-                    label="Notes (optional)"
-                    value={notes}
-                    onChange={setNotes}
-                    placeholder="Anything we should know — e.g. 'sent at 2:14 PM'"
-                  />
+                <div className="space-y-6 max-w-md">
+                  <div>
+                    <label className="block marginalia mb-2">
+                      Your phone number
+                    </label>
+                    <input
+                      type="tel"
+                      value={senderPhone}
+                      onChange={(e) => setSenderPhone(e.target.value)}
+                      placeholder="03XX-XXXXXXX"
+                      className="w-full bg-transparent border-b border-bone-rule py-2 text-bone-900 placeholder:text-bone-400 focus:border-bone-900 focus:outline-none tx-color"
+                    />
+                    <p className="text-xs text-bone-500 mt-2">
+                      The number you sent the payment from
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block marginalia mb-2">
+                      Transaction ID
+                    </label>
+                    <input
+                      type="text"
+                      value={transactionId}
+                      onChange={(e) => setTransactionId(e.target.value)}
+                      placeholder="From your SMS receipt"
+                      className="w-full bg-transparent border-b border-bone-rule py-2 text-bone-900 font-mono placeholder:text-bone-400 focus:border-bone-900 focus:outline-none tx-color"
+                    />
+                  </div>
                 </div>
 
-                <div className="flex gap-2 mt-6">
-                  <button
-                    onClick={() => setStep('pay')}
-                    className="press inline-flex items-center rounded-md border border-ink-700 px-4 py-2.5 hover:border-ink-500 tx-color"
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={submitPayment}
-                    disabled={!senderPhone || !txid || submitting}
-                    className="press flex-1 inline-flex items-center justify-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-2.5 font-medium hover:bg-meth-300 tx-color disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {submitting ? 'Submitting…' : 'Submit for verification'}
-                  </button>
-                </div>
-              </div>
+                <button
+                  onClick={handleSubmit}
+                  disabled={submitting}
+                  className="press mt-10 inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1 disabled:opacity-50"
+                >
+                  {submitting ? 'Submitting…' : 'Submit for review'}
+                  <span aria-hidden>→</span>
+                </button>
+              </>
             )}
 
-            {step === 'done' && (
-              <div className="rounded-xl border border-meth/40 bg-meth/5 p-8 text-center">
-                <div className="inline-grid place-items-center h-14 w-14 rounded-full bg-meth/20 border border-meth/40 mb-4">
-                  <Clock className="h-6 w-6 text-meth" />
-                </div>
-                <h2 className="font-display text-2xl text-paper mb-2">
-                  Got it. We're verifying.
+            {step === 'confirm' && (
+              <>
+                <p className="marginalia mb-6">Submitted</p>
+                <h2 className="text-3xl md:text-4xl font-light tracking-tight text-bone-900 mb-4">
+                  Got it. We will verify within 12 hours.
                 </h2>
-                <p className="text-ink-300 max-w-md mx-auto">
-                  We'll cross-check your TID with our account log. Once verified
-                  (usually within 24 hours), we'll send you a redemption code
-                  via WhatsApp. Type it into{' '}
-                  <Link href="/redeem" className="text-meth hover:underline">/redeem</Link>{' '}
-                  to start your {PREMETH_PLUS_DURATION_MONTHS}-month access.
+                <p className="text-bone-600 mb-10 max-w-xl">
+                  Once we match your TID to our records, we generate a
+                  redemption code bound to your account and message it to{' '}
+                  <strong className="text-bone-900 font-medium">{senderPhone}</strong>.
+                  Then you paste it at /redeem.
                 </p>
-              </div>
+                <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
+                  <Link
+                    href="/"
+                    className="press inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1"
+                  >
+                    Back to home
+                    <span aria-hidden>→</span>
+                  </Link>
+                  <Link
+                    href="/redeem"
+                    className="link-draw text-base text-bone-600 hover:text-bone-900 tx-color"
+                  >
+                    Go to redeem
+                  </Link>
+                </div>
+              </>
             )}
-          </>
-        )}
+          </div>
+        </div>
       </main>
       <Footer />
     </>
-  );
-}
-
-function Field({
-  label, value, onChange, placeholder,
-}: { label: string; value: string; onChange: (s: string) => void; placeholder?: string }) {
-  return (
-    <label className="block">
-      <span className="block text-sm text-ink-300 mb-1.5">{label}</span>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="w-full rounded-md bg-ink-950 border border-ink-800 px-3 py-2.5 text-paper focus:outline-none focus:border-meth"
-      />
-    </label>
   );
 }

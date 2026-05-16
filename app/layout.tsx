@@ -1,43 +1,30 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Fraunces } from 'next/font/google';
+import { Manrope } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'sonner';
 import SessionHeartbeat from '@/components/SessionHeartbeat';
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-manrope',
   display: 'swap',
-});
-
-// Fraunces is a literary, slightly playful serif — picked because the original
-// Premeth brand voice is warm and a bit irreverent ("Ensuring premed students
-// stay premeth"). A grotesque sans would have flattened that voice.
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  variable: '--font-display',
-  display: 'swap',
-  axes: ['SOFT', 'WONK', 'opsz'],
+  weight: ['200', '300', '400', '500', '600', '700', '800'],
 });
 
 export const viewport: Viewport = {
-  themeColor: '#0a0a0a',
+  themeColor: '#F7F7F4',
   width: 'device-width',
   initialScale: 1,
 };
 
 export const metadata: Metadata = {
-  title: 'Premeth — Free MDCAT Prep, Past Papers & Practice MCQs',
+  title: 'Premeth — MDCAT practice from past papers',
   description:
-    "Pakistan's free MDCAT preparation platform. 400,000+ MCQs from 2,500+ past papers across 31 categories. Free aggregate calculator, syllabus guide, study plans.",
-  keywords: [
-    'MDCAT', 'MDCAT 2026', 'MDCAT preparation', 'free MDCAT', 'past papers',
-    'NUMS', 'AKU', 'ETEA', 'PMC', 'medical entrance exam Pakistan',
-  ],
+    'Practice MDCAT MCQs from 2,500 past papers. Free, no signup, no ads. Premeth+ adds personalised drill, mistake review, and full mock exams.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://premeth.com'),
   openGraph: {
-    title: 'Premeth — Free MDCAT Prep',
-    description: 'Practice 400,000+ MCQs from 2,500+ past papers. Now with diagrams, accounts, and question reporting.',
+    title: 'Premeth — MDCAT practice from past papers',
+    description: 'Practice MDCAT MCQs from 2,500 past papers.',
     type: 'website',
   },
 };
@@ -48,20 +35,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
-      <body className="bg-ink-950 text-paper antialiased font-sans">
+    <html lang="en" className={manrope.variable}>
+      <body className="bg-bone text-bone-900 antialiased font-sans">
         {children}
-        {/* SessionHeartbeat enforces single-session-per-account for paid users
-            and logs login fingerprints. It's a no-op for signed-out users. */}
         <SessionHeartbeat />
         <Toaster
           position="bottom-right"
-          theme="dark"
+          theme="light"
           toastOptions={{
             style: {
-              background: '#18181b',
-              color: '#f7f3ec',
-              border: '1px solid #27272a',
+              background: '#FBFBF9',
+              color: '#1A1A18',
+              border: '1px solid #E0E0D8',
+              borderRadius: '4px',
+              fontSize: '14px',
             },
           }}
         />

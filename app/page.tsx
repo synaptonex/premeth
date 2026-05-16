@@ -2,11 +2,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
 import Features from '@/components/Features';
-import Marquee from '@/components/Marquee';
-import FAQ from '@/components/FAQ';
 import PremethPlusSection from '@/components/PremethPlusSection';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
   return (
@@ -14,50 +11,42 @@ export default function HomePage() {
       <Navbar />
       <main>
         <Hero />
-        <Marquee />
         <Features />
-
-        {/* Premeth+ upsell — placed after Features so the visitor has seen
-            the free offering first, primed to learn what the paid tier adds. */}
         <PremethPlusSection />
 
-        {/* CTA strip */}
-        <section className="relative mx-auto max-w-6xl px-5 py-24">
-          <div className="relative overflow-hidden rounded-2xl border border-ink-800 bg-ink-900/40 p-10 md:p-14">
-            <div
-              aria-hidden
-              className="absolute -top-24 -right-24 w-96 h-96 rounded-full"
-              style={{
-                background:
-                  'radial-gradient(circle, rgba(62,224,137,0.18) 0%, rgba(62,224,137,0) 70%)',
-              }}
-            />
-            <h3 className="relative font-display text-4xl md:text-5xl text-paper tracking-tight max-w-2xl">
-              Pick a paper. Hit start. That's the whole onboarding.
-            </h3>
-            <p className="relative mt-4 text-ink-400 max-w-xl">
-              No quiz to "match you to a program". No 10-question intake. The
-              papers are right there.
-            </p>
-            <div className="relative mt-7 flex flex-wrap gap-3">
-              <Link
-                href="/exams"
-                className="press group inline-flex items-center gap-2 rounded-md bg-meth text-ink-950 px-5 py-3 font-medium hover:bg-meth-300 tx-color"
-              >
-                Browse all 31 categories
-                <ArrowRight className="h-4 w-4 transition-transform duration-200 ease-out-strong group-hover:translate-x-0.5" />
-              </Link>
-              <Link
-                href="/signup"
-                className="press inline-flex items-center rounded-md border border-ink-700 text-paper px-5 py-3 hover:border-meth/50 hover:text-meth tx-color"
-              >
-                Save your progress
-              </Link>
+        {/* Closing call to action. Single line, no card, just an invitation. */}
+        <section className="border-t border-bone-rule">
+          <div className="mx-auto max-w-6xl px-6 md:px-10 py-24 md:py-32">
+            <div className="grid grid-cols-12 gap-6">
+              <div className="hidden md:block col-span-1 marginalia pt-1">
+                04 / Start
+              </div>
+              <div className="col-span-12 md:col-span-11">
+                <h2 className="text-4xl md:text-6xl font-light tracking-tighter text-bone-900 max-w-3xl leading-[1.05]">
+                  Pick a paper.
+                  <br />
+                  <span className="text-bone-500">Hit start. That is the whole onboarding.</span>
+                </h2>
+                <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3">
+                  <Link
+                    href="/exams"
+                    className="press inline-flex items-center gap-2 text-base font-medium text-bone-900 border-b border-bone-900 pb-1 hover:gap-3 tx-color"
+                    style={{ transition: 'gap 200ms var(--ease-out)' }}
+                  >
+                    Browse the 31 categories
+                    <span aria-hidden>→</span>
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="link-draw text-base text-bone-600 hover:text-bone-900 tx-color"
+                  >
+                    Save your progress
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </section>
-
-        <FAQ />
       </main>
       <Footer />
     </>
