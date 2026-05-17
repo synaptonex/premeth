@@ -1,5 +1,5 @@
 // Mirrors the schema documented in premeth-data/README.md exactly.
-// Do not rename fields — the JSON files use these names.
+// Do not rename fields - the JSON files use these names.
 
 export interface QuestionOption {
   letter: string;

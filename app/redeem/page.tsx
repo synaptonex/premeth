@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * Redeem a Premeth+ code. Bound to the buyer at issuance time, so a code
+ * Redeem an Enid+ code. Bound to the buyer at issuance time, so a code
  * pasted from anyone else's account will be rejected.
  */
 
@@ -11,7 +11,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/client';
-import { normalizeRedemptionCode } from '@/lib/premeth-plus';
+import { normalizeRedemptionCode } from '@/lib/enid-plus';
 import { toast } from 'sonner';
 
 export default function RedeemPage() {
@@ -31,7 +31,7 @@ export default function RedeemPage() {
   async function handleRedeem() {
     const code = normalizeRedemptionCode(raw);
     if (!code.startsWith('PRMTH-')) {
-      toast.error('That does not look like a Premeth code');
+      toast.error('That does not look like an Enid code');
       return;
     }
     setSubmitting(true);
@@ -62,7 +62,7 @@ export default function RedeemPage() {
             <div className="col-span-12 md:col-span-11">
               <p className="marginalia mb-6">Redeemed</p>
               <h1 className="text-5xl md:text-6xl font-light tracking-tighter text-coal-900">
-                Welcome to Premeth<span className="text-accent">+</span>.
+                Welcome to Enid<span className="text-accent">+</span>.
               </h1>
               <p className="mt-6 text-coal-600 text-lg max-w-xl">
                 Your subscription runs until{' '}
@@ -121,7 +121,7 @@ export default function RedeemPage() {
                 value={raw}
                 onChange={(e) => setRaw(e.target.value)}
                 placeholder="PRMTH-XXXX-XXXX"
-                className="w-full bg-transparent border-b border-coal-rule py-3 text-coal-900 font-mono text-lg tracking-wider placeholder:text-coal-300 focus:border-coal-900 focus:outline-none tx-color"
+                className="w-full bg-transparent border-b border-coal-rule py-3 text-coal-900 font-mono text-lg tracking-wider placeholder:text-coal-500 focus:border-coal-900 focus:outline-none tx-color"
                 autoFocus
               />
               <button
