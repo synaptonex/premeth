@@ -28,6 +28,7 @@ interface PaymentRow {
   notes: string | null;
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
+  referred_by?: string | null;
 }
 
 interface FlaggedSub {
@@ -45,7 +46,6 @@ export default function AdminPaymentsPage() {
   const [pending, setPending] = useState<PaymentRow[]>([]);
   const [recent, setRecent] = useState<PaymentRow[]>([]);
   const [flagged, setFlagged] = useState<FlaggedSub[]>([]);
-  const [showCode, setShowCode] = useState<{ code: string; userEmail?: string } | null>(null);
 
   async function refresh() {
     const [{ data: pendingRows }, { data: recentRows }, { data: flaggedRows }] = await Promise.all([
@@ -57,8 +57,27 @@ export default function AdminPaymentsPage() {
         .select('user_id, fingerprint_count, current_period_end')
         .eq('flagged_for_review', true).limit(50),
     ]);
-    setPending(pendingRows ?? []);
-    setRecent(recentRows ?? []);
+
+    const allPayments = [...(pendingRows ?? []), ...(recentRows ?? [])];
+
+    // Pull the referral tag for everyone in this batch, so each payment shows
+    // which ambassador (if any) to credit. One query, mapped on by user_id.
+    const userIds = Array.from(new Set(allPayments.map((p) => p.user_id)));
+    const refByUser = new Map<string, string | null>();
+    if (userIds.length > 0) {
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, referred_by')
+        .in('id', userIds);
+      for (const row of profiles ?? []) {
+        refByUser.set(row.id, row.referred_by ?? null);
+      }
+    }
+    const withRef = (rows: PaymentRow[] | null) =>
+      (rows ?? []).map((p) => ({ ...p, referred_by: refByUser.get(p.user_id) ?? null }));
+
+    setPending(withRef(pendingRows));
+    setRecent(withRef(recentRows));
     setFlagged(flaggedRows ?? []);
   }
 
@@ -93,7 +112,9 @@ export default function AdminPaymentsPage() {
       toast.error('Approve failed', { description: data.error });
       return;
     }
-    setShowCode({ code: data.code });
+    toast.success('Enid+ activated for the buyer', {
+      description: 'Their subscription is live now. No code to send.',
+    });
     await refresh();
   }
 
@@ -132,7 +153,7 @@ export default function AdminPaymentsPage() {
         <main className="mx-auto max-w-md px-5 py-20 text-center">
           <ShieldAlert className="h-10 w-10 text-accent mx-auto mb-3" />
           <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Not authorized</h1>
-          <p className="text-coal-600">This page is for Premeth admins only.</p>
+          <p className="text-coal-600">This page is for Enid admins only.</p>
         </main>
       </>
     );
@@ -152,45 +173,6 @@ export default function AdminPaymentsPage() {
           </p>
         </div>
 
-        {/* ─── Generated code modal ────────────────────────────────────── */}
-        {showCode && (
-          <div
-            className="fixed inset-0 z-50 grid place-items-center bg-coal/80 backdrop-blur-sm p-5"
-            onClick={() => setShowCode(null)}
-          >
-            <div
-              className="w-full max-w-md border border-accent bg-coal-100 p-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h3 className="text-xl text-coal-900 mb-1">Code generated</h3>
-              <p className="text-sm text-coal-600 mb-5">
-                Copy this code and send it to the buyer on WhatsApp. They'll
-                enter it at /redeem.
-              </p>
-              <div className="flex items-center gap-2 mb-5">
-                <code className="flex-1 bg-coal border border-coal-rule px-4 py-3 font-mono text-lg text-accent text-center tracking-wider">
-                  {showCode.code}
-                </code>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(showCode.code);
-                    toast.success('Copied');
-                  }}
-                  className="press p-3 border border-coal-300 hover:border-accent tx-color"
-                >
-                  <Copy className="h-4 w-4" />
-                </button>
-              </div>
-              <button
-                onClick={() => setShowCode(null)}
-                className="press w-full bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
-              >
-                Done
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* ─── Flagged accounts ────────────────────────────────────────── */}
         {flagged.length > 0 && (
           <section className="mb-10">
@@ -200,7 +182,7 @@ export default function AdminPaymentsPage() {
                 <h2 className="text-lg text-coal-900">Accounts flagged for review</h2>
               </div>
               <p className="text-sm text-coal-600 mb-4">
-                These Premeth+ accounts have logged in from {'>'}5 distinct devices/networks
+                These Enid+ accounts have logged in from {'>'}5 distinct devices/networks
                 in the last 7 days. Worth checking in case the code is being shared.
               </p>
               <ul className="space-y-2">
@@ -247,7 +229,7 @@ export default function AdminPaymentsPage() {
                     <span className={`text-[10px] uppercase px-1.5 py-0.5 rounded ${
                       p.status === 'approved'
                         ? 'bg-coal-100 text-accent border border-coal-rule'
-                        : 'bg-accent/15 text-accent border border-crimson/30'
+                        : 'bg-crimson/15 text-crimson border border-crimson/30'
                     }`}>
                       {p.status}
                     </span>
@@ -286,7 +268,7 @@ function PaymentCard({
         <div className="flex gap-2 shrink-0">
           <button
             onClick={onReject}
-            className="press inline-flex items-center gap-1.5 border border-coal-300 hover:border-crimson hover:text-accent px-3 py-1.5 text-sm tx-color"
+            className="press inline-flex items-center gap-1.5 border border-coal-300 hover:border-crimson hover:text-crimson px-3 py-1.5 text-sm tx-color"
           >
             <X className="h-3.5 w-3.5" /> Reject
           </button>
@@ -294,7 +276,7 @@ function PaymentCard({
             onClick={onApprove}
             className="press inline-flex items-center gap-1.5 bg-accent text-coal px-3 py-1.5 text-sm font-medium hover:opacity-90 tx-color"
           >
-            <Check className="h-3.5 w-3.5" /> Approve & generate code
+            <Check className="h-3.5 w-3.5" /> Approve & activate Enid+
           </button>
         </div>
       </div>
@@ -303,6 +285,11 @@ function PaymentCard({
         <Field label="Sender phone" value={p.sender_phone} mono />
         <Field label="Transaction ID" value={p.transaction_id} mono copyable />
         <Field label="Buyer user ID" value={p.user_id} mono copyable />
+        <Field
+          label="Referred by"
+          value={p.referred_by ? p.referred_by : 'No referral'}
+          mono={!!p.referred_by}
+        />
         {p.notes && <Field label="Notes" value={p.notes} />}
       </div>
     </li>

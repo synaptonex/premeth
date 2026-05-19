@@ -48,7 +48,7 @@ function LoginInner() {
       footer={
         <>
           New here?{' '}
-          <Link href="/signup" className="text-meth hover:underline">Create an account</Link>
+          <Link href="/signup" className="text-accent hover:underline">Create an account</Link>
         </>
       }
     >
@@ -65,8 +65,8 @@ function LoginInner() {
 
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-xs uppercase tracking-wider text-ink-400">Password</label>
-            <Link href="/forgot-password" className="text-xs text-meth hover:underline">
+            <label className="text-xs uppercase tracking-wider text-coal-600">Password</label>
+            <Link href="/forgot-password" className="text-xs text-accent hover:underline">
               Forgot password?
             </Link>
           </div>
@@ -78,12 +78,12 @@ function LoginInner() {
               placeholder="••••••••"
               autoComplete="current-password"
               required
-              className="w-full pl-3 pr-10 py-2.5 rounded-md bg-ink-900 border border-ink-800 text-paper placeholder:text-ink-600 focus:border-meth focus:outline-none tx-color"
+              className="w-full pl-3 pr-10 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
             />
             <button
               type="button"
               onClick={() => setShowPw((v) => !v)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-ink-500 hover:text-paper tx-color"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-coal-500 hover:text-coal-900 tx-color"
               aria-label={showPw ? 'Hide password' : 'Show password'}
             >
               {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -94,7 +94,7 @@ function LoginInner() {
         <button
           type="submit"
           disabled={loading}
-          className="press w-full py-2.5 rounded-md bg-meth text-ink-950 font-medium hover:bg-meth-300 disabled:opacity-50 tx-color"
+          className="press w-full py-2.5 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 disabled:opacity-50 tx-color"
         >
           {loading ? 'Signing in…' : 'Sign in'}
         </button>
@@ -112,7 +112,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-xs uppercase tracking-wider text-ink-400 mb-1.5">{label}</label>
+      <label className="block text-xs uppercase tracking-wider text-coal-600 mb-1.5">{label}</label>
       <input
         type={type}
         value={value}
@@ -120,7 +120,7 @@ function Field({
         placeholder={placeholder}
         autoComplete={autoComplete}
         required={required}
-        className="w-full px-3 py-2.5 rounded-md bg-ink-900 border border-ink-800 text-paper placeholder:text-ink-600 focus:border-meth focus:outline-none tx-color"
+        className="w-full px-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
       />
     </div>
   );

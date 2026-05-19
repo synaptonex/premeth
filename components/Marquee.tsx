@@ -8,11 +8,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const ROW_A = [
-  'BIOLOGY — 81 MCQs',
-  'CHEMISTRY — 45 MCQs',
-  'PHYSICS — 36 MCQs',
-  'ENGLISH — 9 MCQs',
-  'LOGICAL REASONING — 9 MCQs',
+  'BIOLOGY · 81 MCQs',
+  'CHEMISTRY · 45 MCQs',
+  'PHYSICS · 36 MCQs',
+  'ENGLISH · 9 MCQs',
+  'LOGICAL REASONING · 9 MCQs',
   'PMDC 2026 SYLLABUS',
 ];
 
@@ -50,10 +50,10 @@ export default function Marquee() {
             key={i}
             className={`px-6 ${
               big ? 'font-display text-4xl md:text-6xl' : 'text-sm uppercase tracking-widest'
-            } text-paper`}
+            } text-coal-900`}
           >
             {s}
-            <span className="text-meth ml-6">⋆</span>
+            <span className="text-accent ml-6">⋆</span>
           </span>
         ))}
       </div>
@@ -61,7 +61,7 @@ export default function Marquee() {
   );
 
   return (
-    <section ref={root} className="py-12 border-y border-ink-800 bg-ink-950 space-y-6">
+    <section ref={root} className="py-12 border-y border-coal-rule bg-coal space-y-6">
       <Row items={ROW_B} big />
       <Row items={ROW_A} />
     </section>
