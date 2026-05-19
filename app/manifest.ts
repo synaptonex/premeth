@@ -18,6 +18,11 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: 'any',
         type: 'image/svg+xml',
       },
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> 6f40fecb19cbd8e946a4ee9a9e174ade26f891b6
       {
         src: '/icon-192.png',
         sizes: '192x192',
@@ -36,6 +41,10 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/png',
         purpose: 'maskable',
       },
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> 6f40fecb19cbd8e946a4ee9a9e174ade26f891b6
     ],
   };
 }

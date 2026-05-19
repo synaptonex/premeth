@@ -11,9 +11,21 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 const PLUS_FEATURES = [
   {
     n: '01',
+<<<<<<< HEAD
     title: 'Adaptive Daily Drill',
     body:
       'Thirty MCQs a day, pulled from whatever you\'re worst at right now. It shifts as you get better.',
+=======
+<<<<<<< Updated upstream
+    title: 'Unlimited Daily Drills',
+    body:
+      'Thirty MCQs pulled from whatever you are worst at right now, and it shifts as you improve. Free accounts get one a day. Plus removes the limit.',
+=======
+    title: 'Adaptive Daily Drill',
+    body:
+      'Thirty MCQs a day, pulled from whatever you\'re worst at right now. It shifts as you get better.',
+>>>>>>> Stashed changes
+>>>>>>> 6f40fecb19cbd8e946a4ee9a9e174ade26f891b6
   },
   {
     n: '02',
@@ -35,9 +47,21 @@ const PLUS_FEATURES = [
   },
   {
     n: '05',
+<<<<<<< HEAD
     title: 'Study streaks',
     body:
       'A streak day is a day you hit your daily MCQ target. Miss a day and the streak resets. No competing with strangers.',
+=======
+<<<<<<< Updated upstream
+    title: 'Everything stays unlocked',
+    body:
+      'One subscription covers the drill, the vault, mocks and the goal tracker for six months. Streaks stay free for everyone.',
+=======
+    title: 'Study streaks',
+    body:
+      'A streak day is a day you hit your daily MCQ target. Miss a day and the streak resets. No competing with strangers.',
+>>>>>>> Stashed changes
+>>>>>>> 6f40fecb19cbd8e946a4ee9a9e174ade26f891b6
   },
   {
     n: '06',
@@ -47,7 +71,15 @@ const PLUS_FEATURES = [
   },
 ];
 
+<<<<<<< HEAD
 export default function PremethPlusSection() {
+=======
+<<<<<<< Updated upstream
+export default function EnidPlusSection() {
+=======
+export default function PremethPlusSection() {
+>>>>>>> Stashed changes
+>>>>>>> 6f40fecb19cbd8e946a4ee9a9e174ade26f891b6
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -73,6 +105,19 @@ export default function PremethPlusSection() {
       <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-28">
         <div className="grid grid-cols-12 gap-6 mb-16">
           <div className="hidden md:block col-span-1 marginalia pt-1">
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+            04 / Plus
+          </div>
+          <div className="col-span-12 md:col-span-11">
+            <p className="marginalia mb-6">
+              Enid<span className="text-accent">+</span>
+            </p>
+            <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-coal-900 max-w-3xl leading-[1.05]">
+              The papers, plus an app that actually pushes you to study.
+=======
+>>>>>>> 6f40fecb19cbd8e946a4ee9a9e174ade26f891b6
             03 / Plus
           </div>
           <div className="col-span-12 md:col-span-11">
@@ -81,6 +126,10 @@ export default function PremethPlusSection() {
             </p>
             <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-coal-900 max-w-3xl leading-[1.05]">
               For the candidate who wants the app to coach them, not just hold the papers.
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> 6f40fecb19cbd8e946a4ee9a9e174ade26f891b6
             </h2>
           </div>
         </div>
@@ -147,9 +196,21 @@ export default function PremethPlusSection() {
             </div>
 
             <p className="mt-12 text-sm text-coal-500 max-w-2xl">
+<<<<<<< HEAD
               Free Premeth stays free. The 2,500 papers, the aggregate calculator,
               the syllabus guide and the dashboard cost nothing and require no
               account. Premeth<span className="text-accent">+</span> is additive.
+=======
+<<<<<<< Updated upstream
+              Free Enid stays free. The 2,500 papers, the aggregate calculator,
+              the syllabus guide and the dashboard cost nothing and require no
+              account. Enid<span className="text-accent">+</span> is additive.
+=======
+              Free Premeth stays free. The 2,500 papers, the aggregate calculator,
+              the syllabus guide and the dashboard cost nothing and require no
+              account. Premeth<span className="text-accent">+</span> is additive.
+>>>>>>> Stashed changes
+>>>>>>> 6f40fecb19cbd8e946a4ee9a9e174ade26f891b6
             </p>
           </div>
         </div>

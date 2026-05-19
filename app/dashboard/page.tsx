@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import { createClient } from '@/lib/supabase/client';
 import { INDEXES } from '@/lib/data/indexes';
 import { getCategory } from '@/lib/categories';
-import { usePremethPlus } from '@/lib/premeth-plus.client';
+import { useEnidPlus } from '@/lib/enid-plus.client';
 import { computeStreak } from '@/lib/streaks';
 import type { Attempt } from '@/lib/types';
 import gsap from 'gsap';
@@ -20,7 +20,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const supabase = createClient();
   const root = useRef<HTMLDivElement>(null);
-  const { isPlus } = usePremethPlus();
+  const { isPlus } = useEnidPlus();
 
   const [loading, setLoading] = useState(true);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
@@ -53,13 +53,22 @@ export default function DashboardPage() {
       setAttempts(attemptRows ?? []);
       setUsername(prof?.username ?? null);
 
+      // Streaks are free, retention belongs to everyone. Compute for all
+      // logged-in users.
+      const streakRes = await computeStreak(supabase, user.id);
+      setStreak({
+        current: streakRes.current_streak,
+        longest: streakRes.longest_streak,
+        target: streakRes.target,
+        activeToday: streakRes.active_today,
+      });
+
       if (isPlus) {
         const now = new Date().toISOString();
         const [
           { count: dueCount },
           { count: vaultTotal },
           { count: mocks },
-          streakRes,
         ] = await Promise.all([
           supabase
             .from('mistake_vault')
@@ -76,17 +85,10 @@ export default function DashboardPage() {
             .select('id', { count: 'exact', head: true })
             .eq('user_id', user.id)
             .eq('exam_type', 'mdcat_simulation'),
-          computeStreak(supabase, user.id),
         ]);
 
         setVaultCounts({ due: dueCount ?? 0, total: vaultTotal ?? 0 });
         setMockCount(mocks ?? 0);
-        setStreak({
-          current: streakRes.current_streak,
-          longest: streakRes.longest_streak,
-          target: streakRes.target,
-          activeToday: streakRes.active_today,
-        });
       }
 
       setLoading(false);
@@ -170,7 +172,7 @@ export default function DashboardPage() {
           <div className="col-span-12 md:col-span-11">
             <p className="dash-anim marginalia mb-4">
               {isPlus ? (
-                <>Premeth<span className="text-accent">+</span> subscriber</>
+                <>Enid<span className="text-accent">+</span> subscriber</>
               ) : (
                 'Dashboard'
               )}
@@ -211,7 +213,7 @@ export default function DashboardPage() {
 
         {attempts.length > 0 && (
           <>
-            {/* Premeth+ row */}
+            {/* Enid+ row */}
             {isPlus && (
               <div className="grid grid-cols-12 gap-6 mb-20">
                 <div className="hidden md:block col-span-1 marginalia pt-1">
@@ -248,16 +250,46 @@ export default function DashboardPage() {
               </div>
             )}
 
+            {/* Streak, free for everyone, retention belongs to all users */}
+            {!isPlus && (
+              <div className="grid grid-cols-12 gap-6 mb-20">
+                <div className="hidden md:block col-span-1 marginalia pt-1">
+                  02 / Streak
+                </div>
+                <div className="col-span-12 md:col-span-11">
+                  <div className="border-t border-coal-rule pt-6 flex items-baseline gap-8 flex-wrap">
+                    <div>
+                      <div className="text-4xl font-light tracking-tighter text-coal-900 tabular-nums">
+                        {streak.current}
+                        <span className="text-lg text-coal-500"> day{streak.current === 1 ? '' : 's'}</span>
+                      </div>
+                      <p className="marginalia mt-1">
+                        {streak.activeToday
+                          ? 'Active today. Keep it going.'
+                          : 'Practice today to keep your streak.'}
+                      </p>
+                    </div>
+                    <div>
+                      <div className="text-4xl font-light tracking-tighter text-coal-500 tabular-nums">
+                        {streak.longest}
+                      </div>
+                      <p className="marginalia mt-1">Longest streak</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Upsell for free users with traction */}
             {!isPlus && attempts.length >= 3 && (
               <div className="grid grid-cols-12 gap-6 mb-20">
                 <div className="hidden md:block col-span-1 marginalia pt-1">
-                  02 / Plus
+                  03 / Plus
                 </div>
                 <div className="col-span-12 md:col-span-11">
                   <div className="border-t border-coal-rule pt-6">
                     <p className="marginalia mb-3">
-                      Upgrade · Premeth<span className="text-accent">+</span>
+                      Upgrade · Enid<span className="text-accent">+</span>
                     </p>
                     <h2 className="text-2xl md:text-3xl font-light tracking-tight text-coal-900 max-w-2xl">
                       You have answered {stats.totalQuestions.toLocaleString()} questions. Now make every wrong answer earn its keep.
@@ -281,7 +313,7 @@ export default function DashboardPage() {
             {/* Stats */}
             <div className="grid grid-cols-12 gap-6 mb-20">
               <div className="hidden md:block col-span-1 marginalia pt-1">
-                {isPlus ? '03' : '02'} / Numbers
+                {isPlus ? '03' : '04'} / Numbers
               </div>
               <div className="col-span-12 md:col-span-11">
                 <div className="grid grid-cols-2 md:grid-cols-4 border-t border-coal-rule">
@@ -297,7 +329,7 @@ export default function DashboardPage() {
             {topicStats.length > 0 && (
               <div className="grid grid-cols-12 gap-6 mb-20">
                 <div className="hidden md:block col-span-1 marginalia pt-1">
-                  {isPlus ? '04' : '03'} / Weak
+                  {isPlus ? '04' : '05'} / Weak
                 </div>
                 <div className="col-span-12 md:col-span-11">
                   <div className="flex items-baseline justify-between mb-6">
@@ -356,7 +388,7 @@ export default function DashboardPage() {
             {/* Recent attempts */}
             <div className="grid grid-cols-12 gap-6">
               <div className="hidden md:block col-span-1 marginalia pt-1">
-                {isPlus ? '05' : '04'} / Recent
+                {isPlus ? '05' : '06'} / Recent
               </div>
               <div className="col-span-12 md:col-span-11">
                 <div className="flex items-baseline justify-between mb-6">
@@ -408,7 +440,7 @@ export default function DashboardPage() {
                         <div className="col-span-6 md:col-span-2 text-right">
                           <div className="text-coal-900 font-medium tabular-nums">
                             {a.score}
-                            <span className="text-coal-400"> / {a.total}</span>
+                            <span className="text-coal-600"> / {a.total}</span>
                           </div>
                           <div className="marginalia mt-1">{pct}%</div>
                         </div>

@@ -3,6 +3,7 @@ import { Manrope } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'sonner';
 import SessionHeartbeat from '@/components/SessionHeartbeat';
+import ReferralCapture from '@/components/ReferralCapture';
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -18,14 +19,25 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Premeth: MDCAT practice from past papers',
+  title: {
+    default: 'Enid: MDCAT practice from past papers',
+    template: '%s | Enid',
+  },
   description:
-    'Practice MDCAT MCQs from 2,500 past papers. Free, no signup, no ads. Premeth+ adds personalised drill, mistake review, and full mock exams.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://premeth.com'),
+    'Practice MDCAT MCQs from 2,500 past papers. Free, no signup, no ads. Enid+ adds personalised drill, mistake review, and full mock exams.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://enid.app'),
+  applicationName: 'Enid',
+  keywords: ['MDCAT', 'past papers', 'medical entry test', 'MCQ practice', 'Pakistan'],
   openGraph: {
-    title: 'Premeth: MDCAT practice from past papers',
-    description: 'Practice MDCAT MCQs from 2,500 past papers.',
+    title: 'Enid: MDCAT practice from past papers',
+    description: 'Practice MDCAT MCQs from 2,500 past papers. Free, no signup, no ads.',
     type: 'website',
+    siteName: 'Enid',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Enid: MDCAT practice from past papers',
+    description: 'Practice MDCAT MCQs from 2,500 past papers. Free, no signup, no ads.',
   },
 };
 
@@ -39,6 +51,7 @@ export default function RootLayout({
       <body className="bg-coal text-coal-900 antialiased font-sans">
         {children}
         <SessionHeartbeat />
+        <ReferralCapture />
         <Toaster
           position="bottom-right"
           theme="dark"
