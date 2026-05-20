@@ -46,7 +46,7 @@ export default function Hero() {
             </h1>
 
             <p className="hero-anim mt-8 text-lg text-coal-600 max-w-xl leading-relaxed">
-              Premeth holds 400,000 MCQs from every public MDCAT paper since 2008.
+              Enid holds 400,000 MCQs from every public MDCAT paper since 2008.
               Practice any of them in the browser. Save your progress if you want to.
             </p>
 

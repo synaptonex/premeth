@@ -1,6 +1,18 @@
+<<<<<<< HEAD
 // lib/premeth-plus.client.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // React hook for checking Premeth+ status from client components. Import this
+=======
+<<<<<<< Updated upstream
+// lib/enid-plus.client.tsx
+// ─────────────────────────────────────────────────────────────────────────────
+// React hook for checking Enid+ status from client components. Import this
+=======
+// lib/premeth-plus.client.tsx
+// ─────────────────────────────────────────────────────────────────────────────
+// React hook for checking Premeth+ status from client components. Import this
+>>>>>>> Stashed changes
+>>>>>>> 6f40fecb19cbd8e946a4ee9a9e174ade26f891b6
 // in any "use client" component. Internally it uses the browser Supabase client.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -10,11 +22,25 @@ import { useEffect, useState } from 'react';
 import { createClient as createBrowserClient } from '@/lib/supabase/client';
 import {
   INACTIVE,
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+  type EnidPlusStatus,
+} from './enid-plus';
+
+export function useEnidPlus(): EnidPlusStatus {
+  const [status, setStatus] = useState<EnidPlusStatus>({
+=======
+>>>>>>> 6f40fecb19cbd8e946a4ee9a9e174ade26f891b6
   type PremethPlusStatus,
 } from './premeth-plus';
 
 export function usePremethPlus(): PremethPlusStatus {
   const [status, setStatus] = useState<PremethPlusStatus>({
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> 6f40fecb19cbd8e946a4ee9a9e174ade26f891b6
     ...INACTIVE,
     loading: true,
   });
