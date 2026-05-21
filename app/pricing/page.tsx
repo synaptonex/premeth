@@ -9,7 +9,7 @@
  *  3. Sees the destination phone number and amount to send.
  *  4. Sends the money from their own app, comes back with the transaction ID.
  *  5. Submits the TID. The request goes into the admin queue.
- *  6. On approval, the admin sends them a redemption code.
+ *  6. On approval, Enid+ activates on their account automatically. No code.
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -34,7 +34,7 @@ import { useGSAP } from '@gsap/react';
 gsap.registerPlugin(useGSAP);
 
 const FEATURES: { label: string; free: boolean; plus: boolean }[] = [
-  { label: 'All 2,500 past papers',           free: true,  plus: true  },
+  { label: 'All 2,500+ past papers',           free: true,  plus: true  },
   { label: 'Aggregate calculator',            free: true,  plus: true  },
   { label: 'Save attempts and weak topics',   free: true,  plus: true  },
   { label: 'Study streaks',                   free: true,  plus: true  },
@@ -259,7 +259,7 @@ export default function PricingPage() {
                 <p className="text-coal-700 text-lg">
                   Your payment was submitted on{' '}
                   {new Date(latestRequest.created_at).toLocaleDateString('en-GB')}.
-                  We confirm within 12 hours and message you the code.
+                  We verify payments within 24 to 48 hours. Once yours is confirmed, Enid+ activates on your account on its own.
                 </p>
               </div>
             </div>
@@ -373,7 +373,7 @@ export default function PricingPage() {
                 </h2>
                 <p className="text-coal-600 mb-10 max-w-xl">
                   We use the TID to verify the payment in our own JazzCash or
-                  EasyPaisa account. On match, we generate your code.
+                  EasyPaisa account. Once it matches, we activate Enid+ on your account.
                 </p>
 
                 <div className="space-y-6 max-w-md">
@@ -422,13 +422,14 @@ export default function PricingPage() {
               <>
                 <p className="marginalia mb-6">Submitted</p>
                 <h2 className="text-3xl md:text-4xl font-light tracking-tight text-coal-900 mb-4">
-                  Got it. We will verify within 12 hours.
+                  Payment received. Sit tight.
                 </h2>
                 <p className="text-coal-600 mb-10 max-w-xl">
-                  Once we match your TID to our records, we generate a
-                  redemption code bound to your account and message it to{' '}
-                  <strong className="text-coal-900 font-medium">{senderPhone}</strong>.
-                  Then you paste it at /redeem.
+                  We verify every payment by hand against our records. This
+                  takes 24 to 48 hours. Once yours is confirmed, Enid+ turns
+                  on for this account automatically. You do not need a code,
+                  and there is nothing else to submit. Check back, or just
+                  open Enid in a day or two and it will be active.
                 </p>
                 <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
                   <Link
@@ -439,10 +440,10 @@ export default function PricingPage() {
                     <span aria-hidden>→</span>
                   </Link>
                   <Link
-                    href="/redeem"
+                    href="/exams"
                     className="link-draw text-base text-coal-600 hover:text-coal-900 tx-color"
                   >
-                    Go to redeem
+                    Practice in the meantime
                   </Link>
                 </div>
               </>
