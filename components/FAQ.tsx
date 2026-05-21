@@ -14,7 +14,11 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: 'How many questions does Enid have?',
+<<<<<<< HEAD
     a: 'Around 280,000+ MCQs across 2,500+ papers, mocks, and drills, spread over 31 categories. The catalog covers UHS, NUMS, ETEA, DUHS, SZABMU, KMU, AKU, FMDC, PMC, and FSc board.',
+=======
+    a: 'Around 280,000+ MCQs across 2,500+ papers, spread over 31 categories. The catalog covers UHS, NUMS, ETEA, DUHS, SZABMU, KMU, AKU, FMDC, PMC, and FSc board.',
+>>>>>>> 66cd1ea909e163c9c11d4233c04b19d97482db1a
   },
   {
     q: 'A question is wrong. What do I do?',

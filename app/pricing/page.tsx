@@ -34,7 +34,11 @@ import { useGSAP } from '@gsap/react';
 gsap.registerPlugin(useGSAP);
 
 const FEATURES: { label: string; free: boolean; plus: boolean }[] = [
+<<<<<<< HEAD
   { label: 'All 2,500+ papers, mocks, and drills',           free: true,  plus: true  },
+=======
+  { label: 'All 2,500+ past papers',           free: true,  plus: true  },
+>>>>>>> 66cd1ea909e163c9c11d4233c04b19d97482db1a
   { label: 'Aggregate calculator',            free: true,  plus: true  },
   { label: 'Save attempts and weak topics',   free: true,  plus: true  },
   { label: 'Study streaks',                   free: true,  plus: true  },
