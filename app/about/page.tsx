@@ -113,13 +113,22 @@ export default function AboutPage() {
                 </h2>
 
                 <figure className="mt-8 max-w-2xl">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/founders.jpg"
-                    alt="Dr. Shahbaz Waseem Gul and Dr. Sharjeel Waseem Gul, the brothers behind Enid v2."
-                    className="w-full rounded-xl border border-coal-rule bg-coal-50"
-                    loading="lazy"
-                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/founder-pinstripe.jpg"
+                      alt="Dr. Shahbaz Waseem Gul."
+                      className="w-full aspect-[3/4] object-cover rounded-xl border border-coal-rule bg-coal-50"
+                      loading="lazy"
+                    />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/founder-suit.jpg"
+                      alt="Dr. Sharjeel Waseem Gul."
+                      className="w-full aspect-[3/4] object-cover rounded-xl border border-coal-rule bg-coal-50"
+                      loading="lazy"
+                    />
+                  </div>
                   <figcaption className="mt-3 text-sm text-coal-500">
                     Dr. Shahbaz Waseem Gul (left) and Dr. Sharjeel Waseem Gul
                     (right).
