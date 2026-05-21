@@ -13,11 +13,7 @@ export default function Footer() {
               Enid
             </div>
             <p className="text-coal-600 text-sm leading-relaxed max-w-sm">
-<<<<<<< HEAD
               MDCAT practice from 2,500+ papers, mocks, and drills. Built by students who
-=======
-              MDCAT practice from 2,500+ past papers. Built by students who
->>>>>>> 66cd1ea909e163c9c11d4233c04b19d97482db1a
               took the test, for the ones taking it next.
             </p>
           </div>

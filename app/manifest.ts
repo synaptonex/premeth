@@ -7,11 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'Enid: MDCAT practice',
     short_name: 'Enid',
     description:
-<<<<<<< HEAD
       'Practice MDCAT MCQs from 2,500+ papers, mocks, and drills. Free, no signup, no ads.',
-=======
-      'Practice MDCAT MCQs from 2,500+ past papers. Free, no signup, no ads.',
->>>>>>> 66cd1ea909e163c9c11d4233c04b19d97482db1a
     start_url: '/',
     display: 'standalone',
     background_color: '#14130F',

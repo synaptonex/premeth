@@ -141,11 +141,7 @@ export default function EnidPlusSection() {
             </div>
 
             <p className="mt-12 text-sm text-coal-500 max-w-2xl">
-<<<<<<< HEAD
               Free Enid stays free. The 2,500+ papers, mocks, drills, the aggregate calculator,
-=======
-              Free Enid stays free. The 2,500+ papers, the aggregate calculator,
->>>>>>> 66cd1ea909e163c9c11d4233c04b19d97482db1a
               the syllabus guide and the dashboard cost nothing and require no
               account. Enid<span className="text-accent">+</span> is additive.
             </p>

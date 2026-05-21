@@ -24,34 +24,20 @@ export const metadata: Metadata = {
     template: '%s | Enid',
   },
   description:
-<<<<<<< HEAD
     'Practice MDCAT MCQs from 2,500+ papers, mocks, and drills. Free, no signup, no ads. Enid+ adds personalised drill, mistake review, and full mock exams.',
-=======
-    'Practice MDCAT MCQs from 2,500+ past papers. Free, no signup, no ads. Enid+ adds personalised drill, mistake review, and full mock exams.',
->>>>>>> 66cd1ea909e163c9c11d4233c04b19d97482db1a
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://enid.app'),
   applicationName: 'Enid',
   keywords: ['MDCAT', 'past papers', 'medical entry test', 'MCQ practice', 'Pakistan'],
   openGraph: {
-<<<<<<< HEAD
     title: 'Enid: MDCAT practice from past papers, mocks, and drills',
     description: 'Practice MDCAT MCQs from 2,500+ papers, mocks, and drills. Free, no signup, no ads.',
-=======
-    title: 'Enid: MDCAT practice from past papers',
-    description: 'Practice MDCAT MCQs from 2,500+ past papers. Free, no signup, no ads.',
->>>>>>> 66cd1ea909e163c9c11d4233c04b19d97482db1a
     type: 'website',
     siteName: 'Enid',
   },
   twitter: {
     card: 'summary_large_image',
-<<<<<<< HEAD
     title: 'Enid: MDCAT practice from past papers, mocks, and drills',
     description: 'Practice MDCAT MCQs from 2,500+ papers, mocks, and drills. Free, no signup, no ads.',
-=======
-    title: 'Enid: MDCAT practice from past papers',
-    description: 'Practice MDCAT MCQs from 2,500+ past papers. Free, no signup, no ads.',
->>>>>>> 66cd1ea909e163c9c11d4233c04b19d97482db1a
   },
 };
 
