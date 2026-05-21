@@ -40,13 +40,13 @@ export default function Hero() {
             </p>
 
             <h1 className="hero-anim text-5xl md:text-7xl lg:text-8xl font-light tracking-tighter leading-[0.95] text-coal-900 max-w-4xl">
-              Practice 2,500 past papers.
+              Practice 2,500+ past papers.
               <br />
               <span className="text-coal-500">No signup. No ads.</span>
             </h1>
 
             <p className="hero-anim mt-8 text-lg text-coal-600 max-w-xl leading-relaxed">
-              Enid holds 400,000 MCQs from every public MDCAT paper since 2008.
+              Enid holds 280,000+ MCQs from every public MDCAT paper since 2008.
               Practice any of them in the browser. Save your progress if you want to.
             </p>
 
@@ -70,8 +70,8 @@ export default function Hero() {
             {/* Hairline separator and stats. Numbers as composition elements. */}
             <div className="hero-anim mt-20 pt-8 border-t border-coal-rule">
               <dl className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <Stat n="2,500" label="Past papers" />
-                <Stat n="400,000" label="MCQs" />
+                <Stat n="2,500+" label="Past papers" />
+                <Stat n="280,000+" label="MCQs" />
                 <Stat n="31" label="Categories" />
                 <Stat n="2008" label="Earliest year" />
               </dl>
