@@ -67,8 +67,9 @@ export default function ExamsPage() {
             All 31 categories.
           </h1>
           <p className="text-coal-600 max-w-2xl">
-            2,500+ papers, grouped by source and purpose. Pick one to see every
-            paper inside. No login needed to practice.
+            2,500+ papers, mocks, and drills, grouped by source and purpose.
+            Pick a category to see every paper inside. No login needed to
+            practice.
           </p>
         </div>
 

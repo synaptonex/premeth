@@ -259,11 +259,11 @@ export default function DashboardPage() {
                 <div className="col-span-12 md:col-span-11">
                   <div className="border-t border-coal-rule pt-6 flex items-baseline gap-8 flex-wrap">
                     <div>
-                      <div className="text-4xl font-light tracking-tighter text-coal-900 tabular-nums">
+                      <div className={`text-4xl font-light tracking-tighter tabular-nums ${streak.activeToday ? 'text-accent-bright' : 'text-coal-900'}`}>
                         {streak.current}
                         <span className="text-lg text-coal-500"> day{streak.current === 1 ? '' : 's'}</span>
                       </div>
-                      <p className="marginalia mt-1">
+                      <p className={`marginalia mt-1 ${streak.activeToday ? 'text-accent' : ''}`}>
                         {streak.activeToday
                           ? 'Active today. Keep it going.'
                           : 'Practice today to keep your streak.'}

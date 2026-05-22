@@ -431,12 +431,14 @@ export default function DrillPage() {
         <Navbar />
         <main className="mx-auto max-w-xl px-5 py-16">
           <div className="text-center mb-8">
-            <div className="inline-grid place-items-center h-16 w-16 rounded-full bg-coal-100 border border-coal-rule mb-4">
-              <Trophy className="h-7 w-7 text-accent" />
+            <div className="inline-grid place-items-center h-20 w-20 rounded-full bg-accent/15 border-2 border-accent-bright mb-4 shadow-[0_0_0_6px_var(--tw-shadow-color)] shadow-accent/20">
+              <Trophy className="h-9 w-9 text-accent-bright" strokeWidth={2.2} />
             </div>
             <h1 className="text-4xl font-light tracking-tighter text-coal-900">Drill complete.</h1>
-            <p className="text-coal-600 mt-2">
-              {score} / {questions.length} · {pct}%
+            <p className="text-coal-700 mt-2 text-lg">
+              <span className="text-accent-bright font-medium tabular-nums">{score}</span>
+              <span className="text-coal-500"> / {questions.length} · </span>
+              <span className="text-accent-bright font-medium tabular-nums">{pct}%</span>
             </p>
           </div>
           <p className="text-center text-sm text-coal-600 mb-6">
@@ -517,18 +519,18 @@ export default function DrillPage() {
                   disabled={isSubmitted}
                   className={`press w-full text-left border px-4 py-3 flex items-start gap-3 tx-color ${
                     reveal && isCorrect
-                      ? 'border-accent bg-coal-50'
+                      ? 'border-success bg-success/15 shadow-[0_0_0_3px_var(--tw-shadow-color)] shadow-success/20'
                       : reveal && isPicked && !isCorrect
-                      ? 'border-crimson bg-crimson/5'
+                      ? 'border-crimson bg-crimson/15 shadow-[0_0_0_3px_var(--tw-shadow-color)] shadow-crimson/20'
                       : isPicked
-                      ? 'border-accent bg-coal-50'
+                      ? 'border-teal bg-teal/10'
                       : 'border-coal-rule hover:border-coal-300'
                   }`}
                 >
                   <span className="font-mono text-sm text-coal-500 shrink-0">{LETTERS[i]}</span>
                   <span className="flex-1 text-coal-800">{opt.text}</span>
-                  {reveal && isCorrect && <Check className="h-4 w-4 text-accent shrink-0" />}
-                  {reveal && isPicked && !isCorrect && <XIcon className="h-4 w-4 text-crimson shrink-0" />}
+                  {reveal && isCorrect && <Check className="h-5 w-5 text-success-bright shrink-0" strokeWidth={2.5} />}
+                  {reveal && isPicked && !isCorrect && <XIcon className="h-5 w-5 text-crimson-bright shrink-0" strokeWidth={2.5} />}
                 </button>
               );
             })}

@@ -28,13 +28,41 @@ module.exports = {
           900: '#F0EBDD',
           rule: '#322F2A',
         },
-        // One signal color. Warm gold reads as premium on dark, where red
-        // would muddy and blue would feel cold.
-        accent: '#E0A341',
+        // Two-accent system. Gold is for achievement and CTAs. Teal is for
+        // active study state (current question, streaks, progress). They sit
+        // opposite each other on the colour wheel, so the page can carry both
+        // without feeling chaotic.
+        accent: {
+          DEFAULT: '#E0A341',
+          // Brighter, more saturated for moments that should land hard:
+          // streak completions, full-mock results, daily-goal hits.
+          bright: '#F5B84A',
+          glow: 'rgba(245, 184, 74, 0.18)',
+        },
 
-        // Semantic error color — used for wrong answers, rejected states, and
-        // destructive actions. The only other hue the theme allows.
-        crimson: '#e23b3b',
+        // Second accent — deep teal for active study moments.
+        teal: {
+          DEFAULT: '#2DA39A',
+          bright: '#3FBDB3',
+          glow: 'rgba(63, 189, 179, 0.18)',
+        },
+
+        // Success — for correct answers. Brighter than the default green so
+        // the right-answer moment actually lands as a dopamine hit.
+        success: {
+          DEFAULT: '#36C26B',
+          bright: '#4DD984',
+          glow: 'rgba(77, 217, 132, 0.20)',
+        },
+
+        // Semantic error — used for wrong answers and destructive actions.
+        // Slightly warmer and more saturated than the old crimson so wrong
+        // feedback actually registers.
+        crimson: {
+          DEFAULT: '#EF4949',
+          bright: '#FF5E5E',
+          glow: 'rgba(255, 94, 94, 0.20)',
+        },
       },
       letterSpacing: {
         tighter: '-0.04em',

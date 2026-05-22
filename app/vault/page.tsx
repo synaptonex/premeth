@@ -215,18 +215,18 @@ export default function VaultPage() {
                     disabled={submitted}
                     className={`press w-full text-left border px-4 py-3 flex items-start gap-3 tx-color ${
                       reveal && isCorrect
-                        ? 'border-accent bg-coal-50'
+                        ? 'border-success bg-success/15 shadow-[0_0_0_3px_var(--tw-shadow-color)] shadow-success/20'
                         : reveal && isPicked && !isCorrect
-                        ? 'border-crimson bg-crimson/5'
+                        ? 'border-crimson bg-crimson/15 shadow-[0_0_0_3px_var(--tw-shadow-color)] shadow-crimson/20'
                         : isPicked
-                        ? 'border-accent bg-coal-50'
+                        ? 'border-teal bg-teal/10'
                         : 'border-coal-rule hover:border-coal-300'
                     }`}
                   >
                     <span className="font-mono text-sm text-coal-500 shrink-0">{LETTERS[i]}</span>
                     <span className="flex-1 text-coal-800">{opt.text}</span>
-                    {reveal && isCorrect && <Check className="h-4 w-4 text-accent" />}
-                    {reveal && isPicked && !isCorrect && <XIcon className="h-4 w-4 text-accent" />}
+                    {reveal && isCorrect && <Check className="h-5 w-5 text-success-bright" strokeWidth={2.5} />}
+                    {reveal && isPicked && !isCorrect && <XIcon className="h-5 w-5 text-crimson-bright" strokeWidth={2.5} />}
                   </button>
                 );
               })}

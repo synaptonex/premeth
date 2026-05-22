@@ -314,7 +314,7 @@ export default function MockExamPage() {
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
           <Sparkles className="h-8 w-8 text-accent mx-auto mb-3 animate-pulse" />
           <p className="text-coal-700">Assembling your exam…</p>
-          <p className="text-xs text-coal-500 mt-1">Sampling from 2,500+ past papers</p>
+          <p className="text-xs text-coal-500 mt-1">Sampling from 2,500+ papers, mocks, and drills</p>
         </main>
       </>
     );
@@ -344,12 +344,14 @@ export default function MockExamPage() {
       <><Navbar />
         <main className="mx-auto max-w-xl px-5 py-12">
           <div className="text-center mb-8">
-            <div className="inline-grid place-items-center h-16 w-16 rounded-full bg-coal-100 border border-coal-rule mb-4">
-              <Trophy className="h-7 w-7 text-accent" />
+            <div className="inline-grid place-items-center h-20 w-20 rounded-full bg-accent/15 border-2 border-accent-bright mb-4 shadow-[0_0_0_6px_var(--tw-shadow-color)] shadow-accent/20">
+              <Trophy className="h-9 w-9 text-accent-bright" strokeWidth={2.2} />
             </div>
             <h1 className="text-4xl font-light tracking-tighter text-coal-900">Exam complete.</h1>
-            <p className="text-coal-600 mt-2">
-              {score} / {questions.length} · <span className={pct >= 75 ? 'text-coal-900' : pct >= 50 ? 'text-coal-500' : 'text-accent'}>{pct}%</span>
+            <p className="text-coal-700 mt-2 text-lg">
+              <span className="text-accent-bright font-medium tabular-nums">{score}</span>
+              <span className="text-coal-500"> / {questions.length} · </span>
+              <span className={`tabular-nums font-medium ${pct >= 75 ? 'text-success-bright' : pct >= 50 ? 'text-accent-bright' : 'text-crimson-bright'}`}>{pct}%</span>
             </p>
           </div>
           <div className="border border-coal-rule bg-coal-50 p-5 mb-8">
