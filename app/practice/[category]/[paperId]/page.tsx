@@ -472,15 +472,22 @@ export default function PracticePage() {
                 let badgeCls = 'border-coal-rule text-coal-700';
                 if (showResult) {
                   if (isCorrect) {
-                    stateCls = 'border-accent/40 bg-accent/10 text-coal-900';
-                    badgeCls = 'border-accent/40 bg-accent/15 text-accent';
+                    // The dopamine moment for a right answer. Bright success
+                    // green, a real fill, and a soft glow ring. The student
+                    // should feel this land.
+                    stateCls = 'border-success bg-success/15 text-coal-900 shadow-[0_0_0_4px_var(--tw-shadow-color)] shadow-success/20';
+                    badgeCls = 'border-success bg-success/25 text-success-bright font-medium';
                   } else if (isSelected) {
-                    stateCls = 'border-crimson/40 bg-crimson/10 text-coal-900';
-                    badgeCls = 'border-crimson/40 bg-crimson/15 text-crimson';
+                    // The wrong-answer moment. Should sting just enough to be
+                    // memorable, not punitive.
+                    stateCls = 'border-crimson bg-crimson/15 text-coal-900 shadow-[0_0_0_4px_var(--tw-shadow-color)] shadow-crimson/20';
+                    badgeCls = 'border-crimson bg-crimson/25 text-crimson-bright font-medium';
                   }
                 } else if (isSelected) {
-                  stateCls = 'border-accent/40 bg-accent/5 text-coal-900';
-                  badgeCls = 'border-accent/50 bg-accent/15 text-accent';
+                  // Pre-submit "this is my pick" state. Teal so it reads as
+                  // "active study", distinct from the gold reward moments.
+                  stateCls = 'border-teal bg-teal/10 text-coal-900';
+                  badgeCls = 'border-teal bg-teal/20 text-teal-bright';
                 }
 
                 return (
