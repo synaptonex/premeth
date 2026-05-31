@@ -77,3 +77,35 @@ export interface Attempt {
   duration_seconds: number;
   completed_at: string;
 }
+
+export interface ForumThread {
+  id: string;
+  user_id: string;
+  title: string;
+  body: string;
+  created_at: string;
+  last_activity_at: string;
+  reply_count: number;
+  author_username: string | null;
+  author_avatar: string | null;
+}
+
+export interface ForumReply {
+  id: string;
+  thread_id: string;
+  user_id: string;
+  body: string;
+  created_at: string;
+  author_username: string | null;
+  author_avatar: string | null;
+}
+
+export interface LeaderboardRow {
+  user_id: string;
+  username: string | null;
+  avatar_url: string | null;
+  questions_practiced: number;
+  correct_answers: number;
+  accuracy: number;
+  attempts_count: number;
+}

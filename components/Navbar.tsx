@@ -72,6 +72,8 @@ export default function Navbar() {
           <Link href="/exams" className={linkCls('/exams')}>Papers</Link>
           <Link href="/pathways" className={linkCls('/pathways')}>Pathways</Link>
           <Link href="/aggregate" className={linkCls('/aggregate')}>Aggregate</Link>
+          <Link href="/forum" className={linkCls('/forum')}>Forum</Link>
+          <Link href="/leaderboard" className={linkCls('/leaderboard')}>Leaderboard</Link>
           {user && (
             <Link href="/drill" className={linkCls('/drill')}>Drill</Link>
           )}
@@ -138,6 +140,8 @@ export default function Navbar() {
           <MobileLink href="/exams" onClick={() => setMenuOpen(false)}>Papers</MobileLink>
           <MobileLink href="/pathways" onClick={() => setMenuOpen(false)}>After MDCAT</MobileLink>
           <MobileLink href="/aggregate" onClick={() => setMenuOpen(false)}>Aggregate Calculator</MobileLink>
+          <MobileLink href="/forum" onClick={() => setMenuOpen(false)}>Forum</MobileLink>
+          <MobileLink href="/leaderboard" onClick={() => setMenuOpen(false)}>Leaderboard</MobileLink>
           {user && (
             <MobileLink href="/drill" onClick={() => setMenuOpen(false)}>Daily Drill</MobileLink>
           )}

@@ -51,7 +51,7 @@ export default function Founders() {
                   <img
                     src="/founder-suit.jpg"
                     alt="Dr. Sharjeel Waseem Gul."
-                    className="w-full aspect-[3/4] object-cover rounded-2xl border border-coal-rule bg-coal-50 shadow-card mt-6"
+                    className="w-full aspect-[3/4] object-cover rounded-2xl border border-coal-rule bg-coal-50 shadow-card"
                     loading="lazy"
                   />
                 </div>

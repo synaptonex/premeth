@@ -69,15 +69,7 @@ export default function Hero() {
           <div className="hidden md:block col-span-1 marginalia pt-3">01 / Hero</div>
 
           <div className="col-span-12 md:col-span-11">
-            <span className="hero-anim glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium text-coal-700">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-bright opacity-60" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-bright" />
-              </span>
-              For MDCAT 2026 candidates
-            </span>
-
-            <h1 className="hero-anim mt-8 text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[0.95] text-coal-900 max-w-4xl">
+            <h1 className="hero-anim text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[0.95] text-coal-900 max-w-4xl">
               Practice 2,500+ papers,{' '}
               <span className="text-aurora">mocks, and drills.</span>
               <br />
