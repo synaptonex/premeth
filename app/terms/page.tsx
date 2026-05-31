@@ -17,7 +17,7 @@ export default function TermsPage() {
             <span className="text-xs uppercase tracking-widest text-accent">
               Terms
             </span>
-            <h1 className="text-4xl md:text-5xl font-light tracking-tighter text-coal-900 mt-3">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-coal-900 mt-3">
               Terms of Service
             </h1>
             <p className="mt-3 text-sm text-coal-500">

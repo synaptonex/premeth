@@ -90,7 +90,7 @@ export default function ResetPasswordPage() {
               autoComplete="new-password"
               required
               disabled={!ready}
-              className="w-full pl-3 pr-10 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color disabled:opacity-50"
+              className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-coal-100 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color disabled:opacity-50"
             />
             <button
               type="button"
@@ -115,7 +115,7 @@ export default function ResetPasswordPage() {
             autoComplete="new-password"
             required
             disabled={!ready}
-            className="w-full px-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color disabled:opacity-50"
+            className="w-full px-3 py-2.5 rounded-xl bg-coal-100 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color disabled:opacity-50"
           />
         </div>
 
@@ -129,7 +129,7 @@ export default function ResetPasswordPage() {
         <button
           type="submit"
           disabled={!canSubmit || loading}
-          className="press w-full py-2.5 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed tx-color"
+          className="press w-full py-2.5 rounded-full bg-aurora-line text-white shadow-glow font-semibold hover:shadow-glow-lg disabled:opacity-40 disabled:cursor-not-allowed tx-color"
         >
           {loading ? 'Updating…' : 'Update password'}
         </button>

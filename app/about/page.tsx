@@ -39,10 +39,10 @@ export default function AboutPage() {
                 <span className="about-eyebrow text-xs uppercase tracking-widest text-accent">
                   About Enid
                 </span>
-                <h1 className="about-title text-4xl md:text-6xl font-light tracking-tighter text-coal-900 max-w-3xl leading-[1.05] mt-3">
+                <h1 className="about-title text-4xl md:text-6xl font-bold tracking-tight text-coal-900 max-w-3xl leading-[1.05] mt-3">
                   Built by students,
                   <br />
-                  <span className="text-coal-500">
+                  <span className="text-aurora">
                     for the students coming next.
                   </span>
                 </h1>
@@ -81,7 +81,7 @@ export default function AboutPage() {
                 02 / Origins
               </div>
               <div className="col-span-12 md:col-span-11">
-                <h2 className="text-2xl md:text-3xl font-light tracking-tight text-coal-900">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-coal-900">
                   Where it began
                 </h2>
                 <div className="mt-5 space-y-4 text-coal-700 leading-relaxed max-w-2xl">
@@ -108,7 +108,7 @@ export default function AboutPage() {
                 03 / The team
               </div>
               <div className="col-span-12 md:col-span-11">
-                <h2 className="text-2xl md:text-3xl font-light tracking-tight text-coal-900">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-coal-900">
                   Who took it forward
                 </h2>
 
@@ -176,7 +176,7 @@ export default function AboutPage() {
                 04 / Upkeep
               </div>
               <div className="col-span-12 md:col-span-11">
-                <h2 className="text-2xl md:text-3xl font-light tracking-tight text-coal-900">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-coal-900">
                   A question bank that keeps improving
                 </h2>
                 <div className="mt-5 space-y-4 text-coal-700 leading-relaxed max-w-2xl">
@@ -206,7 +206,7 @@ export default function AboutPage() {
                 05 / Contact
               </div>
               <div className="col-span-12 md:col-span-11">
-                <h2 className="text-2xl md:text-3xl font-light tracking-tight text-coal-900">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-coal-900">
                   Get in touch
                 </h2>
                 <p className="mt-3 text-coal-600 leading-relaxed max-w-xl">
@@ -251,7 +251,7 @@ export default function AboutPage() {
                 </div>
 
                 <div className="mt-10">
-                  <h2 className="text-2xl md:text-4xl font-light tracking-tighter text-coal-900 leading-[1.1]">
+                  <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-coal-900 leading-[1.1]">
                     Pick a paper. Hit start.
                   </h2>
                   <div className="mt-6">

@@ -114,10 +114,10 @@ export default function AggregatePage() {
                 <span className="agg-eyebrow text-xs uppercase tracking-widest text-accent">
                   Aggregate calculator
                 </span>
-                <h1 className="agg-title text-4xl md:text-6xl font-light tracking-tighter text-coal-900 max-w-2xl leading-[1.05] mt-3">
+                <h1 className="agg-title text-4xl md:text-6xl font-bold tracking-tight text-coal-900 max-w-2xl leading-[1.05] mt-3">
                   Work out your merit
                   <br />
-                  <span className="text-coal-500">before results day.</span>
+                  <span className="text-aurora">before results day.</span>
                 </h1>
                 <p className="mt-6 text-coal-600 leading-relaxed max-w-xl">
                   Pick your admitting body, put in your marks, and you get the
@@ -191,7 +191,7 @@ export default function AggregatePage() {
                         Your aggregate · {board.label}
                       </div>
 
-                      <div className="text-5xl md:text-6xl font-light tracking-tighter tabular-nums text-coal-900">
+                      <div className="text-5xl md:text-6xl font-bold tracking-tight tabular-nums text-coal-900">
                         {aggregate !== null ? aggregate.toFixed(4) : '0.0000'}
                         <span className="text-2xl text-coal-500">%</span>
                       </div>
@@ -275,7 +275,7 @@ function ScoreRow({
           placeholder="Marks"
           value={value.marks}
           onChange={(e) => onChange({ ...value, marks: e.target.value })}
-          className="w-full px-3 py-2 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
+          className="w-full px-3 py-2 rounded-xl bg-coal-100 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
         />
         <span className="text-coal-500 shrink-0">out of</span>
         <input
@@ -284,7 +284,7 @@ function ScoreRow({
           placeholder="Total"
           value={value.total}
           onChange={(e) => onChange({ ...value, total: e.target.value })}
-          className="w-full px-3 py-2 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
+          className="w-full px-3 py-2 rounded-xl bg-coal-100 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
         />
       </div>
       {invalid && (

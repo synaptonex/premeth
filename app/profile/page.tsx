@@ -283,7 +283,7 @@ export default function ProfilePage() {
                   <button
                     onClick={uploadAvatar}
                     disabled={uploadingAvatar}
-                    className="press text-sm px-4 py-2 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 disabled:opacity-50 tx-color"
+                    className="press text-sm px-4 py-2 rounded-full bg-aurora-line text-white shadow-glow font-semibold hover:shadow-glow-lg disabled:opacity-50 tx-color"
                   >
                     {uploadingAvatar ? 'Uploading…' : 'Save new avatar'}
                   </button>
@@ -322,12 +322,12 @@ export default function ProfilePage() {
               value={username}
               onChange={(e) => setUsername(e.target.value.trim())}
               placeholder="username"
-              className="flex-1 px-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
+              className="flex-1 px-3 py-2.5 rounded-xl bg-coal-100 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
             />
             <button
               onClick={saveUsername}
               disabled={savingProfile || username.trim() === savedUsername || !username.trim()}
-              className="press text-sm px-4 py-2.5 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed tx-color"
+              className="press text-sm px-4 py-2.5 rounded-full bg-aurora-line text-white shadow-glow font-semibold hover:shadow-glow-lg disabled:opacity-40 disabled:cursor-not-allowed tx-color"
             >
               {savingProfile ? 'Saving…' : 'Save'}
             </button>
@@ -357,7 +357,7 @@ export default function ProfilePage() {
                   onChange={(e) => setOldPw(e.target.value)}
                   autoComplete="current-password"
                   required
-                  className="w-full pl-3 pr-10 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 focus:border-accent focus:outline-none tx-color"
+                  className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-coal-100 border border-coal-rule text-coal-900 focus:border-accent focus:outline-none tx-color"
                 />
                 <button
                   type="button"
@@ -380,7 +380,7 @@ export default function ProfilePage() {
                 onChange={(e) => setNewPw(e.target.value)}
                 autoComplete="new-password"
                 required
-                className="w-full px-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 focus:border-accent focus:outline-none tx-color"
+                className="w-full px-3 py-2.5 rounded-xl bg-coal-100 border border-coal-rule text-coal-900 focus:border-accent focus:outline-none tx-color"
               />
               <p className="text-xs text-coal-500 mt-1.5">8+ characters with letters and a number.</p>
             </div>
@@ -388,7 +388,7 @@ export default function ProfilePage() {
             <button
               type="submit"
               disabled={savingPw}
-              className="press text-sm px-4 py-2.5 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 disabled:opacity-50 tx-color"
+              className="press text-sm px-4 py-2.5 rounded-full bg-aurora-line text-white shadow-glow font-semibold hover:shadow-glow-lg disabled:opacity-50 tx-color"
             >
               {savingPw ? 'Updating…' : 'Update password'}
             </button>

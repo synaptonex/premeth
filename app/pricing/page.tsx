@@ -151,7 +151,7 @@ export default function PricingPage() {
             </div>
             <div className="col-span-12 md:col-span-11">
               <p className="marginalia mb-4">Your subscription</p>
-              <h1 className="text-5xl md:text-6xl font-light tracking-tighter text-coal-900">
+              <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-coal-900">
                 Enid<span className="text-accent">+</span> is active.
               </h1>
               <p className="mt-6 text-coal-600 max-w-xl text-lg">
@@ -196,11 +196,11 @@ export default function PricingPage() {
           </div>
           <div className="col-span-12 md:col-span-11">
             <p className="price-anim marginalia mb-6">Pricing</p>
-            <h1 className="price-anim text-5xl md:text-7xl font-light tracking-tighter text-coal-900 max-w-3xl leading-[0.95]">
+            <h1 className="price-anim text-5xl md:text-7xl font-bold tracking-tight text-coal-900 max-w-3xl leading-[0.95]">
               Free is free.
               <br />
               <span className="text-coal-500">Plus is</span>{' '}
-              <span className="tabular-nums">Rs {price.toLocaleString()}</span>
+              <span className="text-aurora tabular-nums">Rs {price.toLocaleString()}</span>
               <span className="text-coal-500"> / 6 months.</span>
             </h1>
             {isFounders && foundersTaken !== null && (
@@ -308,7 +308,7 @@ export default function PricingPage() {
                 >
                   ← Back
                 </button>
-                <h2 className="text-3xl font-light tracking-tight text-coal-900 mb-2">
+                <h2 className="text-3xl font-bold tracking-tight text-coal-900 mb-2">
                   Send Rs {price.toLocaleString()} to this number.
                 </h2>
                 <p className="text-coal-600 mb-10">
@@ -368,7 +368,7 @@ export default function PricingPage() {
                 >
                   ← Back
                 </button>
-                <h2 className="text-3xl font-light tracking-tight text-coal-900 mb-2">
+                <h2 className="text-3xl font-bold tracking-tight text-coal-900 mb-2">
                   Submit your transaction ID.
                 </h2>
                 <p className="text-coal-600 mb-10 max-w-xl">
@@ -421,7 +421,7 @@ export default function PricingPage() {
             {step === 'confirm' && (
               <>
                 <p className="marginalia mb-6">Submitted</p>
-                <h2 className="text-3xl md:text-4xl font-light tracking-tight text-coal-900 mb-4">
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-coal-900 mb-4">
                   Payment received. Sit tight.
                 </h2>
                 <p className="text-coal-600 mb-10 max-w-xl">

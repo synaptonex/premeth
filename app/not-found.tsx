@@ -5,29 +5,32 @@ export default function NotFound() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-xl px-5 py-24 text-center">
-        <div className="font-display text-7xl md:text-8xl text-accent tracking-tight">
-          404
-        </div>
-        <h1 className="font-display text-3xl text-coal-900 mt-4">
-          Page not found.
-        </h1>
-        <p className="text-coal-600 mt-2 mb-8">
-          The page you're looking for isn't here. Maybe it never was.
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <Link
-            href="/"
-            className="press inline-flex items-center rounded-md bg-accent text-coal px-4 py-2 font-medium hover:bg-accent/90 tx-color"
-          >
-            Go home
-          </Link>
-          <Link
-            href="/exams"
-            className="press inline-flex items-center rounded-md border border-coal-rule text-coal-900 px-4 py-2 hover:border-accent/50 hover:text-accent tx-color"
-          >
-            Browse papers
-          </Link>
+      <main className="relative overflow-hidden">
+        <div className="aurora-field aurora-animate" aria-hidden />
+        <div className="relative z-10 mx-auto max-w-xl px-5 py-32 text-center">
+          <div className="font-display text-8xl md:text-9xl font-extrabold tracking-tight text-aurora">
+            404
+          </div>
+          <h1 className="font-display text-3xl font-bold text-coal-900 mt-4">
+            Page not found.
+          </h1>
+          <p className="text-coal-600 mt-2 mb-8">
+            The page you&apos;re looking for isn&apos;t here. Maybe it never was.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/"
+              className="press inline-flex items-center rounded-full bg-aurora-line px-6 py-2.5 font-semibold text-white shadow-glow hover:shadow-glow-lg tx-color"
+            >
+              Go home
+            </Link>
+            <Link
+              href="/exams"
+              className="press inline-flex items-center rounded-full glass px-6 py-2.5 text-coal-900 hover:text-accent-bright tx-color"
+            >
+              Browse papers
+            </Link>
+          </div>
         </div>
       </main>
     </>

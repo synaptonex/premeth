@@ -98,10 +98,10 @@ export default function PathwaysPage() {
                 <span className="pw-anim text-xs uppercase tracking-widest text-accent">
                   After MDCAT
                 </span>
-                <h1 className="pw-anim text-4xl md:text-6xl font-light tracking-tighter text-coal-900 max-w-3xl leading-[1.05] mt-3">
+                <h1 className="pw-anim text-4xl md:text-6xl font-bold tracking-tight text-coal-900 max-w-3xl leading-[1.05] mt-3">
                   Getting in is step one.
                   <br />
-                  <span className="text-coal-500">Then comes the longer road.</span>
+                  <span className="text-aurora">Then comes the longer road.</span>
                 </h1>
                 <div className="pw-anim mt-8 space-y-4 text-coal-700 leading-relaxed text-lg max-w-2xl">
                   <p>
@@ -133,7 +133,7 @@ export default function PathwaysPage() {
                 02 / Routes
               </div>
               <div className="col-span-12 md:col-span-11">
-                <h2 className="text-2xl md:text-3xl font-light tracking-tight text-coal-900">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-coal-900">
                   Four ways the degree can travel
                 </h2>
                 <p className="mt-3 text-coal-600 max-w-xl">
@@ -180,7 +180,7 @@ export default function PathwaysPage() {
                 <div className="inline-grid place-items-center h-11 w-11 rounded-lg bg-accent/10 border border-accent/20 text-accent mb-5">
                   <Compass className="h-5 w-5" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-light tracking-tight text-coal-900 max-w-2xl">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-coal-900 max-w-2xl">
                   What we wish we had, built into one place
                 </h2>
                 <div className="mt-5 space-y-4 text-coal-700 leading-relaxed max-w-2xl">

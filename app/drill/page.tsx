@@ -343,7 +343,7 @@ export default function DrillPage() {
         <Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
           <Target className="h-10 w-10 text-accent mx-auto mb-3" />
-          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">
+          <h1 className="text-3xl font-bold tracking-tight text-coal-900 mb-2">
             One free drill a day
           </h1>
           <p className="text-coal-600 mb-6">
@@ -353,7 +353,7 @@ export default function DrillPage() {
           <div className="flex items-center justify-center gap-x-6 gap-y-3 flex-wrap">
             <Link
               href="/signup"
-              className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
+              className="press inline-flex items-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-5 py-2.5 font-semibold hover:shadow-glow-lg tx-color"
             >
               Create free account <ArrowRight className="h-4 w-4" />
             </Link>
@@ -376,7 +376,7 @@ export default function DrillPage() {
         <Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
           <Check className="h-10 w-10 text-accent mx-auto mb-3" />
-          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">
+          <h1 className="text-3xl font-bold tracking-tight text-coal-900 mb-2">
             That is today&apos;s drill done
           </h1>
           <p className="text-coal-600 mb-6">
@@ -387,7 +387,7 @@ export default function DrillPage() {
           <div className="flex items-center justify-center gap-x-6 gap-y-3 flex-wrap">
             <Link
               href="/pricing"
-              className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
+              className="press inline-flex items-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-5 py-2.5 font-semibold hover:shadow-glow-lg tx-color"
             >
               Drill without limits <ArrowRight className="h-4 w-4" />
             </Link>
@@ -408,14 +408,14 @@ export default function DrillPage() {
       <>
         <Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
-          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Drill couldn't be built</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-coal-900 mb-2">Drill couldn't be built</h1>
           <p className="text-coal-600 mb-6">
             We couldn't find enough questions matching your weak topics. Practice
             a few more papers and try again tomorrow.
           </p>
           <Link
             href="/exams"
-            className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
+            className="press inline-flex items-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-5 py-2.5 font-semibold hover:shadow-glow-lg tx-color"
           >
             Browse papers
           </Link>
@@ -434,7 +434,7 @@ export default function DrillPage() {
             <div className="inline-grid place-items-center h-20 w-20 rounded-full bg-accent/15 border-2 border-accent-bright mb-4 shadow-[0_0_0_6px_var(--tw-shadow-color)] shadow-accent/20">
               <Trophy className="h-9 w-9 text-accent-bright" strokeWidth={2.2} />
             </div>
-            <h1 className="text-4xl font-light tracking-tighter text-coal-900">Drill complete.</h1>
+            <h1 className="text-4xl font-bold tracking-tight text-coal-900">Drill complete.</h1>
             <p className="text-coal-700 mt-2 text-lg">
               <span className="text-accent-bright font-medium tabular-nums">{score}</span>
               <span className="text-coal-500"> / {questions.length} · </span>
@@ -448,7 +448,7 @@ export default function DrillPage() {
           <div className="flex flex-wrap gap-3 justify-center">
             <Link
               href="/vault"
-              className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
+              className="press inline-flex items-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-5 py-2.5 font-semibold hover:shadow-glow-lg tx-color"
             >
               Open Mistake Vault <ArrowRight className="h-4 w-4" />
             </Link>
@@ -557,14 +557,14 @@ export default function DrillPage() {
             <button
               onClick={submitAnswer}
               disabled={selected === null}
-              className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color disabled:opacity-50"
+              className="press inline-flex items-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-5 py-2.5 font-semibold hover:shadow-glow-lg tx-color disabled:opacity-50"
             >
               Submit
             </button>
           ) : (
             <button
               onClick={goNext}
-              className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
+              className="press inline-flex items-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-5 py-2.5 font-semibold hover:shadow-glow-lg tx-color"
             >
               {qIndex < questions.length - 1 ? 'Next' : 'Finish drill'}{' '}
               <ArrowRight className="h-4 w-4" />

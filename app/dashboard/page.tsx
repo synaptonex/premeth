@@ -177,7 +177,7 @@ export default function DashboardPage() {
                 'Dashboard'
               )}
             </p>
-            <h1 className="dash-anim text-5xl md:text-6xl font-light tracking-tighter text-coal-900">
+            <h1 className="dash-anim text-5xl md:text-6xl font-bold tracking-tight text-coal-900">
               {username ? `Welcome back, ${username}.` : 'Welcome back.'}
             </h1>
             {attempts.length > 0 && (
@@ -259,7 +259,7 @@ export default function DashboardPage() {
                 <div className="col-span-12 md:col-span-11">
                   <div className="border-t border-coal-rule pt-6 flex items-baseline gap-8 flex-wrap">
                     <div>
-                      <div className={`text-4xl font-light tracking-tighter tabular-nums ${streak.activeToday ? 'text-accent-bright' : 'text-coal-900'}`}>
+                      <div className={`text-4xl font-bold tracking-tight tabular-nums ${streak.activeToday ? 'text-accent-bright' : 'text-coal-900'}`}>
                         {streak.current}
                         <span className="text-lg text-coal-500"> day{streak.current === 1 ? '' : 's'}</span>
                       </div>
@@ -270,7 +270,7 @@ export default function DashboardPage() {
                       </p>
                     </div>
                     <div>
-                      <div className="text-4xl font-light tracking-tighter text-coal-500 tabular-nums">
+                      <div className="text-4xl font-bold tracking-tight text-coal-500 tabular-nums">
                         {streak.longest}
                       </div>
                       <p className="marginalia mt-1">Longest streak</p>
@@ -291,7 +291,7 @@ export default function DashboardPage() {
                     <p className="marginalia mb-3">
                       Upgrade · Enid<span className="text-accent">+</span>
                     </p>
-                    <h2 className="text-2xl md:text-3xl font-light tracking-tight text-coal-900 max-w-2xl">
+                    <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-coal-900 max-w-2xl">
                       You have answered {stats.totalQuestions.toLocaleString()} questions. Now make every wrong answer earn its keep.
                     </h2>
                     <p className="mt-4 text-coal-600 max-w-xl">
@@ -333,7 +333,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="col-span-12 md:col-span-11">
                   <div className="flex items-baseline justify-between mb-6">
-                    <h2 className="text-3xl font-light tracking-tight text-coal-900">
+                    <h2 className="text-3xl font-bold tracking-tight text-coal-900">
                       Topics to revise.
                     </h2>
                     {isPlus && (
@@ -392,7 +392,7 @@ export default function DashboardPage() {
               </div>
               <div className="col-span-12 md:col-span-11">
                 <div className="flex items-baseline justify-between mb-6">
-                  <h2 className="text-3xl font-light tracking-tight text-coal-900">
+                  <h2 className="text-3xl font-bold tracking-tight text-coal-900">
                     Recent attempts.
                   </h2>
                   <Link
@@ -467,7 +467,7 @@ function DashStat({
       className="press bg-coal p-6 hover:bg-coal-50 tx-color block"
     >
       <p className="marginalia mb-3">{label}</p>
-      <div className="text-3xl font-light tracking-tighter text-coal-900 tabular-nums">
+      <div className="text-3xl font-bold tracking-tight text-coal-900 tabular-nums">
         {value}
       </div>
       <p className="text-xs text-coal-500 mt-1">{sub}</p>
@@ -479,7 +479,7 @@ function StatBox({ label, value }: { label: string; value: string }) {
   return (
     <div className="py-6 px-4 border-b border-coal-rule md:border-b-0 md:border-r last:border-r-0 border-coal-rule">
       <p className="marginalia mb-2">{label}</p>
-      <div className="text-3xl font-light tracking-tighter text-coal-900 tabular-nums">
+      <div className="text-3xl font-bold tracking-tight text-coal-900 tabular-nums">
         {value}
       </div>
     </div>

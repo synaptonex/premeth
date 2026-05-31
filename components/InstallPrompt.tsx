@@ -67,8 +67,8 @@ export default function InstallPrompt() {
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-40 mx-auto max-w-sm">
-      <div className="rounded-xl border border-coal-rule bg-coal-50 shadow-2xl p-4 flex items-center gap-3">
-        <div className="inline-grid place-items-center h-10 w-10 rounded-lg bg-accent/10 border border-accent/20 text-accent shrink-0">
+      <div className="rounded-2xl glass shadow-card p-4 flex items-center gap-3">
+        <div className="inline-grid place-items-center h-10 w-10 rounded-lg bg-accent/15 border border-accent/30 text-accent-bright shrink-0">
           <Download className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
@@ -81,7 +81,7 @@ export default function InstallPrompt() {
         </div>
         <button
           onClick={install}
-          className="press shrink-0 bg-accent text-coal text-sm font-medium px-3 py-1.5 rounded-md hover:opacity-90 tx-color"
+          className="press shrink-0 bg-aurora-line text-white text-sm font-semibold px-3.5 py-1.5 rounded-full shadow-glow hover:shadow-glow-lg tx-color"
         >
           Add
         </button>

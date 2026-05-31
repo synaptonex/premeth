@@ -4,6 +4,7 @@ import './globals.css';
 import { Toaster } from 'sonner';
 import SessionHeartbeat from '@/components/SessionHeartbeat';
 import ReferralCapture from '@/components/ReferralCapture';
+import RevealOnScroll from '@/components/RevealOnScroll';
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -52,15 +53,16 @@ export default function RootLayout({
         {children}
         <SessionHeartbeat />
         <ReferralCapture />
+        <RevealOnScroll />
         <Toaster
           position="bottom-right"
           theme="dark"
           toastOptions={{
             style: {
-              background: '#1E1C17',
-              color: '#F0EBDD',
-              border: '1px solid #322F2A',
-              borderRadius: '4px',
+              background: '#120D1F',
+              color: '#F5F2FC',
+              border: '1px solid #271D3A',
+              borderRadius: '12px',
               fontSize: '14px',
             },
           }}

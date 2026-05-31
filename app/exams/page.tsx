@@ -63,7 +63,7 @@ export default function ExamsPage() {
       <main ref={root} className="mx-auto max-w-6xl px-5 py-14">
         <div className="flex flex-col gap-3 mb-10">
           <span className="text-xs uppercase tracking-widest text-accent">Catalog</span>
-          <h1 className="font-display text-5xl md:text-6xl text-coal-900 tracking-tight">
+          <h1 className="font-display text-5xl md:text-6xl font-bold text-coal-900 tracking-tight">
             All 31 categories.
           </h1>
           <p className="text-coal-600 max-w-2xl">
@@ -80,7 +80,7 @@ export default function ExamsPage() {
             placeholder="Search categories..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
+            className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-coal-100 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
           />
         </div>
 

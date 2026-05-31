@@ -19,26 +19,26 @@ export default function HomePage() {
         <AggregateTeaser />
 
         {/* Closing call to action. Single line, no card, just an invitation. */}
-        <section className="border-t border-coal-rule">
+        <section className="relative">
+          <div className="rule-aurora" />
           <div className="mx-auto max-w-6xl px-6 md:px-10 py-24 md:py-32">
             <div className="grid grid-cols-12 gap-6">
               <div className="hidden md:block col-span-1 marginalia pt-1">
                 06 / Start
               </div>
               <div className="col-span-12 md:col-span-11">
-                <h2 className="text-4xl md:text-6xl font-light tracking-tighter text-coal-900 max-w-3xl leading-[1.05]">
+                <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-coal-900 max-w-3xl leading-[1.05]">
                   Pick a paper.
                   <br />
-                  <span className="text-coal-500">Hit start. That's the whole onboarding.</span>
+                  <span className="text-aurora">Hit start. That's the whole onboarding.</span>
                 </h2>
-                <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3">
+                <div className="mt-10 flex flex-wrap items-center gap-5">
                   <Link
                     href="/exams"
-                    className="press inline-flex items-center gap-2 text-base font-medium text-coal-900 border-b border-coal-900 pb-1 hover:gap-3 tx-color"
-                    style={{ transition: 'gap 200ms var(--ease-out)' }}
+                    className="press group inline-flex items-center gap-2 rounded-full bg-aurora-line bg-[length:200%_100%] px-7 py-3.5 text-base font-semibold text-white shadow-glow tx-color hover:shadow-glow-lg"
                   >
                     Browse the 31 categories
-                    <span aria-hidden>→</span>
+                    <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
                   </Link>
                   <Link
                     href="/signup"

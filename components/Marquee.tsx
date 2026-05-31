@@ -17,8 +17,8 @@ const ROW_A = [
 ];
 
 const ROW_B = [
-  'UHS',  'NUMS', 'ETEA', 'AKU',  'FMDC', 'DUHS',
-  'SZABMU', 'KMU', 'PMC',  'PMDC',
+  'UHS', 'NUMS', 'ETEA', 'AKU', 'FMDC', 'DUHS',
+  'SZABMU', 'KMU', 'PMC', 'PMDC',
 ];
 
 export default function Marquee() {
@@ -26,34 +26,29 @@ export default function Marquee() {
 
   useGSAP(
     () => {
-      // Two rows scrolling in opposite directions, looped seamlessly via xPercent.
-      // linear easing (per Emil rule: constant motion = linear).
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return;
       const rows = root.current?.querySelectorAll('.marquee-track') ?? [];
       rows.forEach((row, i) => {
         const dir = i % 2 === 0 ? -1 : 1;
-        gsap.to(row, {
-          xPercent: dir * 50,
-          repeat: -1,
-          duration: 36,
-          ease: 'none',
-        });
+        gsap.to(row, { xPercent: dir * 50, repeat: -1, duration: 36, ease: 'none' });
       });
     },
     { scope: root }
   );
 
   const Row = ({ items, big }: { items: string[]; big?: boolean }) => (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
       <div className="marquee-track flex whitespace-nowrap">
         {[...items, ...items, ...items].map((s, i) => (
           <span
             key={i}
             className={`px-6 ${
-              big ? 'font-display text-4xl md:text-6xl' : 'text-sm uppercase tracking-widest'
-            } text-coal-900`}
+              big ? 'font-display text-4xl md:text-6xl font-extrabold tracking-tight text-coal-900' : 'text-sm uppercase tracking-widest text-coal-600'
+            }`}
           >
             {s}
-            <span className="text-accent ml-6">⋆</span>
+            <span className="text-accent-bright ml-6">⋆</span>
           </span>
         ))}
       </div>
@@ -61,7 +56,7 @@ export default function Marquee() {
   );
 
   return (
-    <section ref={root} className="py-12 border-y border-coal-rule bg-coal space-y-6">
+    <section ref={root} className="py-12 border-y border-coal-rule bg-coal-50 space-y-6">
       <Row items={ROW_B} big />
       <Row items={ROW_A} />
     </section>

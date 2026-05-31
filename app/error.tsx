@@ -14,34 +14,29 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Surface the error for debugging without exposing it to the user.
     console.error(error);
   }, [error]);
 
   return (
-    <main className="min-h-screen grid place-items-center bg-coal px-6">
-      <div className="max-w-md text-center">
-        <p className="text-xs uppercase tracking-widest text-accent">
-          Something broke
-        </p>
-        <h1 className="mt-3 text-3xl font-light tracking-tighter text-coal-900">
-          That page hit a snag.
+    <main className="relative min-h-screen grid place-items-center px-6 overflow-hidden">
+      <div className="aurora-field aurora-animate" aria-hidden />
+      <div className="relative z-10 max-w-md text-center">
+        <p className="marginalia text-accent-bright">Something broke</p>
+        <h1 className="mt-3 text-3xl font-bold tracking-tight text-coal-900">
+          That page hit a <span className="text-aurora">snag.</span>
         </h1>
         <p className="mt-3 text-coal-600 leading-relaxed">
-          The problem is on our end, not yours. Try again, and if it keeps
-          happening, let us know and we will look into it.
+          The problem is on our end, not yours. Try again, and if it keeps happening, let us
+          know and we will look into it.
         </p>
-        <div className="mt-7 flex items-center justify-center gap-x-6 gap-y-3 flex-wrap">
+        <div className="mt-7 flex items-center justify-center gap-5 flex-wrap">
           <button
             onClick={reset}
-            className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
+            className="press inline-flex items-center gap-2 rounded-full bg-aurora-line px-6 py-2.5 font-semibold text-white shadow-glow hover:shadow-glow-lg tx-color"
           >
             Try again
           </button>
-          <Link
-            href="/"
-            className="link-draw text-coal-600 hover:text-coal-900 tx-color"
-          >
+          <Link href="/" className="link-draw text-coal-600 hover:text-coal-900 tx-color">
             Back to home
           </Link>
         </div>

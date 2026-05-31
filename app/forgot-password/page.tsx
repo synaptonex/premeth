@@ -96,14 +96,14 @@ export default function ForgotPasswordPage() {
             autoComplete="email"
             required
             autoFocus
-            className="w-full px-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
+            className="w-full px-3 py-2.5 rounded-xl bg-coal-100 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="press w-full py-2.5 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 disabled:opacity-50 tx-color"
+          className="press w-full py-2.5 rounded-full bg-aurora-line text-white shadow-glow font-semibold hover:shadow-glow-lg disabled:opacity-50 tx-color"
         >
           {loading ? 'Sending…' : 'Send reset link'}
         </button>

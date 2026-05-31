@@ -247,14 +247,14 @@ export default function VaultPage() {
               <button
                 onClick={() => setSubmitted(true)}
                 disabled={selected === null}
-                className="press w-full inline-flex items-center justify-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color disabled:opacity-50"
+                className="press w-full inline-flex items-center justify-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-5 py-2.5 font-semibold hover:shadow-glow-lg tx-color disabled:opacity-50"
               >
                 Reveal answer
               </button>
             ) : (
               <button
                 onClick={() => submitReview(wasCorrect)}
-                className="press w-full inline-flex items-center justify-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
+                className="press w-full inline-flex items-center justify-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-5 py-2.5 font-semibold hover:shadow-glow-lg tx-color"
               >
                 {wasCorrect ? 'Got it right, advance stage' : 'Got it wrong, reset to stage 1'}
               </button>
@@ -281,7 +281,7 @@ export default function VaultPage() {
       <main className="mx-auto max-w-3xl px-5 py-12">
         <div className="mb-8">
           <span className="text-xs uppercase tracking-widest text-accent">Enid+</span>
-          <h1 className="text-4xl font-light tracking-tighter text-coal-900 mt-2">
+          <h1 className="text-4xl font-bold tracking-tight text-coal-900 mt-2">
             Mistake Vault.
           </h1>
           <p className="text-coal-600 mt-2">
@@ -308,7 +308,7 @@ export default function VaultPage() {
             </p>
             <Link
               href="/pricing"
-              className="press inline-flex items-center gap-2 mt-4 bg-accent text-coal px-4 py-2 text-sm font-medium hover:opacity-90 tx-color"
+              className="press inline-flex items-center gap-2 mt-4 bg-aurora-line text-white shadow-glow rounded-full px-4 py-2 text-sm font-semibold hover:shadow-glow-lg tx-color"
             >
               Unlock spaced review <ArrowRight className="h-4 w-4" />
             </Link>

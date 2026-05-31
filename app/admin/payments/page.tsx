@@ -152,7 +152,7 @@ export default function AdminPaymentsPage() {
         <Navbar />
         <main className="mx-auto max-w-md px-5 py-20 text-center">
           <ShieldAlert className="h-10 w-10 text-accent mx-auto mb-3" />
-          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Not authorized</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-coal-900 mb-2">Not authorized</h1>
           <p className="text-coal-600">This page is for Enid admins only.</p>
         </main>
       </>
@@ -165,7 +165,7 @@ export default function AdminPaymentsPage() {
       <main className="mx-auto max-w-5xl px-5 py-12">
         <div className="mb-8">
           <span className="text-xs uppercase tracking-widest text-accent">Admin</span>
-          <h1 className="text-4xl font-light tracking-tighter text-coal-900 mt-2">
+          <h1 className="text-4xl font-bold tracking-tight text-coal-900 mt-2">
             Payment review.
           </h1>
           <p className="text-coal-600 mt-2">
@@ -274,7 +274,7 @@ function PaymentCard({
           </button>
           <button
             onClick={onApprove}
-            className="press inline-flex items-center gap-1.5 bg-accent text-coal px-3 py-1.5 text-sm font-medium hover:opacity-90 tx-color"
+            className="press inline-flex items-center gap-1.5 bg-aurora-line text-white shadow-glow rounded-full px-3 py-1.5 text-sm font-semibold hover:shadow-glow-lg tx-color"
           >
             <Check className="h-3.5 w-3.5" /> Approve & activate Enid+
           </button>

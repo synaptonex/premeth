@@ -39,27 +39,32 @@ export default function FAQ() {
 
   return (
     <section className="relative mx-auto max-w-3xl px-5 py-24">
-      <h2 className="font-display text-4xl md:text-5xl text-coal-900 tracking-tight mb-8">
-        Frequently asked questions.
+      <h2 className="font-display text-4xl md:text-5xl font-bold text-coal-900 tracking-tight mb-10">
+        Frequently asked <span className="text-aurora">questions.</span>
       </h2>
 
-      <div className="divide-y divide-coal-rule border-t border-b border-coal-rule">
+      <div className="space-y-3">
         {FAQS.map((item, i) => {
           const isOpen = open === i;
           return (
-            <div key={item.q}>
+            <div
+              key={item.q}
+              className={`rounded-2xl border tx-color ${
+                isOpen ? 'glass border-accent/30' : 'border-coal-rule hover:border-coal-300'
+              }`}
+            >
               <button
                 onClick={() => setOpen(isOpen ? null : i)}
-                className="w-full flex items-center justify-between py-5 text-left group"
+                className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left group"
                 aria-expanded={isOpen}
               >
-                <span className="font-medium text-coal-900 pr-6 group-hover:text-accent tx-color">
+                <span className={`font-medium pr-2 tx-color ${isOpen ? 'text-coal-900' : 'text-coal-800 group-hover:text-coal-900'}`}>
                   {item.q}
                 </span>
                 <ChevronDown
-                  className={`h-4 w-4 text-coal-600 shrink-0`}
+                  className={`h-4 w-4 shrink-0 ${isOpen ? 'text-accent-bright' : 'text-coal-500'}`}
                   style={{
-                    transition: 'transform 200ms var(--ease-out)',
+                    transition: 'transform 220ms var(--ease-out)',
                     transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                   }}
                 />
@@ -72,7 +77,7 @@ export default function FAQ() {
                 }}
               >
                 <div className="overflow-hidden">
-                  <p className="pb-5 pr-8 text-coal-600 leading-relaxed">{item.a}</p>
+                  <p className="px-5 pb-5 text-coal-600 leading-relaxed">{item.a}</p>
                 </div>
               </div>
             </div>

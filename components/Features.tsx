@@ -51,61 +51,53 @@ export default function Features() {
 
   useGSAP(
     () => {
-      gsap.from('.feat-row', {
-        y: 10,
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      gsap.from('.feat-card', {
+        y: reduce ? 0 : 24,
         autoAlpha: 0,
-        duration: 0.5,
-        stagger: 0.05,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: root.current,
-          start: 'top 80%',
-          once: true,
-        },
+        duration: reduce ? 0 : 0.6,
+        stagger: reduce ? 0 : 0.08,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: root.current, start: 'top 78%', once: true },
       });
     },
     { scope: root }
   );
 
   return (
-    <section
-      ref={root}
-      className="border-t border-coal-rule"
-    >
+    <section ref={root} className="relative border-t border-coal-rule">
       <div className="mx-auto max-w-6xl px-6 md:px-10 py-20 md:py-28">
-        <div className="grid grid-cols-12 gap-6 mb-16">
-          <div className="hidden md:block col-span-1 marginalia pt-1">
-            03 / Free
-          </div>
+        <div className="grid grid-cols-12 gap-6 mb-14">
+          <div className="hidden md:block col-span-1 marginalia pt-2">03 / Free</div>
           <div className="col-span-12 md:col-span-11">
-            <h2 className="text-4xl md:text-5xl font-light tracking-tighter text-coal-900 max-w-2xl">
-              What is free, and stays free.
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-coal-900 max-w-2xl">
+              What is free, and <span className="text-aurora">stays free.</span>
             </h2>
           </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-6">
-          <div className="hidden md:block col-span-1" />
-          <div className="col-span-12 md:col-span-11">
-            <ul className="border-t border-coal-rule">
-              {FEATURES.map((f) => (
-                <li
-                  key={f.n}
-                  className="feat-row grid grid-cols-12 gap-4 py-7 border-b border-coal-rule"
-                >
-                  <span className="col-span-12 md:col-span-1 marginalia pt-1">
-                    {f.n}
-                  </span>
-                  <h3 className="col-span-12 md:col-span-4 text-xl text-coal-900 font-medium leading-snug">
-                    {f.title}
-                  </h3>
-                  <p className="col-span-12 md:col-span-7 text-coal-600 leading-relaxed">
-                    {f.body}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {FEATURES.map((f) => (
+            <article
+              key={f.n}
+              className="feat-card group relative overflow-hidden rounded-2xl glass p-6 tx-transform hover:-translate-y-1.5 hover:shadow-card-hover"
+            >
+              {/* Per-card glow that blooms on hover. */}
+              <div
+                className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-accent/20 blur-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                aria-hidden
+              />
+              <div className="relative">
+                <span className="text-2xl font-bold tracking-tight text-aurora tabular-nums">
+                  {f.n}
+                </span>
+                <h3 className="mt-4 text-xl font-semibold leading-snug text-coal-900">
+                  {f.title}
+                </h3>
+                <p className="mt-3 text-coal-600 leading-relaxed">{f.body}</p>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>

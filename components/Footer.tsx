@@ -2,15 +2,14 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-coal-rule mt-12">
+    <footer className="relative mt-12">
+      <div className="rule-aurora" />
       <div className="mx-auto max-w-6xl px-6 md:px-10 py-16">
         <div className="grid grid-cols-12 gap-6">
-          <div className="hidden md:block col-span-1 marginalia pt-1">
-            End / Notes
-          </div>
+          <div className="hidden md:block col-span-1 marginalia pt-1">End / Notes</div>
           <div className="col-span-12 md:col-span-5">
-            <div className="text-coal-900 text-base font-medium mb-3">
-              Enid
+            <div className="text-coal-900 text-xl font-bold tracking-tight mb-3">
+              Enid<span className="text-accent-bright">+</span>
             </div>
             <p className="text-coal-600 text-sm leading-relaxed max-w-sm">
               MDCAT practice from 2,500+ papers, mocks, and drills. Built by students who
@@ -36,7 +35,7 @@ export default function Footer() {
               <li><Link href="/about" className="text-coal-600 hover:text-coal-900 tx-color">About</Link></li>
               <li>
                 <Link href="/pricing" className="text-coal-600 hover:text-coal-900 tx-color">
-                  Enid<span className="text-accent">+</span>
+                  Enid<span className="text-accent-bright">+</span>
                 </Link>
               </li>
               <li><Link href="/aggregate" className="text-coal-600 hover:text-coal-900 tx-color">Aggregate Calculator</Link></li>
@@ -66,19 +65,11 @@ export default function Footer() {
         </div>
 
         <div className="mt-16 pt-8 border-t border-coal-rule flex flex-wrap items-baseline justify-between gap-y-3">
-          <span className="marginalia italic">
-            Enid, by Syncrasy
-          </span>
+          <span className="marginalia italic">Enid, by Syncrasy</span>
           <div className="flex items-baseline gap-5">
-            <Link href="/privacy" className="marginalia hover:text-coal-700 tx-color">
-              Privacy
-            </Link>
-            <Link href="/terms" className="marginalia hover:text-coal-700 tx-color">
-              Terms
-            </Link>
-            <span className="marginalia">
-              © {new Date().getFullYear()}
-            </span>
+            <Link href="/privacy" className="marginalia hover:text-coal-700 tx-color">Privacy</Link>
+            <Link href="/terms" className="marginalia hover:text-coal-700 tx-color">Terms</Link>
+            <span className="marginalia">© {new Date().getFullYear()}</span>
           </div>
         </div>
       </div>

@@ -240,7 +240,7 @@ export default function FormulasPage() {
       <main>
         <section className="mx-auto max-w-5xl px-5 py-16 md:py-24">
           <p className="marginalia mb-6">Reference</p>
-          <h1 className="font-display text-4xl md:text-5xl text-coal-900 tracking-tight mb-4">
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-coal-900 tracking-tight mb-4">
             MDCAT formula sheet.
           </h1>
           <p className="text-coal-600 mb-10 max-w-2xl leading-relaxed">

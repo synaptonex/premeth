@@ -250,14 +250,14 @@ export default function MockExamPage() {
       <><Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
           <Lock className="h-10 w-10 text-accent mx-auto mb-3" />
-          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Enid+ only</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-coal-900 mb-2">Enid+ only</h1>
           <p className="text-coal-600 mb-6">
             Full timed MDCAT simulations. 200 MCQs, 200 minutes, real exam interface,
             per-subject breakdown when you're done.
           </p>
           <Link
             href="/pricing"
-            className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
+            className="press inline-flex items-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-5 py-2.5 font-semibold hover:shadow-glow-lg tx-color"
           >
             See Enid+ <ArrowRight className="h-4 w-4" />
           </Link>
@@ -272,7 +272,7 @@ export default function MockExamPage() {
         <main className="mx-auto max-w-2xl px-5 py-12">
           <div className="text-center mb-10">
             <Clock className="h-10 w-10 text-accent mx-auto mb-3" />
-            <h1 className="text-4xl font-light tracking-tighter text-coal-900">Full timed mock exam.</h1>
+            <h1 className="text-4xl font-bold tracking-tight text-coal-900">Full timed mock exam.</h1>
             <p className="text-coal-600 mt-2">PMDC MDCAT format. 200 MCQs in 200 minutes.</p>
           </div>
           <div className="border border-coal-rule bg-coal-50 p-6 mb-8">
@@ -299,7 +299,7 @@ export default function MockExamPage() {
           </div>
           <button
             onClick={buildExam}
-            className="press w-full inline-flex items-center justify-center gap-2 bg-accent text-coal px-5 py-3 font-medium hover:opacity-90 tx-color"
+            className="press w-full inline-flex items-center justify-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-5 py-3 font-semibold hover:shadow-glow-lg tx-color"
           >
             Start the exam <ArrowRight className="h-4 w-4" />
           </button>
@@ -324,7 +324,7 @@ export default function MockExamPage() {
     return (
       <><Navbar />
         <main className="mx-auto max-w-lg px-5 py-20 text-center">
-          <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">Could not build exam</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-coal-900 mb-2">Could not build exam</h1>
           <p className="text-coal-600">Not enough question data available right now. Try again later.</p>
         </main>
       </>
@@ -347,7 +347,7 @@ export default function MockExamPage() {
             <div className="inline-grid place-items-center h-20 w-20 rounded-full bg-accent/15 border-2 border-accent-bright mb-4 shadow-[0_0_0_6px_var(--tw-shadow-color)] shadow-accent/20">
               <Trophy className="h-9 w-9 text-accent-bright" strokeWidth={2.2} />
             </div>
-            <h1 className="text-4xl font-light tracking-tighter text-coal-900">Exam complete.</h1>
+            <h1 className="text-4xl font-bold tracking-tight text-coal-900">Exam complete.</h1>
             <p className="text-coal-700 mt-2 text-lg">
               <span className="text-accent-bright font-medium tabular-nums">{score}</span>
               <span className="text-coal-500"> / {questions.length} · </span>
@@ -384,7 +384,7 @@ export default function MockExamPage() {
           <div className="flex flex-wrap gap-3 justify-center">
             <Link
               href="/vault"
-              className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
+              className="press inline-flex items-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-5 py-2.5 font-semibold hover:shadow-glow-lg tx-color"
             >
               Review mistakes
             </Link>
@@ -423,7 +423,7 @@ export default function MockExamPage() {
             </div>
             <button
               onClick={() => setShowSubmitConfirm(true)}
-              className="press text-sm bg-accent text-coal px-4 py-1.5 font-medium hover:opacity-90 tx-color"
+              className="press text-sm bg-aurora-line text-white shadow-glow rounded-full px-4 py-1.5 font-semibold hover:shadow-glow-lg tx-color"
             >
               Submit
             </button>
@@ -482,7 +482,7 @@ export default function MockExamPage() {
               <button
                 onClick={() => setQIndex(Math.min(questions.length - 1, qIndex + 1))}
                 disabled={qIndex === questions.length - 1}
-                className="press inline-flex items-center gap-1.5 bg-accent text-coal px-4 py-2 text-sm font-medium hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed tx-color"
+                className="press inline-flex items-center gap-1.5 bg-aurora-line text-white shadow-glow rounded-full px-4 py-2 text-sm font-semibold hover:shadow-glow-lg disabled:opacity-40 disabled:cursor-not-allowed tx-color"
               >
                 Next <ArrowRight className="h-3.5 w-3.5" />
               </button>
@@ -504,7 +504,7 @@ export default function MockExamPage() {
                       onClick={() => setQIndex(i)}
                       className={`press text-xs rounded h-7 w-full font-mono tx-color ${
                         isCurr
-                          ? 'bg-accent text-coal'
+                          ? 'bg-aurora-line text-white shadow-glow'
                           : isAns
                           ? 'bg-coal-100 text-accent border border-coal-rule'
                           : 'border border-coal-rule text-coal-600 hover:border-coal-400'
@@ -545,7 +545,7 @@ export default function MockExamPage() {
                 </button>
                 <button
                   onClick={() => { setShowSubmitConfirm(false); finish(); }}
-                  className="press flex-1 bg-accent text-coal px-4 py-2.5 font-medium hover:opacity-90 tx-color"
+                  className="press flex-1 bg-aurora-line text-white shadow-glow rounded-full px-4 py-2.5 font-semibold hover:shadow-glow-lg tx-color"
                 >
                   Yes, submit
                 </button>

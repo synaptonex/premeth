@@ -166,7 +166,7 @@ export default function GoalPage() {
         <main className="mx-auto max-w-2xl px-5 py-20">
           <div className="border border-coal-rule bg-coal-50 p-10 text-center">
             <Lock className="h-8 w-8 text-accent mx-auto mb-3" />
-            <h1 className="text-3xl font-light tracking-tighter text-coal-900 mb-2">
+            <h1 className="text-3xl font-bold tracking-tight text-coal-900 mb-2">
               Goal Tracker is an Enid+ feature.
             </h1>
             <p className="text-coal-700 max-w-md mx-auto mb-6">
@@ -175,7 +175,7 @@ export default function GoalPage() {
             </p>
             <Link
               href="/pricing"
-              className="press inline-flex items-center gap-2 bg-accent text-coal px-5 py-2.5 font-medium hover:opacity-90 tx-color"
+              className="press inline-flex items-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-5 py-2.5 font-semibold hover:shadow-glow-lg tx-color"
             >
               See Enid+ pricing <ArrowRight className="h-4 w-4" />
             </Link>
@@ -191,7 +191,7 @@ export default function GoalPage() {
       <main ref={root} className="mx-auto max-w-3xl px-5 py-12">
         <div className="mb-10">
           <span className="text-xs uppercase tracking-widest text-accent">Enid+ · Goal Tracker</span>
-          <h1 className="text-4xl md:text-5xl font-light tracking-tighter text-coal-900 mt-2">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-coal-900 mt-2">
             Your countdown.
           </h1>
           <p className="text-coal-600 mt-2">
@@ -325,7 +325,7 @@ export default function GoalPage() {
           <button
             onClick={saveGoal}
             disabled={saving}
-            className="press w-full inline-flex items-center justify-center gap-2 bg-accent text-coal px-4 py-2.5 font-medium hover:opacity-90 tx-color disabled:opacity-50"
+            className="press w-full inline-flex items-center justify-center gap-2 bg-aurora-line text-white shadow-glow rounded-full px-4 py-2.5 font-semibold hover:shadow-glow-lg tx-color disabled:opacity-50"
           >
             <Save className="h-4 w-4" />
             {saving ? 'Saving…' : 'Save goal'}

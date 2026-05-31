@@ -132,7 +132,7 @@ export default function ReportModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md rounded-xl border border-coal-rule bg-coal p-6 shadow-2xl animate-modal-in max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-md rounded-2xl border border-coal-rule bg-coal-50 p-6 shadow-card animate-modal-in max-h-[90vh] overflow-y-auto"
       >
 
         <button
@@ -144,7 +144,7 @@ export default function ReportModal({
         </button>
 
         <div className="flex items-center gap-2 mb-1">
-          <Flag className="h-4 w-4 text-crimson" />
+          <Flag className="h-4 w-4 text-crimson-bright" />
           <h2 className="font-display text-xl text-coal-900">Report this question</h2>
         </div>
         <p className="text-xs text-coal-500 mb-5">
@@ -260,7 +260,7 @@ export default function ReportModal({
           <button
             onClick={submit}
             disabled={submitting || !authedEmail}
-            className="press text-sm px-4 py-2 rounded-md bg-crimson text-coal-900 font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-crimson/90 tx-color"
+            className="press text-sm px-4 py-2 rounded-md bg-crimson text-white font-semibold rounded-full disabled:opacity-50 disabled:cursor-not-allowed shadow-crimson hover:brightness-110 tx-color"
           >
             {submitting ? 'Submitting…' : 'Submit report'}
           </button>

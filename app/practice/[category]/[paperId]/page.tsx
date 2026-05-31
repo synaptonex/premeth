@@ -277,7 +277,7 @@ export default function PracticePage() {
           </p>
           <Link
             href={`/papers/${category}`}
-            className="press inline-flex items-center gap-2 rounded-md bg-accent text-coal px-5 py-2.5 font-medium hover:bg-accent/90 tx-color"
+            className="press inline-flex items-center gap-2 rounded-full bg-aurora-line text-white shadow-glow rounded-full px-5 py-2.5 font-semibold hover:shadow-glow-lg tx-color"
           >
             <ArrowLeft className="h-4 w-4" /> Back to papers
           </Link>
@@ -349,7 +349,7 @@ export default function PracticePage() {
             </button>
             <Link
               href={`/papers/${category}`}
-              className="press inline-flex items-center gap-2 rounded-md bg-accent text-coal px-4 py-2 font-medium hover:bg-accent/90 tx-color"
+              className="press inline-flex items-center gap-2 rounded-full bg-aurora-line text-white shadow-glow rounded-full px-4 py-2 font-semibold hover:shadow-glow-lg tx-color"
             >
               Pick another paper
             </Link>
@@ -531,7 +531,7 @@ export default function PracticePage() {
                 <button
                   onClick={submitAnswer}
                   disabled={selected === null}
-                  className="press inline-flex items-center gap-2 text-sm px-5 py-2 rounded-md bg-accent text-coal font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-accent/90 tx-color"
+                  className="press inline-flex items-center gap-2 text-sm px-5 py-2 rounded-full bg-aurora-line text-white shadow-glow font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-accent/90 tx-color"
                 >
                   Check answer
                   <span className="text-[10px] px-1 py-0.5 rounded bg-coal/30 hidden sm:inline">↵</span>
@@ -539,7 +539,7 @@ export default function PracticePage() {
               ) : qIndex < total - 1 ? (
                 <button
                   onClick={goNext}
-                  className="press inline-flex items-center gap-1.5 text-sm px-5 py-2 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 tx-color"
+                  className="press inline-flex items-center gap-1.5 text-sm px-5 py-2 rounded-full bg-aurora-line text-white shadow-glow font-semibold hover:shadow-glow-lg tx-color"
                 >
                   Next question
                   <ArrowRight className="h-4 w-4" />
@@ -547,7 +547,7 @@ export default function PracticePage() {
               ) : (
                 <button
                   onClick={finish}
-                  className="press inline-flex items-center gap-2 text-sm px-5 py-2 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 tx-color"
+                  className="press inline-flex items-center gap-2 text-sm px-5 py-2 rounded-full bg-aurora-line text-white shadow-glow font-semibold hover:shadow-glow-lg tx-color"
                 >
                   <Trophy className="h-4 w-4" />
                   Finish paper
@@ -603,7 +603,7 @@ export default function PracticePage() {
                             <span
                               className={`shrink-0 inline-grid place-items-center h-5 w-5 rounded text-[11px] font-medium ${
                                 o.isCorrect
-                                  ? 'bg-accent text-coal'
+                                  ? 'bg-aurora-line text-white shadow-glow'
                                   : 'bg-coal-200 text-coal-800'
                               }`}
                             >

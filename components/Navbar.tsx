@@ -16,6 +16,7 @@ export default function Navbar() {
 
   const [user, setUser] = useState<User | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
@@ -24,6 +25,13 @@ export default function Navbar() {
     });
     return () => sub.subscription.unsubscribe();
   }, [supabase]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   async function signOut() {
     await supabase.auth.signOut();
@@ -36,17 +44,28 @@ export default function Navbar() {
 
   const linkCls = (href: string) => {
     const active = pathname === href || pathname.startsWith(href + '/');
-    return `text-sm tx-color ${
-      active ? 'text-coal-900' : 'text-coal-500 hover:text-coal-900'
+    return `relative text-sm tx-color ${
+      active
+        ? 'text-coal-900 after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-aurora-line'
+        : 'text-coal-500 hover:text-coal-900'
     }`;
   };
 
   return (
-    <header className="border-b border-coal-rule">
+    <header
+      className={`sticky top-0 z-50 tx-color ${
+        scrolled
+          ? 'glass border-b border-coal-rule'
+          : 'border-b border-transparent bg-coal/40'
+      }`}
+    >
       <div className="mx-auto max-w-6xl px-6 md:px-10 h-16 flex items-center justify-between">
-        <Link href="/" className="text-coal-900 text-base font-medium tracking-tight">
+        <Link
+          href="/"
+          className="group text-coal-900 text-lg font-bold tracking-tight tx-color hover:text-aurora"
+        >
           Enid
-          {isPlus && <span className="text-accent ml-0.5">+</span>}
+          {isPlus && <span className="text-accent-bright ml-0.5">+</span>}
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
@@ -68,12 +87,12 @@ export default function Navbar() {
           )}
           {!isPlus && (
             <Link href="/pricing" className={linkCls('/pricing')}>
-              Enid<span className="text-accent">+</span>
+              Enid<span className="text-accent-bright">+</span>
             </Link>
           )}
         </nav>
 
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-5">
           {user ? (
             <>
               <Link
@@ -96,7 +115,7 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/signup"
-                className="press text-sm font-medium text-coal-900 border-b border-coal-900 pb-0.5 tx-color"
+                className="press inline-flex items-center rounded-full bg-aurora-line bg-[length:200%_100%] px-4 py-2 text-sm font-semibold text-white shadow-glow tx-color hover:shadow-glow-lg focus-visible:shadow-glow-lg"
               >
                 Create account
               </Link>
@@ -105,16 +124,17 @@ export default function Navbar() {
         </div>
 
         <button
-          className="md:hidden p-2 -mr-2 text-coal-900"
+          className="md:hidden p-2 -mr-2 text-coal-900 rounded-lg tx-color hover:bg-coal-100"
           onClick={() => setMenuOpen((v) => !v)}
           aria-label="Toggle menu"
+          aria-expanded={menuOpen}
         >
           {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       {menuOpen && (
-        <div className="md:hidden border-t border-coal-rule bg-coal px-6 py-6 space-y-4">
+        <div className="md:hidden glass border-t border-coal-rule px-6 py-6 space-y-4 animate-fade-up">
           <MobileLink href="/exams" onClick={() => setMenuOpen(false)}>Papers</MobileLink>
           <MobileLink href="/pathways" onClick={() => setMenuOpen(false)}>After MDCAT</MobileLink>
           <MobileLink href="/aggregate" onClick={() => setMenuOpen(false)}>Aggregate Calculator</MobileLink>
@@ -139,7 +159,7 @@ export default function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className="block text-base text-coal-900"
                 >
-                  Enid<span className="text-accent">+</span>
+                  Enid<span className="text-accent-bright">+</span>
                 </Link>
               )}
               <button onClick={signOut} className="block text-base text-coal-600">
@@ -154,11 +174,17 @@ export default function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className="block text-base text-coal-900"
                 >
-                  Enid<span className="text-accent">+</span>
+                  Enid<span className="text-accent-bright">+</span>
                 </Link>
               )}
               <MobileLink href="/login" onClick={() => setMenuOpen(false)}>Sign in</MobileLink>
-              <MobileLink href="/signup" onClick={() => setMenuOpen(false)}>Create account</MobileLink>
+              <Link
+                href="/signup"
+                onClick={() => setMenuOpen(false)}
+                className="press inline-flex items-center rounded-full bg-aurora-line px-4 py-2 text-sm font-semibold text-white shadow-glow"
+              >
+                Create account
+              </Link>
             </>
           )}
         </div>
@@ -175,7 +201,7 @@ function MobileLink({
   children: React.ReactNode;
 }) {
   return (
-    <Link href={href} onClick={onClick} className="block text-base text-coal-700">
+    <Link href={href} onClick={onClick} className="block text-base text-coal-700 hover:text-coal-900 tx-color">
       {children}
     </Link>
   );

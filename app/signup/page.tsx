@@ -94,7 +94,7 @@ export default function SignupPage() {
             placeholder="rana_med"
             autoComplete="username"
             required
-            className="w-full px-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
+            className="w-full px-3 py-2.5 rounded-xl bg-coal-100 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
           />
           <p className="text-xs text-coal-500 mt-1.5">
             3–24 characters. Letters, numbers, underscores. You can change this later.
@@ -112,7 +112,7 @@ export default function SignupPage() {
             placeholder="you@example.com"
             autoComplete="email"
             required
-            className="w-full px-3 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
+            className="w-full px-3 py-2.5 rounded-xl bg-coal-100 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
           />
         </div>
 
@@ -128,7 +128,7 @@ export default function SignupPage() {
               placeholder="••••••••"
               autoComplete="new-password"
               required
-              className="w-full pl-3 pr-10 py-2.5 rounded-md bg-coal-50 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
+              className="w-full pl-3 pr-10 py-2.5 rounded-xl bg-coal-100 border border-coal-rule text-coal-900 placeholder:text-coal-500 focus:border-accent focus:outline-none tx-color"
             />
             <button
               type="button"
@@ -149,7 +149,7 @@ export default function SignupPage() {
         <button
           type="submit"
           disabled={loading}
-          className="press w-full py-2.5 rounded-md bg-accent text-coal font-medium hover:bg-accent/90 disabled:opacity-50 tx-color"
+          className="press w-full py-2.5 rounded-full bg-aurora-line text-white shadow-glow font-semibold hover:shadow-glow-lg disabled:opacity-50 tx-color"
         >
           {loading ? 'Creating account…' : 'Create account'}
         </button>
