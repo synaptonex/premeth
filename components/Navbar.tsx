@@ -1,12 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { useEnidPlus } from '@/lib/enid-plus.client';
+
+type Item = { href: string; label: string };
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -42,21 +44,35 @@ export default function Navbar() {
     router.refresh();
   }
 
-  const linkCls = (href: string) => {
-    const active = pathname === href || pathname.startsWith(href + '/');
-    return `relative text-sm tx-color ${
-      active
-        ? 'text-coal-900 after:absolute after:-bottom-1.5 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-aurora-line'
-        : 'text-coal-500 hover:text-coal-900'
-    }`;
-  };
+  // Build each tab's items, honouring auth + Plus gating.
+  const studyItems: Item[] = [
+    { href: '/exams', label: 'Papers' },
+    ...(user ? [{ href: '/drill', label: 'Daily Drill' }] : []),
+    ...(user && isPlus
+      ? [
+          { href: '/vault', label: 'Mistake Vault' },
+          { href: '/mock', label: 'Mock Exam' },
+        ]
+      : []),
+  ];
+  const communityItems: Item[] = [
+    { href: '/forum', label: 'Forum' },
+    { href: '/leaderboard', label: 'Leaderboard' },
+  ];
+  const moreItems: Item[] = [
+    { href: '/aggregate', label: 'Aggregate Calculator' },
+    { href: '/pathways', label: 'Pathways' },
+    { href: '/about', label: 'About' },
+  ];
+
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
+  const groupActive = (items: Item[]) => items.some((i) => isActive(i.href));
+  const dashActive = isActive('/dashboard');
 
   return (
     <header
       className={`sticky top-0 z-50 tx-color ${
-        scrolled
-          ? 'glass border-b border-coal-rule'
-          : 'border-b border-transparent bg-coal/40'
+        scrolled ? 'glass border-b border-coal-rule' : 'border-b border-transparent bg-coal/40'
       }`}
     >
       <div className="mx-auto max-w-6xl px-6 md:px-10 h-16 flex items-center justify-between">
@@ -68,45 +84,37 @@ export default function Navbar() {
           {isPlus && <span className="text-accent-bright ml-0.5">+</span>}
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8">
-          <Link href="/exams" className={linkCls('/exams')}>Papers</Link>
-          <Link href="/pathways" className={linkCls('/pathways')}>Pathways</Link>
-          <Link href="/aggregate" className={linkCls('/aggregate')}>Aggregate</Link>
-          <Link href="/forum" className={linkCls('/forum')}>Forum</Link>
-          <Link href="/leaderboard" className={linkCls('/leaderboard')}>Leaderboard</Link>
-          {user && (
-            <Link href="/drill" className={linkCls('/drill')}>Drill</Link>
-          )}
-          {user && isPlus && (
-            <>
-              <Link href="/vault" className={linkCls('/vault')}>Vault</Link>
-              <Link href="/mock" className={linkCls('/mock')}>Mock</Link>
-            </>
-          )}
-          <Link href="/about" className={linkCls('/about')}>About</Link>
-          {user && (
-            <Link href="/dashboard" className={linkCls('/dashboard')}>Dashboard</Link>
-          )}
-          {!isPlus && (
-            <Link href="/pricing" className={linkCls('/pricing')}>
-              Enid<span className="text-accent-bright">+</span>
-            </Link>
-          )}
+        <nav className="hidden md:flex items-center gap-2">
+          <Dropdown label="Study" items={studyItems} active={groupActive(studyItems)} isActive={isActive} />
+          <Dropdown label="Community" items={communityItems} active={groupActive(communityItems)} isActive={isActive} />
+          <Dropdown label="More" items={moreItems} active={groupActive(moreItems)} isActive={isActive} />
+          <Link
+            href="/dashboard"
+            className={`relative px-3 py-2 text-sm rounded-lg tx-color ${
+              dashActive
+                ? 'text-coal-900 after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-aurora-line'
+                : 'text-coal-500 hover:text-coal-900'
+            }`}
+          >
+            Dashboard
+          </Link>
         </nav>
 
         <div className="hidden md:flex items-center gap-5">
+          {!isPlus && (
+            <Link href="/pricing" className="text-sm text-coal-500 hover:text-coal-900 tx-color">
+              Enid<span className="text-accent-bright">+</span>
+            </Link>
+          )}
           {user ? (
             <>
               <Link
                 href="/profile"
-                className="text-sm text-coal-500 hover:text-coal-900 tx-color truncate max-w-[10rem]"
+                className="text-sm text-coal-500 hover:text-coal-900 tx-color truncate max-w-[9rem]"
               >
                 {user.email}
               </Link>
-              <button
-                onClick={signOut}
-                className="text-sm text-coal-500 hover:text-coal-900 tx-color"
-              >
+              <button onClick={signOut} className="text-sm text-coal-500 hover:text-coal-900 tx-color">
                 Sign out
               </button>
             </>
@@ -136,64 +144,141 @@ export default function Navbar() {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden glass border-t border-coal-rule px-6 py-6 space-y-4 animate-fade-up">
-          <MobileLink href="/exams" onClick={() => setMenuOpen(false)}>Papers</MobileLink>
-          <MobileLink href="/pathways" onClick={() => setMenuOpen(false)}>After MDCAT</MobileLink>
-          <MobileLink href="/aggregate" onClick={() => setMenuOpen(false)}>Aggregate Calculator</MobileLink>
-          <MobileLink href="/forum" onClick={() => setMenuOpen(false)}>Forum</MobileLink>
-          <MobileLink href="/leaderboard" onClick={() => setMenuOpen(false)}>Leaderboard</MobileLink>
-          {user && (
-            <MobileLink href="/drill" onClick={() => setMenuOpen(false)}>Daily Drill</MobileLink>
-          )}
-          {user && isPlus && (
-            <>
-              <MobileLink href="/vault" onClick={() => setMenuOpen(false)}>Mistake Vault</MobileLink>
-              <MobileLink href="/mock" onClick={() => setMenuOpen(false)}>Mock Exam</MobileLink>
-              <MobileLink href="/goal" onClick={() => setMenuOpen(false)}>Goal Tracker</MobileLink>
-            </>
-          )}
-          <MobileLink href="/about" onClick={() => setMenuOpen(false)}>About</MobileLink>
-          {user ? (
-            <>
-              <MobileLink href="/dashboard" onClick={() => setMenuOpen(false)}>Dashboard</MobileLink>
-              <MobileLink href="/profile" onClick={() => setMenuOpen(false)}>Profile</MobileLink>
-              {!isPlus && (
-                <Link
-                  href="/pricing"
-                  onClick={() => setMenuOpen(false)}
-                  className="block text-base text-coal-900"
-                >
-                  Enid<span className="text-accent-bright">+</span>
-                </Link>
-              )}
-              <button onClick={signOut} className="block text-base text-coal-600">
-                Sign out
-              </button>
-            </>
-          ) : (
-            <>
-              {!isPlus && (
-                <Link
-                  href="/pricing"
-                  onClick={() => setMenuOpen(false)}
-                  className="block text-base text-coal-900"
-                >
-                  Enid<span className="text-accent-bright">+</span>
-                </Link>
-              )}
-              <MobileLink href="/login" onClick={() => setMenuOpen(false)}>Sign in</MobileLink>
+        <div className="md:hidden glass border-t border-coal-rule px-6 py-6 space-y-6 animate-fade-up">
+          <MobileGroup title="Study" items={studyItems} onNavigate={() => setMenuOpen(false)} />
+          <MobileGroup title="Community" items={communityItems} onNavigate={() => setMenuOpen(false)} />
+          <MobileGroup title="More" items={moreItems} onNavigate={() => setMenuOpen(false)} />
+          <div className="space-y-3">
+            <p className="marginalia">Account</p>
+            <MobileLink href="/dashboard" onClick={() => setMenuOpen(false)}>Dashboard</MobileLink>
+            {!isPlus && (
               <Link
-                href="/signup"
+                href="/pricing"
                 onClick={() => setMenuOpen(false)}
-                className="press inline-flex items-center rounded-full bg-aurora-line px-4 py-2 text-sm font-semibold text-white shadow-glow"
+                className="block text-base text-coal-900"
               >
-                Create account
+                Enid<span className="text-accent-bright">+</span>
               </Link>
-            </>
-          )}
+            )}
+            {user ? (
+              <>
+                <MobileLink href="/profile" onClick={() => setMenuOpen(false)}>Profile</MobileLink>
+                <button onClick={signOut} className="block text-base text-coal-600">Sign out</button>
+              </>
+            ) : (
+              <>
+                <MobileLink href="/login" onClick={() => setMenuOpen(false)}>Sign in</MobileLink>
+                <Link
+                  href="/signup"
+                  onClick={() => setMenuOpen(false)}
+                  className="press inline-flex items-center rounded-full bg-aurora-line px-4 py-2 text-sm font-semibold text-white shadow-glow"
+                >
+                  Create account
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       )}
     </header>
+  );
+}
+
+function Dropdown({
+  label, items, active, isActive,
+}: {
+  label: string;
+  items: Item[];
+  active: boolean;
+  isActive: (href: string) => boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    const onClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('mousedown', onClick);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('mousedown', onClick);
+    };
+  }, [open]);
+
+  const openNow = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setOpen(true);
+  };
+  const closeSoon = () => {
+    closeTimer.current = setTimeout(() => setOpen(false), 120);
+  };
+
+  return (
+    <div ref={ref} className="relative" onMouseEnter={openNow} onMouseLeave={closeSoon}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        className={`relative inline-flex items-center gap-1 px-3 py-2 text-sm rounded-lg tx-color ${
+          active
+            ? 'text-coal-900 after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-aurora-line'
+            : 'text-coal-500 hover:text-coal-900'
+        }`}
+      >
+        {label}
+        <ChevronDown
+          className="h-3.5 w-3.5"
+          style={{ transition: 'transform 200ms var(--ease-out)', transform: open ? 'rotate(180deg)' : 'none' }}
+        />
+      </button>
+
+      {open && (
+        <div
+          role="menu"
+          aria-label={label}
+          className="absolute left-0 top-full mt-2 min-w-[12rem] rounded-xl glass p-1.5 shadow-card z-50 animate-fade-up"
+        >
+          {items.map((it) => (
+            <Link
+              key={it.href}
+              href={it.href}
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className={`block rounded-lg px-3 py-2 text-sm tx-color ${
+                isActive(it.href)
+                  ? 'bg-coal-100 text-accent-bright'
+                  : 'text-coal-700 hover:bg-coal-100 hover:text-coal-900'
+              }`}
+            >
+              {it.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileGroup({
+  title, items, onNavigate,
+}: {
+  title: string;
+  items: Item[];
+  onNavigate: () => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <p className="marginalia">{title}</p>
+      {items.map((it) => (
+        <MobileLink key={it.href} href={it.href} onClick={onNavigate}>{it.label}</MobileLink>
+      ))}
+    </div>
   );
 }
 
